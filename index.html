@@ -369,6 +369,9 @@
             .features-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            #browser-extension .feature-card > div[style*="grid-template-columns: repeat(3"] {
+                grid-template-columns: 1fr !important;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1435,24 +1438,24 @@ response = client.chat.completions.create(...)
             <h2 class="section-title fade-in">Protect Employees on ChatGPT, Claude & Gemini</h2>
             <p class="section-subtitle fade-in">Managed browser extension deployed via MDM</p>
             
-            <div style="max-width: 800px; margin: 3rem auto 0;">
+            <div style="max-width: 1000px; margin: 3rem auto 0;">
                 <div class="feature-card fade-in" style="padding: 2.5rem; text-align: left;">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 2rem;">
                         <div>
-                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">Scans Locally</div>
-                            <p style="color: var(--gray); font-size: 0.9375rem; line-height: 1.6;">Prompts are scanned before they're sent to AI providers.</p>
+                            <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">Scans Locally</div>
+                            <p style="color: var(--gray); font-size: 0.9375rem; line-height: 1.6; margin: 0;">Prompts are scanned before they're sent to AI providers.</p>
                         </div>
                         <div>
-                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">Policy Enforcement</div>
-                            <p style="color: var(--gray); font-size: 0.9375rem; line-height: 1.6;">Warns on secrets & PII, blocks according to your policies.</p>
+                            <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">Policy Enforcement</div>
+                            <p style="color: var(--gray); font-size: 0.9375rem; line-height: 1.6; margin: 0;">Warns on secrets & PII, blocks according to your policies.</p>
                         </div>
                         <div>
-                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">Unified Dashboard</div>
-                            <p style="color: var(--gray); font-size: 0.9375rem; line-height: 1.6;">Streams events to the same dashboard used for SDK traffic.</p>
+                            <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">Unified Dashboard</div>
+                            <p style="color: var(--gray); font-size: 0.9375rem; line-height: 1.6; margin: 0;">Streams events to the same dashboard used for SDK traffic.</p>
                         </div>
                     </div>
                     
-                    <div style="background: var(--gray-light); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-top: 1.5rem;">
+                    <div style="background: var(--gray-light); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-top: 2rem;">
                         <p style="margin: 0; color: var(--dark); font-size: 0.9375rem; line-height: 1.7;">
                             <strong style="color: var(--primary);">Zero configuration required.</strong> IT installs the extension company-wide via MDM. When employees use ChatGPT, Claude, or Gemini, their requests are automatically protected. No training needed, no behavior change required.
                         </p>
