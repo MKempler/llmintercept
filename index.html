@@ -1872,25 +1872,34 @@ response = client.chat.completions.create(...)
             submitBtn.innerHTML = '<span class="loading"></span> Sending...';
             
             try {
-                // For now, just open email client
-                // In production, you'd send to your backend/email service
-                const name = formData.get('name');
-                const email = formData.get('email');
-                const company = formData.get('company');
-                const useCase = formData.get('use-case');
+                // Send to Formspree
+                const formspreeEndpoint = 'https://formspree.io/f/mblqrwlk';
                 
-                const subject = encodeURIComponent('Demo Request - LLM Intercept');
-                const body = encodeURIComponent(
-                    `Name: ${name}\nEmail: ${email}\nCompany: ${company}\n\nUse Case:\n${useCase}`
-                );
+                const response = await fetch(formspreeEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: formData.get('name'),
+                        email: formData.get('email'),
+                        company: formData.get('company'),
+                        'use-case': formData.get('use-case'),
+                        _subject: 'Demo Request - LLM Intercept',
+                        _replyto: formData.get('email')
+                    })
+                });
                 
-                window.location.href = `mailto:contact@llmintercept.com?subject=${subject}&body=${body}`;
-                
-                // Show success message
-                messageDiv.style.display = 'block';
-                messageDiv.className = 'demo-result success show';
-                messageDiv.innerHTML = '<p><strong>Thank you!</strong></p><p>We\'ll be in touch shortly to set up your demo.</p>';
-                form.reset();
+                if (response.ok) {
+                    // Show success message
+                    messageDiv.style.display = 'block';
+                    messageDiv.className = 'demo-result success show';
+                    messageDiv.innerHTML = '<p><strong>Thank you!</strong></p><p>We\'ll be in touch shortly to set up your demo.</p>';
+                    form.reset();
+                } else {
+                    throw new Error('Form submission failed');
+                }
             } catch (error) {
                 messageDiv.style.display = 'block';
                 messageDiv.className = 'demo-result error show';
