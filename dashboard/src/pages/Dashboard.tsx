@@ -40,7 +40,7 @@ function Dashboard() {
     logs: [] as any[]
   })
   const [loading, setLoading] = useState(true)
-  const [timeRange, setTimeRange] = useState<TimeRange>('24h')
+  const [timeRange, setTimeRange] = useState<TimeRange>('7d')
 
   useEffect(() => {
     fetchStats()
@@ -155,28 +155,73 @@ function Dashboard() {
     'var(--chart-gray)'
   ]
 
-  // Prepare time series data (group by hour)
+  // Prepare time series data (group by time period based on selected range)
   const timeSeriesData = useMemo(() => {
+    if (!filteredData.logs.length) return []
+    
     const grouped: Record<string, { blocked: number; allowed: number; time: string }> = {}
+    
+    // Determine grouping format based on time range
+    let timeFormat: string
+    let maxPoints: number
+    
+    switch (timeRange) {
+      case '24h':
+        timeFormat = 'MMM dd HH:00'
+        maxPoints = 24
+        break
+      case '7d':
+        timeFormat = 'MMM dd'
+        maxPoints = 7
+        break
+      case '30d':
+        timeFormat = 'MMM dd'
+        maxPoints = 30
+        break
+      default:
+        timeFormat = 'MMM dd'
+        maxPoints = 30
+    }
     
     filteredData.logs.forEach((log: any) => {
       if (!log.timestamp) return
       const date = parseISO(log.timestamp)
-      const hourKey = format(date, 'MMM dd HH:mm')
+      const timeKey = format(date, timeFormat)
       
-      if (!grouped[hourKey]) {
-        grouped[hourKey] = { blocked: 0, allowed: 0, time: hourKey }
+      if (!grouped[timeKey]) {
+        grouped[timeKey] = { blocked: 0, allowed: 0, time: timeKey }
       }
       
       if (log.status === 'blocked') {
-        grouped[hourKey].blocked++
+        grouped[timeKey].blocked++
       } else if (log.status === 'allowed') {
-        grouped[hourKey].allowed++
+        grouped[timeKey].allowed++
       }
     })
     
-    return Object.values(grouped).slice(-24).sort((a, b) => a.time.localeCompare(b.time))
-  }, [filteredData.logs])
+    // Sort by time and take the most recent points
+    const sorted = Object.values(grouped).sort((a, b) => {
+      // Parse dates properly for correct sorting
+      try {
+        // For "MMM dd HH:00" format, try parsing with time
+        if (timeRange === '24h') {
+          const dateA = parseISO(a.time.replace(' ', 'T').replace(':', ':00:00'))
+          const dateB = parseISO(b.time.replace(' ', 'T').replace(':', ':00:00'))
+          return dateA.getTime() - dateB.getTime()
+        } else {
+          // For "MMM dd" format, parse as date
+          const dateA = parseISO(a.time + 'T00:00:00')
+          const dateB = parseISO(b.time + 'T00:00:00')
+          return dateA.getTime() - dateB.getTime()
+        }
+      } catch {
+        // Fallback to string comparison
+        return a.time.localeCompare(b.time)
+      }
+    })
+    
+    return sorted.slice(-maxPoints)
+  }, [filteredData.logs, timeRange])
 
   // Calculate insights
   const insights = useMemo(() => {
@@ -391,7 +436,7 @@ function Dashboard() {
 
         <ChartCard
           title="Activity Over Time"
-          description="Request trends by hour"
+          description={timeRange === '24h' ? 'Request trends by hour' : timeRange === '7d' ? 'Request trends by day' : 'Request trends over time'}
           icon={<ClockIcon size={20} />}
         >
           <ResponsiveContainer width="100%" height={380}>
