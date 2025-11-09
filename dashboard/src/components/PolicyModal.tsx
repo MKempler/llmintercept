@@ -132,15 +132,17 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
         className="card"
         style={{
           width: '100%',
-          maxWidth: '600px',
+          maxWidth: '640px',
           maxHeight: '90vh',
           overflowY: 'auto',
-          position: 'relative'
+          position: 'relative',
+          padding: '32px',
+          boxShadow: 'var(--shadow-lg)'
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--dark)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', paddingBottom: '24px', borderBottom: '1px solid var(--gray-border)' }}>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--dark)', margin: 0 }}>
             {policy ? 'Edit Policy' : 'Create Policy'}
           </h2>
           <button
@@ -153,10 +155,20 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
               color: 'var(--gray)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              borderRadius: '6px',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--gray-light)'
+              e.currentTarget.style.color = 'var(--dark)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent'
+              e.currentTarget.style.color = 'var(--gray)'
             }}
           >
-            <FiX size={24} />
+            <FiX size={20} />
           </button>
         </div>
 
@@ -178,8 +190,8 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
         )}
 
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500, color: 'var(--dark)' }}>
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{ display: 'block', marginBottom: '10px', fontWeight: 600, color: 'var(--dark)', fontSize: '14px' }}>
               Policy Name <span style={{ color: 'var(--error)' }}>*</span>
             </label>
             <input
@@ -190,17 +202,28 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
               required
               style={{
                 width: '100%',
-                padding: '10px 12px',
+                padding: '12px 16px',
                 border: '1px solid var(--gray-border)',
                 borderRadius: '8px',
                 fontSize: '14px',
-                fontFamily: 'inherit'
+                fontFamily: 'inherit',
+                backgroundColor: 'var(--white)',
+                transition: 'all 0.2s',
+                boxSizing: 'border-box'
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = 'var(--primary)'
+                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.1)'
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = 'var(--gray-border)'
+                e.currentTarget.style.boxShadow = 'none'
               }}
             />
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500, color: 'var(--dark)' }}>
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{ display: 'block', marginBottom: '10px', fontWeight: 600, color: 'var(--dark)', fontSize: '14px' }}>
               Description
             </label>
             <textarea
@@ -210,56 +233,88 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
               rows={3}
               style={{
                 width: '100%',
-                padding: '10px 12px',
+                padding: '12px 16px',
                 border: '1px solid var(--gray-border)',
                 borderRadius: '8px',
                 fontSize: '14px',
                 fontFamily: 'inherit',
-                resize: 'vertical'
+                resize: 'vertical',
+                backgroundColor: 'var(--white)',
+                transition: 'all 0.2s',
+                boxSizing: 'border-box'
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = 'var(--primary)'
+                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.1)'
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = 'var(--gray-border)'
+                e.currentTarget.style.boxShadow = 'none'
               }}
             />
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500, color: 'var(--dark)' }}>
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{ display: 'block', marginBottom: '12px', fontWeight: 600, color: 'var(--dark)', fontSize: '14px' }}>
               Violation Types <span style={{ color: 'var(--error)' }}>*</span>
             </label>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
                 { value: 'secret', label: 'Secrets', description: 'API keys, passwords, tokens' },
                 { value: 'pii', label: 'PII', description: 'Emails, SSNs, phone numbers' },
                 { value: 'prompt_injection', label: 'Prompt Injection', description: 'Jailbreak attempts' }
-              ].map(type => (
-                <label
-                  key={type.value}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '12px',
-                    border: '1px solid var(--gray-border)',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    backgroundColor: violationTypes.includes(type.value) ? 'var(--primary-light)' : 'transparent',
-                    transition: 'all 0.2s'
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={violationTypes.includes(type.value)}
-                    onChange={() => handleViolationTypeToggle(type.value)}
-                    style={{ marginRight: '12px', width: '18px', height: '18px', cursor: 'pointer' }}
-                  />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 500, color: 'var(--dark)' }}>{type.label}</div>
-                    <div style={{ fontSize: '12px', color: 'var(--gray)' }}>{type.description}</div>
-                  </div>
-                </label>
-              ))}
+              ].map(type => {
+                const isSelected = violationTypes.includes(type.value)
+                return (
+                  <label
+                    key={type.value}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '14px 16px',
+                      border: `2px solid ${isSelected ? 'var(--primary)' : 'var(--gray-border)'}`,
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      backgroundColor: isSelected ? 'rgba(37, 99, 235, 0.05)' : 'var(--white)',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isSelected) {
+                        e.currentTarget.style.borderColor = 'var(--primary-light)'
+                        e.currentTarget.style.backgroundColor = 'rgba(37, 99, 235, 0.02)'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSelected) {
+                        e.currentTarget.style.borderColor = 'var(--gray-border)'
+                        e.currentTarget.style.backgroundColor = 'var(--white)'
+                      }
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => handleViolationTypeToggle(type.value)}
+                      style={{ 
+                        marginRight: '14px', 
+                        width: '20px', 
+                        height: '20px', 
+                        cursor: 'pointer',
+                        accentColor: 'var(--primary)'
+                      }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 600, color: 'var(--dark)', fontSize: '14px', marginBottom: '2px' }}>{type.label}</div>
+                      <div style={{ fontSize: '13px', color: 'var(--gray)' }}>{type.description}</div>
+                    </div>
+                  </label>
+                )
+              })}
             </div>
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500, color: 'var(--dark)' }}>
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{ display: 'block', marginBottom: '12px', fontWeight: 600, color: 'var(--dark)', fontSize: '14px' }}>
               Action <span style={{ color: 'var(--error)' }}>*</span>
             </label>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
@@ -268,57 +323,98 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                 { value: 'redact', label: 'Redact', description: 'Remove sensitive data' },
                 { value: 'warn', label: 'Warn', description: 'Log but allow' },
                 { value: 'allow', label: 'Allow', description: 'No action' }
-              ].map(actionOption => (
-                <label
-                  key={actionOption.value}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    padding: '16px',
-                    border: `2px solid ${action === actionOption.value ? getActionColor(actionOption.value) : 'var(--gray-border)'}`,
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    backgroundColor: action === actionOption.value ? `${getActionColor(actionOption.value)}15` : 'transparent',
-                    transition: 'all 0.2s'
-                  }}
-                >
-                  <input
-                    type="radio"
-                    name="action"
-                    value={actionOption.value}
-                    checked={action === actionOption.value}
-                    onChange={(e) => setAction(e.target.value)}
-                    style={{ display: 'none' }}
-                  />
-                  <div style={{ color: getActionColor(actionOption.value), marginBottom: '8px' }}>
-                    {getActionIcon(actionOption.value)}
-                  </div>
-                  <div style={{ fontWeight: 600, color: 'var(--dark)', marginBottom: '4px' }}>
-                    {actionOption.label}
-                  </div>
-                  <div style={{ fontSize: '12px', color: 'var(--gray)', textAlign: 'center' }}>
-                    {actionOption.description}
-                  </div>
-                </label>
-              ))}
+              ].map(actionOption => {
+                const isSelected = action === actionOption.value
+                const actionColor = getActionColor(actionOption.value)
+                return (
+                  <label
+                    key={actionOption.value}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '20px 16px',
+                      border: `2px solid ${isSelected ? actionColor : 'var(--gray-border)'}`,
+                      borderRadius: '10px',
+                      cursor: 'pointer',
+                      backgroundColor: isSelected ? `${actionColor}15` : 'var(--white)',
+                      transition: 'all 0.2s',
+                      position: 'relative'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isSelected) {
+                        e.currentTarget.style.borderColor = actionColor
+                        e.currentTarget.style.backgroundColor = `${actionColor}08`
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSelected) {
+                        e.currentTarget.style.borderColor = 'var(--gray-border)'
+                        e.currentTarget.style.backgroundColor = 'var(--white)'
+                      }
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="action"
+                      value={actionOption.value}
+                      checked={isSelected}
+                      onChange={(e) => setAction(e.target.value)}
+                      style={{ display: 'none' }}
+                    />
+                    <div style={{ 
+                      color: actionColor, 
+                      marginBottom: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '8px',
+                      backgroundColor: `${actionColor}15`
+                    }}>
+                      {getActionIcon(actionOption.value)}
+                    </div>
+                    <div style={{ fontWeight: 600, color: 'var(--dark)', marginBottom: '4px', fontSize: '15px' }}>
+                      {actionOption.label}
+                    </div>
+                    <div style={{ fontSize: '12px', color: 'var(--gray)', textAlign: 'center', lineHeight: '1.4' }}>
+                      {actionOption.description}
+                    </div>
+                  </label>
+                )
+              })}
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-            <div>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
+            <div style={{ 
+              padding: '16px', 
+              backgroundColor: 'var(--gray-light)', 
+              borderRadius: '8px',
+              border: '1px solid var(--gray-border)'
+            }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', margin: 0 }}>
                 <input
                   type="checkbox"
                   checked={enabled}
                   onChange={(e) => setEnabled(e.target.checked)}
-                  style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                  style={{ 
+                    width: '20px', 
+                    height: '20px', 
+                    cursor: 'pointer',
+                    accentColor: 'var(--primary)'
+                  }}
                 />
-                <span style={{ fontWeight: 500, color: 'var(--dark)' }}>Enabled</span>
+                <div>
+                  <div style={{ fontWeight: 600, color: 'var(--dark)', fontSize: '14px' }}>Enabled</div>
+                  <div style={{ fontSize: '12px', color: 'var(--gray)', marginTop: '2px' }}>Policy is active</div>
+                </div>
               </label>
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500, color: 'var(--dark)' }}>
+              <label style={{ display: 'block', marginBottom: '10px', fontWeight: 600, color: 'var(--dark)', fontSize: '14px' }}>
                 Priority
               </label>
               <input
@@ -326,31 +422,59 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                 value={priority}
                 onChange={(e) => setPriority(parseInt(e.target.value) || 0)}
                 min="0"
+                placeholder="0"
                 style={{
                   width: '100%',
-                  padding: '10px 12px',
+                  padding: '12px 16px',
                   border: '1px solid var(--gray-border)',
                   borderRadius: '8px',
                   fontSize: '14px',
-                  fontFamily: 'inherit'
+                  fontFamily: 'inherit',
+                  backgroundColor: 'var(--white)',
+                  transition: 'all 0.2s',
+                  boxSizing: 'border-box'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--primary)'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.1)'
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--gray-border)'
+                  e.currentTarget.style.boxShadow = 'none'
                 }}
               />
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '24px' }}>
+          <div style={{ 
+            display: 'flex', 
+            gap: '12px', 
+            justifyContent: 'flex-end', 
+            marginTop: '32px',
+            paddingTop: '24px',
+            borderTop: '1px solid var(--gray-border)'
+          }}>
             <button
               type="button"
               onClick={onClose}
               style={{
-                padding: '10px 20px',
+                padding: '12px 24px',
                 border: '1px solid var(--gray-border)',
                 borderRadius: '8px',
-                background: 'white',
+                background: 'var(--white)',
                 color: 'var(--dark)',
-                fontWeight: 500,
+                fontWeight: 600,
+                fontSize: '14px',
                 cursor: 'pointer',
                 transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--gray-light)'
+                e.currentTarget.style.borderColor = 'var(--gray)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--white)'
+                e.currentTarget.style.borderColor = 'var(--gray-border)'
               }}
             >
               Cancel
@@ -359,14 +483,28 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
               type="submit"
               disabled={loading}
               style={{
-                padding: '10px 20px',
+                padding: '12px 24px',
                 border: 'none',
                 borderRadius: '8px',
                 background: loading ? 'var(--gray)' : 'var(--primary)',
                 color: 'white',
-                fontWeight: 500,
+                fontWeight: 600,
+                fontSize: '14px',
                 cursor: loading ? 'not-allowed' : 'pointer',
-                transition: 'all 0.2s'
+                transition: 'all 0.2s',
+                boxShadow: loading ? 'none' : 'var(--shadow-sm)'
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  e.currentTarget.style.background = 'var(--primary-dark)'
+                  e.currentTarget.style.boxShadow = 'var(--shadow-md)'
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) {
+                  e.currentTarget.style.background = 'var(--primary)'
+                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)'
+                }
               }}
             >
               {loading ? 'Saving...' : policy ? 'Update Policy' : 'Create Policy'}
