@@ -1381,10 +1381,10 @@ response = client.chat.completions.create(...)
 
     <script>
         // Gateway URL - Update this when you deploy your gateway
-        // For production: https://gateway.llmintercept.com or your Railway/Render URL
+        // For production: Use your Railway URL
         const FIREWALL_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
             ? 'http://localhost:8000' 
-            : 'https://gateway.llmintercept.com'; // Update this with your actual gateway URL
+            : 'https://llmintercept-production.up.railway.app'; // Railway gateway URL
         const DEMO_MODE = true;
         const OPENAI_API_KEY = DEMO_MODE ? '' : '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';
         
