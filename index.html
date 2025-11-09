@@ -1897,7 +1897,10 @@ response = client.chat.completions.create(...)
 
                 updateStats();
             } catch (error) {
-                resultDiv.innerHTML = `<div class="demo-result error show" style="margin-top: 1rem;"><p><strong>Network Error</strong></p><p style="margin-top: 0.5rem;">${error.message}</p><p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">Unable to connect to the firewall gateway. Please try again later.</p></div>`;
+                // Only show error if it's not a handled 403 (which is expected behavior)
+                if (error.message && !error.message.includes('403')) {
+                    resultDiv.innerHTML = `<div class="demo-result error show" style="margin-top: 1rem;"><p><strong>Network Error</strong></p><p style="margin-top: 0.5rem;">${error.message}</p><p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">Unable to connect to the firewall gateway. Please try again later.</p></div>`;
+                }
             }
         }
 
