@@ -14,7 +14,7 @@ class SecretsDetector:
         return [
             {
                 "name": "AWS Access Key",
-                "pattern": r'AKIA[0-9A-Z]{16}',
+                "pattern": r'AKIA[0-9A-Z]{8,}',  # Match 8+ chars after AKIA (partial keys are also suspicious)
                 "type": "aws_access_key"
             },
             {
