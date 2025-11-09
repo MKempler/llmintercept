@@ -14,18 +14,17 @@ class PIIDetector:
     
     def __init__(self):
         # Initialize Presidio analyzer if available
+        # Gracefully handle if spaCy model is not installed
         self.analyzer = None
         if PRESIDIO_AVAILABLE:
             try:
                 self.analyzer = AnalyzerEngine()
-            except Exception:
-                # Fallback if spaCy model not loaded
-                try:
-                    provider = NlpEngineProvider(conf_file=None)
-                    nlp_engine = provider.create_engine()
-                    self.analyzer = AnalyzerEngine(nlp_engine=nlp_engine)
-                except Exception:
-                    self.analyzer = None
+            except Exception as e:
+                # Fallback if spaCy model not loaded - use regex only
+                # This is fine for demo mode
+                self.analyzer = None
+                import logging
+                logging.debug(f"Presidio analyzer not available: {e}. Using regex fallback only.")
         
         # Regex patterns as fallback for common PII
         self.regex_patterns = [
