@@ -3,8 +3,11 @@ import axios from 'axios'
 import { 
   BarChart, 
   Bar, 
-  LineChart, 
-  Line,
+  AreaChart,
+  Area,
+  PieChart,
+  Pie,
+  Cell,
   XAxis, 
   YAxis, 
   CartesianGrid, 
@@ -20,7 +23,8 @@ import Skeleton from '../components/Skeleton'
 import TimeFilter from '../components/TimeFilter'
 import InsightsCard from '../components/InsightsCard'
 import ChartCard from '../components/ChartCard'
-import { ChartIcon, ShieldIcon, CheckIcon, getViolationIcon } from '../components/Icons'
+import CustomTooltip from '../components/CustomTooltip'
+import { ChartIcon, ShieldIcon, CheckIcon, getViolationIcon, AlertIcon, ClockIcon } from '../components/Icons'
 import { getApiUrl } from '../utils/api'
 
 const API_URL = getApiUrl()
@@ -121,8 +125,34 @@ function Dashboard() {
 
   // Prepare chart data
   const barChartData = [
-    { name: 'Blocked', value: filteredStats.blockedRequests, fill: 'var(--chart-error)' },
-    { name: 'Allowed', value: filteredStats.allowedRequests, fill: 'var(--chart-success)' }
+    { name: 'Blocked', value: filteredStats.blockedRequests },
+    { name: 'Allowed', value: filteredStats.allowedRequests }
+  ]
+
+  // Prepare violation breakdown data for pie chart
+  const violationBreakdown = useMemo(() => {
+    const breakdown: Record<string, number> = {}
+    
+    filteredData.violations.forEach((log: any) => {
+      const violations = log.violations || []
+      violations.forEach((v: any) => {
+        const type = v.type || 'unknown'
+        breakdown[type] = (breakdown[type] || 0) + 1
+      })
+    })
+    
+    return Object.entries(breakdown).map(([name, value]) => ({
+      name: name.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      value
+    }))
+  }, [filteredData.violations])
+
+  const PIE_COLORS = [
+    'var(--chart-error)',
+    'var(--chart-warning)',
+    'var(--chart-primary)',
+    'var(--chart-success)',
+    'var(--chart-gray)'
   ]
 
   // Prepare time series data (group by hour)
@@ -313,28 +343,48 @@ function Dashboard() {
         <ChartCard
           title="Request Status"
           description="Blocked vs allowed requests"
+          icon={<ChartIcon size={20} />}
         >
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={barChartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--gray-border)" />
+          <ResponsiveContainer width="100%" height={380}>
+            <BarChart data={barChartData} margin={{ top: 20, right: 20, left: 0, bottom: 10 }}>
+              <defs>
+                <linearGradient id="barGradientError" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="var(--chart-error-light)" stopOpacity={1} />
+                  <stop offset="100%" stopColor="var(--chart-error)" stopOpacity={0.8} />
+                </linearGradient>
+                <linearGradient id="barGradientSuccess" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="var(--chart-success-light)" stopOpacity={1} />
+                  <stop offset="100%" stopColor="var(--chart-success)" stopOpacity={0.8} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--gray-border)" opacity={0.3} />
               <XAxis 
                 dataKey="name" 
-                tick={{ fill: 'var(--gray)', fontSize: 12 }}
-                axisLine={{ stroke: 'var(--gray-border)' }}
+                tick={{ fill: 'var(--gray)', fontSize: 13, fontWeight: 500 }}
+                axisLine={{ stroke: 'var(--gray-border)', strokeWidth: 1 }}
+                tickLine={false}
               />
               <YAxis 
                 tick={{ fill: 'var(--gray)', fontSize: 12 }}
-                axisLine={{ stroke: 'var(--gray-border)' }}
+                axisLine={{ stroke: 'var(--gray-border)', strokeWidth: 1 }}
+                tickLine={false}
               />
-              <Tooltip 
-                contentStyle={{
-                  backgroundColor: 'var(--white)',
-                  border: '1px solid var(--gray-border)',
-                  borderRadius: '8px',
-                  boxShadow: 'var(--shadow-md)'
-                }}
-              />
-              <Bar dataKey="value" radius={[8, 8, 0, 0]} />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar 
+                dataKey="value" 
+                radius={[12, 12, 0, 0]}
+                barCategoryGap="30%"
+                isAnimationActive={true}
+                animationDuration={800}
+                animationEasing="ease-out"
+              >
+                {barChartData.map((entry, index) => (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={index === 0 ? 'url(#barGradientError)' : 'url(#barGradientSuccess)'}
+                  />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -342,51 +392,112 @@ function Dashboard() {
         <ChartCard
           title="Activity Over Time"
           description="Request trends by hour"
+          icon={<ClockIcon size={20} />}
         >
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={timeSeriesData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--gray-border)" />
+          <ResponsiveContainer width="100%" height={380}>
+            <AreaChart data={timeSeriesData} margin={{ top: 10, right: 20, left: 0, bottom: 40 }}>
+              <defs>
+                <linearGradient id="areaGradientBlocked" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--chart-error)" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="var(--chart-error)" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="areaGradientAllowed" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--chart-success)" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="var(--chart-success)" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--gray-border)" opacity={0.3} />
               <XAxis 
                 dataKey="time" 
                 tick={{ fill: 'var(--gray)', fontSize: 11 }}
-                axisLine={{ stroke: 'var(--gray-border)' }}
+                axisLine={{ stroke: 'var(--gray-border)', strokeWidth: 1 }}
+                tickLine={false}
                 angle={-45}
                 textAnchor="end"
                 height={60}
               />
               <YAxis 
                 tick={{ fill: 'var(--gray)', fontSize: 12 }}
-                axisLine={{ stroke: 'var(--gray-border)' }}
+                axisLine={{ stroke: 'var(--gray-border)', strokeWidth: 1 }}
+                tickLine={false}
               />
-              <Tooltip 
-                contentStyle={{
-                  backgroundColor: 'var(--white)',
-                  border: '1px solid var(--gray-border)',
-                  borderRadius: '8px',
-                  boxShadow: 'var(--shadow-md)'
-                }}
+              <Tooltip content={<CustomTooltip />} />
+              <Legend 
+                wrapperStyle={{ paddingTop: '20px' }}
+                iconType="circle"
+                formatter={(value) => <span style={{ fontSize: '13px', fontWeight: 500 }}>{value}</span>}
               />
-              <Legend />
-              <Line 
+              <Area 
                 type="monotone" 
                 dataKey="blocked" 
                 stroke="var(--chart-error)" 
-                strokeWidth={2}
-                dot={{ r: 4 }}
+                strokeWidth={3}
+                fill="url(#areaGradientBlocked)"
                 name="Blocked"
+                dot={{ r: 0 }}
+                activeDot={{ r: 6, stroke: 'var(--chart-error)', strokeWidth: 2 }}
+                isAnimationActive={true}
+                animationDuration={800}
               />
-              <Line 
+              <Area 
                 type="monotone" 
                 dataKey="allowed" 
                 stroke="var(--chart-success)" 
-                strokeWidth={2}
-                dot={{ r: 4 }}
+                strokeWidth={3}
+                fill="url(#areaGradientAllowed)"
                 name="Allowed"
+                dot={{ r: 0 }}
+                activeDot={{ r: 6, stroke: 'var(--chart-success)', strokeWidth: 2 }}
+                isAnimationActive={true}
+                animationDuration={800}
               />
-            </LineChart>
+            </AreaChart>
           </ResponsiveContainer>
         </ChartCard>
       </div>
+
+      {/* Violation Breakdown Pie Chart */}
+      {violationBreakdown.length > 0 && (
+        <div className="mb-8">
+          <ChartCard
+            title="Violation Breakdown"
+            description="Distribution of violation types"
+            icon={<AlertIcon size={20} />}
+          >
+            <ResponsiveContainer width="100%" height={380}>
+              <PieChart>
+                <Pie
+                  data={violationBreakdown}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ percent }) => percent > 0.05 ? `${(percent * 100).toFixed(0)}%` : ''}
+                  outerRadius={120}
+                  innerRadius={60}
+                  fill="#8884d8"
+                  dataKey="value"
+                  isAnimationActive={true}
+                  animationDuration={800}
+                  animationEasing="ease-out"
+                >
+                  {violationBreakdown.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={PIE_COLORS[index % PIE_COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+                <Legend 
+                  wrapperStyle={{ paddingTop: '20px' }}
+                  iconType="circle"
+                  formatter={(value) => <span style={{ fontSize: '13px', fontWeight: 500 }}>{value}</span>}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+      )}
 
       {/* Violations Table */}
       <div className="card" style={{ padding: 0 }}>
