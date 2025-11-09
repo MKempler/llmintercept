@@ -1206,7 +1206,7 @@ response = client.chat.completions.create(...)
                             See real-time stats, violation details, audit logs, and policy management.<br>
                             Get complete visibility into all your LLM interactions.
                         </p>
-                        <a href="http://localhost:3000" target="_blank" class="btn btn-primary" style="display: inline-flex;">
+                        <a href="https://dashboard.llmintercept.com" target="_blank" class="btn btn-primary" style="display: inline-flex;">
                             <span>View Full Dashboard →</span>
                         </a>
                     </div>
@@ -1380,7 +1380,11 @@ response = client.chat.completions.create(...)
     </footer>
 
     <script>
-        const FIREWALL_URL = 'http://localhost:8000';
+        // Gateway URL - Update this when you deploy your gateway
+        // For production: https://gateway.llmintercept.com or your Railway/Render URL
+        const FIREWALL_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:8000' 
+            : 'https://gateway.llmintercept.com'; // Update this with your actual gateway URL
         const DEMO_MODE = true;
         const OPENAI_API_KEY = DEMO_MODE ? '' : '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';
         
@@ -1645,7 +1649,7 @@ response = client.chat.completions.create(...)
 
                 updateStats();
             } catch (error) {
-                resultDiv.innerHTML = `<div class="demo-result error show" style="margin-top: 1rem;"><p><strong>Network Error</strong></p><p style="margin-top: 0.5rem;">${error.message}</p><p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">Make sure the gateway is running on port 8000</p></div>`;
+                resultDiv.innerHTML = `<div class="demo-result error show" style="margin-top: 1rem;"><p><strong>Network Error</strong></p><p style="margin-top: 0.5rem;">${error.message}</p><p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">Unable to connect to the firewall gateway. Please try again later.</p></div>`;
             }
         }
 

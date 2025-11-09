@@ -77,7 +77,7 @@ export default function Navbar() {
             </div>
             <div className="hidden sm:ml-8 sm:flex sm:space-x-1">
               <a
-                href="http://localhost:3001"
+                href="https://llmintercept.com"
                 className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
                 style={{ marginLeft: '24px' }}
               >
