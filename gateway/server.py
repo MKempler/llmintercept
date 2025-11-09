@@ -138,7 +138,8 @@ async def get_demo_mode():
     # Default to True for MVP (no customers yet)
     # Set DEMO_MODE=false to disable when you have real customers
     demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
-    return {"demo_mode": demo_mode}
+    response = JSONResponse(content={"demo_mode": demo_mode})
+    return add_cors_headers(response)
 
 
 @app.get("/api/violations")
@@ -158,9 +159,11 @@ async def get_violations():
             from gateway.demo_data import generate_demo_violations
             _cached_demo_violations = generate_demo_violations()
             _last_demo_data_generation_time = current_time
-        return {"violations": _cached_demo_violations}
+        response = JSONResponse(content={"violations": _cached_demo_violations})
+        return add_cors_headers(response)
     
-    return {"violations": real_violations}
+    response = JSONResponse(content={"violations": real_violations})
+    return add_cors_headers(response)
 
 
 @app.get("/api/logs")
@@ -180,9 +183,11 @@ async def get_logs():
             from gateway.demo_data import generate_demo_logs
             _cached_demo_logs = generate_demo_logs()
             _last_demo_data_generation_time = current_time
-        return {"logs": _cached_demo_logs}
+        response = JSONResponse(content={"logs": _cached_demo_logs})
+        return add_cors_headers(response)
     
-    return {"logs": real_logs}
+    response = JSONResponse(content={"logs": real_logs})
+    return add_cors_headers(response)
 
 
 @app.get("/api/policies")
