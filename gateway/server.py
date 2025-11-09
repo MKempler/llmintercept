@@ -13,8 +13,8 @@ from pydantic import BaseModel
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from detection import DetectionEngine
-from policy import PolicyEngine, Action
+from detection import DetectionEngine, ViolationType
+from policy import PolicyEngine, Action, PolicyRule
 from policy.actions import execute_action
 from audit_logging import AuditLogger
 from gateway.converters import (
@@ -192,20 +192,218 @@ async def get_logs():
 
 @app.get("/api/policies")
 async def get_policies():
-    """Get current policies."""
+    """Get current policies with statistics."""
     rules = policy_engine.get_rules()
-    response = JSONResponse(content={
-        "policies": [
-            {
-                "id": rule.id,
-                "name": rule.name,
-                "violation_types": [vt.value for vt in rule.violation_types],
-                "action": rule.action.value,
-                "enabled": rule.enabled
+    
+    # Get all logs for statistics calculation
+    demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
+    if demo_mode:
+        from gateway.demo_data import generate_demo_logs
+        all_logs = generate_demo_logs(80)
+    else:
+        all_logs = audit_logger.get_recent_logs(limit=1000)
+    
+    # Calculate statistics for each policy
+    policies_with_stats = []
+    for rule in rules:
+        # Count violations caught by this policy
+        violations_caught = 0
+        last_triggered = None
+        requests_affected = 0
+        
+        for log in all_logs:
+            log_violations = log.get("violations", [])
+            if not log_violations:
+                continue
+            
+            # Check if any violation matches this policy's violation types
+            policy_applied = False
+            for violation in log_violations:
+                violation_type_str = violation.get("type", "").lower()
+                violation_type_enum = None
+                
+                # Map string to ViolationType enum
+                if violation_type_str == "secret":
+                    violation_type_enum = ViolationType.SECRET
+                elif violation_type_str == "pii":
+                    violation_type_enum = ViolationType.PII
+                elif violation_type_str in ["prompt_injection", "injection"]:
+                    violation_type_enum = ViolationType.PROMPT_INJECTION
+                
+                if violation_type_enum and violation_type_enum in rule.violation_types:
+                    policy_applied = True
+                    violations_caught += 1
+                    break
+            
+            if policy_applied:
+                requests_affected += 1
+                log_timestamp = log.get("timestamp")
+                if log_timestamp:
+                    if last_triggered is None or log_timestamp > last_triggered:
+                        last_triggered = log_timestamp
+        
+        policies_with_stats.append({
+            "id": rule.id,
+            "name": rule.name,
+            "description": rule.description,
+            "violation_types": [vt.value for vt in rule.violation_types],
+            "action": rule.action.value,
+            "enabled": rule.enabled,
+            "priority": rule.priority,
+            "created_at": rule.created_at,
+            "updated_at": rule.updated_at,
+            "statistics": {
+                "violations_caught": violations_caught,
+                "requests_affected": requests_affected,
+                "last_triggered": last_triggered
             }
-            for rule in rules
-        ]
+        })
+    
+    response = JSONResponse(content={"policies": policies_with_stats})
+    return add_cors_headers(response)
+
+
+class PolicyCreateRequest(BaseModel):
+    """Request model for creating a policy."""
+    name: str
+    description: Optional[str] = None
+    violation_types: List[str]
+    action: str
+    enabled: bool = True
+    priority: int = 0
+
+
+class PolicyUpdateRequest(BaseModel):
+    """Request model for updating a policy."""
+    name: Optional[str] = None
+    description: Optional[str] = None
+    violation_types: Optional[List[str]] = None
+    action: Optional[str] = None
+    enabled: Optional[bool] = None
+    priority: Optional[int] = None
+
+
+@app.post("/api/policies")
+async def create_policy(request: PolicyCreateRequest):
+    """Create a new policy."""
+    from datetime import datetime
+    
+    # Convert violation type strings to enums
+    violation_type_enums = []
+    for vt_str in request.violation_types:
+        if vt_str.lower() == "secret":
+            violation_type_enums.append(ViolationType.SECRET)
+        elif vt_str.lower() == "pii":
+            violation_type_enums.append(ViolationType.PII)
+        elif vt_str.lower() in ["prompt_injection", "injection"]:
+            violation_type_enums.append(ViolationType.PROMPT_INJECTION)
+    
+    if not violation_type_enums:
+        raise HTTPException(status_code=400, detail="At least one violation type is required")
+    
+    # Convert action string to enum
+    action_enum = Action[request.action.upper()] if hasattr(Action, request.action.upper()) else Action.BLOCK
+    
+    # Generate ID
+    policy_id = f"policy_{uuid.uuid4().hex[:8]}"
+    now = datetime.utcnow().isoformat()
+    
+    # Create policy rule
+    new_rule = PolicyRule(
+        id=policy_id,
+        name=request.name,
+        description=request.description,
+        violation_types=violation_type_enums,
+        action=action_enum,
+        enabled=request.enabled,
+        priority=request.priority,
+        created_at=now,
+        updated_at=now
+    )
+    
+    policy_engine.add_rule(new_rule)
+    
+    response = JSONResponse(content={
+        "id": policy_id,
+        "name": new_rule.name,
+        "description": new_rule.description,
+        "violation_types": [vt.value for vt in new_rule.violation_types],
+        "action": new_rule.action.value,
+        "enabled": new_rule.enabled,
+        "priority": new_rule.priority,
+        "created_at": new_rule.created_at,
+        "updated_at": new_rule.updated_at
+    }, status_code=201)
+    return add_cors_headers(response)
+
+
+@app.put("/api/policies/{policy_id}")
+async def update_policy(policy_id: str, request: PolicyUpdateRequest):
+    """Update an existing policy."""
+    from datetime import datetime
+    
+    rule = policy_engine.get_rule(policy_id)
+    if not rule:
+        raise HTTPException(status_code=404, detail="Policy not found")
+    
+    # Build update dict
+    update_dict = {}
+    if request.name is not None:
+        update_dict["name"] = request.name
+    if request.description is not None:
+        update_dict["description"] = request.description
+    if request.violation_types is not None:
+        violation_type_enums = []
+        for vt_str in request.violation_types:
+            if vt_str.lower() == "secret":
+                violation_type_enums.append(ViolationType.SECRET)
+            elif vt_str.lower() == "pii":
+                violation_type_enums.append(ViolationType.PII)
+            elif vt_str.lower() in ["prompt_injection", "injection"]:
+                violation_type_enums.append(ViolationType.PROMPT_INJECTION)
+        update_dict["violation_types"] = violation_type_enums
+    if request.action is not None:
+        action_enum = Action[request.action.upper()] if hasattr(Action, request.action.upper()) else Action.BLOCK
+        update_dict["action"] = action_enum
+    if request.enabled is not None:
+        update_dict["enabled"] = request.enabled
+    if request.priority is not None:
+        update_dict["priority"] = request.priority
+    
+    update_dict["updated_at"] = datetime.utcnow().isoformat()
+    
+    policy_engine.update_rule(policy_id, **update_dict)
+    
+    # Get updated rule
+    updated_rule = policy_engine.get_rule(policy_id)
+    
+    response = JSONResponse(content={
+        "id": updated_rule.id,
+        "name": updated_rule.name,
+        "description": updated_rule.description,
+        "violation_types": [vt.value for vt in updated_rule.violation_types],
+        "action": updated_rule.action.value,
+        "enabled": updated_rule.enabled,
+        "priority": updated_rule.priority,
+        "created_at": updated_rule.created_at,
+        "updated_at": updated_rule.updated_at
     })
+    return add_cors_headers(response)
+
+
+@app.delete("/api/policies/{policy_id}")
+async def delete_policy(policy_id: str):
+    """Delete a policy."""
+    # Don't allow deleting default policies
+    default_policy_ids = ["block_secrets", "redact_pii", "block_injection"]
+    if policy_id in default_policy_ids:
+        raise HTTPException(status_code=400, detail="Cannot delete default policies")
+    
+    success = policy_engine.delete_rule(policy_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Policy not found")
+    
+    response = JSONResponse(content={"message": "Policy deleted successfully"})
     return add_cors_headers(response)
 
 

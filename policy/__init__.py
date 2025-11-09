@@ -1,7 +1,8 @@
 """Policy engine for enforcing security rules."""
 from typing import List, Dict, Any, Optional
 from enum import Enum
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import datetime
 from detection import Violation, ViolationType
 
 
@@ -21,7 +22,11 @@ class PolicyRule:
     violation_types: List[ViolationType]
     action: Action
     enabled: bool = True
-    metadata: Optional[Dict[str, Any]] = None
+    description: Optional[str] = None
+    priority: int = 0
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = field(default_factory=dict)
 
 
 class PolicyEngine:
@@ -32,27 +37,40 @@ class PolicyEngine:
     
     def _load_default_rules(self) -> List[PolicyRule]:
         """Load default policy rules."""
+        now = datetime.utcnow().isoformat()
         return [
             PolicyRule(
                 id="block_secrets",
                 name="Block Secrets",
                 violation_types=[ViolationType.SECRET],
                 action=Action.BLOCK,
-                enabled=True
+                enabled=True,
+                description="Automatically block requests containing API keys, passwords, tokens, or other secrets before they reach the LLM.",
+                priority=1,
+                created_at=now,
+                updated_at=now
             ),
             PolicyRule(
                 id="redact_pii",
                 name="Redact PII",
                 violation_types=[ViolationType.PII],
                 action=Action.REDACT,
-                enabled=True
+                enabled=True,
+                description="Detect and redact personally identifiable information (emails, SSNs, phone numbers) while allowing requests to proceed.",
+                priority=2,
+                created_at=now,
+                updated_at=now
             ),
             PolicyRule(
                 id="block_injection",
                 name="Block Prompt Injection",
                 violation_types=[ViolationType.PROMPT_INJECTION],
                 action=Action.BLOCK,
-                enabled=True
+                enabled=True,
+                description="Block prompt injection attacks and jailbreak attempts that try to override system instructions.",
+                priority=3,
+                created_at=now,
+                updated_at=now
             )
         ]
     
@@ -121,4 +139,17 @@ class PolicyEngine:
     def get_rules(self) -> List[PolicyRule]:
         """Get all policy rules."""
         return self.rules
+    
+    def delete_rule(self, rule_id: str) -> bool:
+        """Delete a policy rule."""
+        initial_count = len(self.rules)
+        self.rules = [r for r in self.rules if r.id != rule_id]
+        return len(self.rules) < initial_count
+    
+    def get_rule(self, rule_id: str) -> Optional[PolicyRule]:
+        """Get a specific policy rule by ID."""
+        for rule in self.rules:
+            if rule.id == rule_id:
+                return rule
+        return None
 
