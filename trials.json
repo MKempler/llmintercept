@@ -1,0 +1,12 @@
+{
+  "test@example.com": {
+    "email": "test@example.com",
+    "company": "Test Company",
+    "api_key": "fw_live_GRIJm1lmzESY5vywWXZyjb4OjYeZ4DhQ",
+    "created_at": "2025-11-09T00:02:50.461060",
+    "expires_at": "2025-11-23T00:02:50.461060",
+    "status": "active",
+    "usage_count": 0,
+    "notes": null
+  }
+}
