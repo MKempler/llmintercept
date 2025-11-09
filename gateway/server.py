@@ -45,6 +45,14 @@ app.add_middleware(
     expose_headers=["*"],  # Expose headers for extension access
 )
 
+# Helper function to add CORS headers to responses
+def add_cors_headers(response):
+    """Add CORS headers to response."""
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    return response
+
 # Initialize components
 detection_engine = DetectionEngine()
 policy_engine = PolicyEngine()
@@ -115,6 +123,13 @@ class GoogleRequest(BaseModel):
 async def health():
     """Health check endpoint."""
     return {"status": "healthy"}
+
+
+@app.options("/{full_path:path}")
+async def options_handler(full_path: str):
+    """Handle OPTIONS preflight requests."""
+    response = JSONResponse(content={})
+    return add_cors_headers(response)
 
 
 @app.get("/api/demo-mode")
@@ -218,7 +233,7 @@ async def chat_completions(
         policy_result = policy_engine.evaluate(violations)
         
         if policy_result["blocked"]:
-            return JSONResponse(
+            response = JSONResponse(
                 status_code=403,
                 content={
                     "error": {
@@ -236,6 +251,7 @@ async def chat_completions(
                     }
                 }
             )
+            return add_cors_headers(response)
         else:
             # Prepare violation data for response
             violation_data = [
@@ -277,7 +293,9 @@ async def chat_completions(
                     "action": "redact"
                 }
             
-            return response_data
+            # Wrap in JSONResponse to ensure CORS headers are added
+            response = JSONResponse(content=response_data)
+            return add_cors_headers(response)
     
     if not api_key:
         raise HTTPException(
@@ -324,7 +342,7 @@ async def chat_completions(
             metadata={"policy_action": policy_result["action"].value}
         )
         
-        return JSONResponse(
+        response = JSONResponse(
             status_code=403,
             content={
                 "error": {
@@ -334,6 +352,7 @@ async def chat_completions(
                 }
             }
         )
+        return add_cors_headers(response)
     
     # Apply redaction if needed
     modified_request = request
@@ -572,7 +591,7 @@ async def anthropic_messages(
         violations, policy_result, violation_data = _scan_and_evaluate(prompt_text, request_id, start_time, "/v1/anthropic/messages")
         
         if policy_result["blocked"]:
-            return JSONResponse(
+            response = JSONResponse(
                 status_code=403,
                 content={
                     "error": {
@@ -582,9 +601,10 @@ async def anthropic_messages(
                     }
                 }
             )
+            return add_cors_headers(response)
         
         # Mock response
-        return {
+        response_data = {
             "id": f"demo-{request_id}",
             "type": "message",
             "role": "assistant",
@@ -593,6 +613,8 @@ async def anthropic_messages(
             "stop_reason": "end_turn",
             "stop_sequence": None
         }
+        response = JSONResponse(content=response_data)
+        return add_cors_headers(response)
     
     if not api_key:
         raise HTTPException(
@@ -625,7 +647,7 @@ async def anthropic_messages(
             metadata={"policy_action": policy_result["action"].value, "provider": "anthropic"}
         )
         
-        return JSONResponse(
+        response = JSONResponse(
             status_code=403,
             content={
                 "error": {
@@ -635,6 +657,7 @@ async def anthropic_messages(
                 }
             }
         )
+        return add_cors_headers(response)
     
     # Apply redaction if needed
     modified_request = request
@@ -812,7 +835,7 @@ async def google_generate_content(
         violations, policy_result, violation_data = _scan_and_evaluate(prompt_text, request_id, start_time, f"/v1/google/models/{model}:generateContent")
         
         if policy_result["blocked"]:
-            return JSONResponse(
+            response = JSONResponse(
                 status_code=403,
                 content={
                     "error": {
@@ -822,9 +845,10 @@ async def google_generate_content(
                     }
                 }
             )
+            return add_cors_headers(response)
         
         # Mock response
-        return {
+        response_data = {
             "candidates": [{
                 "content": {
                     "parts": [{"text": "This is a demo response. In production, this would be the actual Gemini response."}],
@@ -833,6 +857,8 @@ async def google_generate_content(
                 "finishReason": "STOP"
             }]
         }
+        response = JSONResponse(content=response_data)
+        return add_cors_headers(response)
     
     if not api_key:
         raise HTTPException(
@@ -865,7 +891,7 @@ async def google_generate_content(
             metadata={"policy_action": policy_result["action"].value, "provider": "google"}
         )
         
-        return JSONResponse(
+        response = JSONResponse(
             status_code=403,
             content={
                 "error": {
@@ -875,6 +901,7 @@ async def google_generate_content(
                 }
             }
         )
+        return add_cors_headers(response)
     
     # Apply redaction if needed
     modified_request = request
