@@ -47,10 +47,6 @@ class PIIDetector:
         ]
     
     def detect(self, text: str) -> List[Dict[str, Any]]:
-        """Detect PII in text."""
-        # Lazy initialize analyzer on first use
-        if not self._analyzer_initialized:
-            self._init_analyzer()
         """
         Detect PII in text.
         
