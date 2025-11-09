@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Badge from '../components/Badge'
 import LoadingSpinner from '../components/LoadingSpinner'
+import { getApiUrl } from '../utils/api'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_URL = getApiUrl()
 
 function Policies() {
   const [policies, setPolicies] = useState<any[]>([])

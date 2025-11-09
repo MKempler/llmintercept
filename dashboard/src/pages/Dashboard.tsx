@@ -21,8 +21,9 @@ import TimeFilter from '../components/TimeFilter'
 import InsightsCard from '../components/InsightsCard'
 import ChartCard from '../components/ChartCard'
 import { ChartIcon, ShieldIcon, CheckIcon, getViolationIcon } from '../components/Icons'
+import { getApiUrl } from '../utils/api'
 
-const API_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000'
+const API_URL = getApiUrl()
 
 type TimeRange = '24h' | '7d' | '30d' | 'all'
 
