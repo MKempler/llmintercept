@@ -48,9 +48,9 @@ export default function Navbar() {
       }}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-20 relative">
           {/* Logo Section */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 flex-shrink-0">
             <a 
               href="#" 
               onClick={handleLogoClick}
@@ -148,8 +148,8 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Navigation Links */}
-          <div className="hidden md:flex items-center gap-1">
+          {/* Navigation Links - Centered */}
+          <div className="hidden md:flex items-center gap-1 absolute left-1/2 transform -translate-x-1/2">
             <Link
               to="/"
               className="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200"
@@ -201,7 +201,7 @@ export default function Navbar() {
           </div>
 
           {/* Back to Demo Link - Subtle, Right Side */}
-          <div className="hidden lg:flex items-center">
+          <div className="hidden lg:flex items-center flex-shrink-0">
             <a
               href="https://llmintercept.com"
               className="inline-flex items-center px-3 py-2 text-xs font-medium transition-colors duration-200"
