@@ -159,7 +159,7 @@ function Dashboard() {
   const timeSeriesData = useMemo(() => {
     if (!filteredData.logs.length) return []
     
-    const grouped: Record<string, { blocked: number; allowed: number; time: string }> = {}
+    const grouped: Record<string, { blocked: number; allowed: number; time: string; date: Date }> = {}
     
     // Determine grouping format based on time range
     let timeFormat: string
@@ -189,7 +189,7 @@ function Dashboard() {
       const timeKey = format(date, timeFormat)
       
       if (!grouped[timeKey]) {
-        grouped[timeKey] = { blocked: 0, allowed: 0, time: timeKey }
+        grouped[timeKey] = { blocked: 0, allowed: 0, time: timeKey, date }
       }
       
       if (log.status === 'blocked') {
@@ -199,28 +199,13 @@ function Dashboard() {
       }
     })
     
-    // Sort by time and take the most recent points
+    // Sort by date and take the most recent points
     const sorted = Object.values(grouped).sort((a, b) => {
-      // Parse dates properly for correct sorting
-      try {
-        // For "MMM dd HH:00" format, try parsing with time
-        if (timeRange === '24h') {
-          const dateA = parseISO(a.time.replace(' ', 'T').replace(':', ':00:00'))
-          const dateB = parseISO(b.time.replace(' ', 'T').replace(':', ':00:00'))
-          return dateA.getTime() - dateB.getTime()
-        } else {
-          // For "MMM dd" format, parse as date
-          const dateA = parseISO(a.time + 'T00:00:00')
-          const dateB = parseISO(b.time + 'T00:00:00')
-          return dateA.getTime() - dateB.getTime()
-        }
-      } catch {
-        // Fallback to string comparison
-        return a.time.localeCompare(b.time)
-      }
+      return a.date.getTime() - b.date.getTime()
     })
     
-    return sorted.slice(-maxPoints)
+    // Remove date property before returning (only needed for sorting)
+    return sorted.slice(-maxPoints).map(({ date, ...rest }) => rest)
   }, [filteredData.logs, timeRange])
 
   // Calculate insights
