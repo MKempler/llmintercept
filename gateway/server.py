@@ -194,7 +194,7 @@ async def get_logs():
 async def get_policies():
     """Get current policies."""
     rules = policy_engine.get_rules()
-    return {
+    response = JSONResponse(content={
         "policies": [
             {
                 "id": rule.id,
@@ -205,7 +205,8 @@ async def get_policies():
             }
             for rule in rules
         ]
-    }
+    })
+    return add_cors_headers(response)
 
 
 @app.post("/v1/chat/completions")
