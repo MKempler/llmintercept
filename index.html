@@ -1833,11 +1833,21 @@ response = client.chat.completions.create(...)
                 if (response.status === 403) {
                     stats.blocked++;
                     stats.violations += data.error?.violations?.length || 0;
-                    let html = `<div class="demo-result blocked show" style="margin-top: 1rem;"><p><strong>✅ Request Blocked</strong></p><p style="margin-top: 0.5rem;">${data.error?.message || 'Security violation detected'}</p>`;
+                    let html = `<div class="demo-result blocked show" style="margin-top: 1rem;"><p><strong>❌ Request Blocked</strong></p><p style="margin-top: 0.5rem;">${data.error?.message || 'Security violation detected'}</p>`;
                     
                     if (data.error?.violations && data.error.violations.length > 0) {
-                        html += '<div class="violation-list" style="margin-top: 1rem;"><strong style="display: block; margin-bottom: 0.75rem;">Violations Detected:</strong>';
+                        // Group violations by type to avoid duplicates
+                        const violationMap = new Map();
                         data.error.violations.forEach(v => {
+                            const key = `${v.type}_${v.matched_text}`;
+                            if (!violationMap.has(key)) {
+                                violationMap.set(key, v);
+                            }
+                        });
+                        const uniqueViolations = Array.from(violationMap.values());
+                        
+                        html += '<div class="violation-list" style="margin-top: 1rem;"><strong style="display: block; margin-bottom: 0.75rem;">Violations Detected:</strong>';
+                        uniqueViolations.forEach(v => {
                             html += `<div class="violation-item"><strong>${v.type.toUpperCase()}</strong> ${v.message}<br><small>Matched: "${v.matched_text || 'N/A'}"</small></div>`;
                         });
                         html += '</div>';
@@ -1854,7 +1864,7 @@ response = client.chat.completions.create(...)
                         // PII was detected and redacted
                         const piiTypes = firewallMeta.violations.map(v => v.type.toUpperCase()).join(', ');
                         resultDiv.innerHTML = `<div class="demo-result success show" style="margin-top: 1rem;">
-                            <p><strong>✅ Request Allowed (PII Redacted)</strong></p>
+                            <p><strong>⚠️ Request Allowed (PII Redacted)</strong></p>
                             <p style="margin-top: 0.75rem; color: var(--dark);">Your prompt contained PII that was automatically redacted before being sent to the LLM.</p>
                             <div style="margin-top: 1rem; padding: 1rem; background: #fef3c7; border-radius: 6px; border-left: 3px solid #f59e0b;">
                                 <p style="margin: 0; font-size: 0.9rem; color: var(--dark);"><strong>⚠️ PII Detected and Redacted:</strong></p>
@@ -2048,12 +2058,22 @@ response = client.chat.completions.create(...)
                     stats.blocked++;
                     stats.violations += data.error?.violations?.length || 0;
                     resultDiv.className = 'demo-result blocked show';
-                    let html = `<p><strong>Request Blocked</strong></p>`;
+                    let html = `<p><strong>❌ Request Blocked</strong></p>`;
                     html += `<p style="margin-top: 0.5rem;">${data.error?.message || 'Security violation detected'}</p>`;
                     
                     if (data.error?.violations && data.error.violations.length > 0) {
-                        html += '<div class="violation-list"><strong style="display: block; margin-bottom: 1rem;">Violations Detected:</strong>';
+                        // Group violations by type to avoid duplicates
+                        const violationMap = new Map();
                         data.error.violations.forEach(v => {
+                            const key = `${v.type}_${v.matched_text}`;
+                            if (!violationMap.has(key)) {
+                                violationMap.set(key, v);
+                            }
+                        });
+                        const uniqueViolations = Array.from(violationMap.values());
+                        
+                        html += '<div class="violation-list"><strong style="display: block; margin-bottom: 1rem;">Violations Detected:</strong>';
+                        uniqueViolations.forEach(v => {
                             html += `<div class="violation-item"><strong>${v.type.toUpperCase()}</strong> ${v.message}<br><small>Matched: "${v.matched_text || 'N/A'}"</small></div>`;
                         });
                         html += '</div>';
