@@ -1331,9 +1331,8 @@ response = client.chat.completions.create(...)
             <h2 class="section-title fade-in">Two Ways to Protect Your Organization</h2>
             <p class="section-subtitle fade-in">Choose how your team uses AI - we protect both scenarios</p>
             
-            <div class="features-grid" style="margin-top: 3rem;">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-top: 3rem;" class="two-column-grid">
                 <div class="feature-card fade-in" style="text-align: left;">
-                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">💻</div>
                     <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem;">For Applications Your Team Builds</h3>
                     <p style="margin-bottom: 1.5rem; color: var(--gray); line-height: 1.7;">Your developers are building apps that use ChatGPT, Claude, or Gemini APIs. Add our SDK to automatically scan every request before it reaches the AI.</p>
                     <div style="background: var(--white); padding: 1rem; border-radius: 8px; border: 1px solid var(--gray-border); margin-top: 1rem;">
@@ -1352,7 +1351,6 @@ response = client.chat.completions.create(...)
                 </div>
                 
                 <div class="feature-card fade-in" style="text-align: left;">
-                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">🌐</div>
                     <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem;">For Employees Using Web Interfaces</h3>
                     <p style="margin-bottom: 1.5rem; color: var(--gray); line-height: 1.7;">Your employees are using chat.openai.com, claude.ai, or gemini.google.com directly. Install our browser extension to automatically scan what they type before it reaches the AI.</p>
                     <div style="background: var(--white); padding: 1rem; border-radius: 8px; border: 1px solid var(--gray-border); margin-top: 1rem;">
