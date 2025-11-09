@@ -883,7 +883,7 @@
     <!-- Header -->
     <header id="header">
         <nav class="container">
-            <a href="#" class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+            <a href="#" class="logo" id="logoLink">
                 <div class="logo-icon">
                     <img src="logo.png" alt="LLM Intercept Logo" />
                 </div>
@@ -1429,6 +1429,18 @@ response = client.chat.completions.create(...)
                 header.classList.remove('scrolled');
             }
         });
+
+        // Logo click handler - scroll to top
+        const logoLink = document.getElementById('logoLink');
+        if (logoLink) {
+            logoLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
 
         const observerOptions = {
             threshold: 0.1,
