@@ -31,14 +31,6 @@ export default function Navbar() {
     return false
   }
 
-  const navLinkClass = (path: string) => {
-    const baseClass = "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200"
-    if (isActive(path)) {
-      return `${baseClass} border-blue-600 text-gray-900`
-    }
-    return `${baseClass} border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700`
-  }
-
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault()
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -55,145 +47,177 @@ export default function Navbar() {
         borderBottom: '1px solid rgba(226, 232, 240, 0.8)'
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
-              <a 
-                href="#" 
-                onClick={handleLogoClick}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo Section */}
+          <div className="flex items-center gap-6">
+            <a 
+              href="#" 
+              onClick={handleLogoClick}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                transition: 'all 0.3s ease',
+                textDecoration: 'none',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-1px)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+              }}
+            >
+              <div
                 style={{
-                  fontSize: '1.75rem',
-                  fontWeight: 800,
-                  color: 'var(--dark)',
-                  letterSpacing: '-0.03em',
+                  width: '44px',
+                  height: '44px',
+                  background: 'transparent',
+                  borderRadius: '10px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.875rem',
-                  transition: 'all 0.3s ease',
-                  textDecoration: 'none',
-                  fontFamily: "'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif",
-                  cursor: 'pointer'
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  transition: 'all 0.3s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-1px)'
+                  e.currentTarget.style.transform = 'scale(1.05)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.transform = 'scale(1)'
                 }}
               >
-                <div
+                <img 
+                  src="/logo.png" 
+                  alt="LLM Intercept Logo" 
                   style={{
-                    width: '60px',
-                    height: '60px',
-                    background: 'transparent',
-                    borderRadius: '10px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    transition: 'all 0.3s ease'
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    borderRadius: '8px'
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.05)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)'
+                />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.25rem' }}>
+                <span
+                  style={{
+                    fontSize: '1.5rem',
+                    background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, #60a5fa 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    fontWeight: 800,
+                    letterSpacing: '-0.02em',
+                    fontFamily: "'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif"
                   }}
                 >
-                  <img 
-                    src="/logo.png" 
-                    alt="LLM Intercept Logo" 
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain',
-                      borderRadius: '8px'
-                    }}
-                  />
-                </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.25rem' }}>
-                  <span
-                    style={{
-                      background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, #60a5fa 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                      fontWeight: 800,
-                      letterSpacing: '-0.02em',
-                      fontFamily: "'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif"
-                    }}
-                  >
-                    LLM
-                  </span>
-                  <span
-                    style={{
-                      color: 'var(--dark)',
-                      fontWeight: 700,
-                      letterSpacing: '-0.02em',
-                      fontFamily: "'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif"
-                    }}
-                  >
-                    Intercept
-                  </span>
-                </div>
-              </a>
-              {demoMode && (
-                <span 
-                  style={{
-                    marginLeft: '12px',
-                    padding: '4px 10px',
-                    borderRadius: '12px',
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    background: 'var(--gray-light)',
-                    color: 'var(--gray)',
-                    border: '1px solid var(--gray-border)'
-                  }}
-                >
-                  Demo Mode
+                  LLM
                 </span>
-              )}
-            </div>
-            <div className="hidden sm:ml-8 sm:flex sm:space-x-1">
-              <a
-                href="https://llmintercept.com"
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                style={{ marginLeft: '24px' }}
+                <span
+                  style={{
+                    fontSize: '1.5rem',
+                    color: 'var(--dark)',
+                    fontWeight: 700,
+                    letterSpacing: '-0.02em',
+                    fontFamily: "'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif"
+                  }}
+                >
+                  Intercept
+                </span>
+              </div>
+            </a>
+            
+            {/* Demo Mode Badge - Only show if active */}
+            {demoMode && (
+              <span 
+                style={{
+                  padding: '3px 8px',
+                  borderRadius: '6px',
+                  fontSize: '10px',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  background: 'var(--gray-light)',
+                  color: 'var(--gray)',
+                  border: '1px solid var(--gray-border)'
+                }}
               >
-                ← Back to Demo
-              </a>
-              <Link
-                to="/"
-                className={navLinkClass('/')}
-                style={{ marginLeft: '8px' }}
-              >
-                Dashboard
-              </Link>
-              <Link
-                to="/violations"
-                className={navLinkClass('/violations')}
-                style={{ marginLeft: '8px' }}
-              >
-                Violations
-              </Link>
-              <Link
-                to="/logs"
-                className={navLinkClass('/logs')}
-                style={{ marginLeft: '8px' }}
-              >
-                Logs
-              </Link>
-              <Link
-                to="/policies"
-                className={navLinkClass('/policies')}
-                style={{ marginLeft: '8px' }}
-              >
-                Policies
-              </Link>
-            </div>
+                Demo
+              </span>
+            )}
+          </div>
+
+          {/* Navigation Links */}
+          <div className="hidden md:flex items-center gap-1">
+            <Link
+              to="/"
+              className="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200"
+              style={{
+                color: isActive('/') ? 'var(--primary)' : 'var(--gray)',
+                borderBottom: isActive('/') ? '2px solid var(--primary)' : '2px solid transparent',
+                marginBottom: '-2px',
+                fontWeight: isActive('/') ? 600 : 500
+              }}
+            >
+              Dashboard
+            </Link>
+            <Link
+              to="/violations"
+              className="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200"
+              style={{
+                color: isActive('/violations') ? 'var(--primary)' : 'var(--gray)',
+                borderBottom: isActive('/violations') ? '2px solid var(--primary)' : '2px solid transparent',
+                marginBottom: '-2px',
+                fontWeight: isActive('/violations') ? 600 : 500
+              }}
+            >
+              Violations
+            </Link>
+            <Link
+              to="/logs"
+              className="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200"
+              style={{
+                color: isActive('/logs') ? 'var(--primary)' : 'var(--gray)',
+                borderBottom: isActive('/logs') ? '2px solid var(--primary)' : '2px solid transparent',
+                marginBottom: '-2px',
+                fontWeight: isActive('/logs') ? 600 : 500
+              }}
+            >
+              Logs
+            </Link>
+            <Link
+              to="/policies"
+              className="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200"
+              style={{
+                color: isActive('/policies') ? 'var(--primary)' : 'var(--gray)',
+                borderBottom: isActive('/policies') ? '2px solid var(--primary)' : '2px solid transparent',
+                marginBottom: '-2px',
+                fontWeight: isActive('/policies') ? 600 : 500
+              }}
+            >
+              Policies
+            </Link>
+          </div>
+
+          {/* Back to Demo Link - Subtle, Right Side */}
+          <div className="hidden lg:flex items-center">
+            <a
+              href="https://llmintercept.com"
+              className="inline-flex items-center px-3 py-2 text-xs font-medium transition-colors duration-200"
+              style={{
+                color: 'var(--gray)',
+                textDecoration: 'none'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--primary)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--gray)'
+              }}
+            >
+              ← Demo Site
+            </a>
           </div>
         </div>
       </div>
