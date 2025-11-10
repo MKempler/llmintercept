@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, asdict
 import json
+import os
 from sqlalchemy import create_engine, Column, String, Integer, DateTime, Text, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -46,11 +47,22 @@ class AuditLogger:
         if "sqlite" in self.database_url:
             # Use sync engine for schema creation
             sync_url = self.database_url.replace("+aiosqlite", "")
-            self.engine = create_engine(sync_url)
+            self.engine = create_engine(sync_url, pool_pre_ping=True)
             Base.metadata.create_all(self.engine)
             self.Session = sessionmaker(bind=self.engine)
         else:
-            self.engine = create_engine(self.database_url)
+            # PostgreSQL or other databases - use connection pooling
+            # Parse PostgreSQL URL and add connection pool settings
+            pool_size = int(os.getenv("DB_POOL_SIZE", "10"))
+            max_overflow = int(os.getenv("DB_MAX_OVERFLOW", "20"))
+            
+            self.engine = create_engine(
+                self.database_url,
+                pool_size=pool_size,
+                max_overflow=max_overflow,
+                pool_pre_ping=True,  # Verify connections before using
+                pool_recycle=3600,  # Recycle connections after 1 hour
+            )
             Base.metadata.create_all(self.engine)
             self.Session = sessionmaker(bind=self.engine)
     
