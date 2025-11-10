@@ -9,6 +9,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LKJ51BJ5DG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-LKJ51BJ5DG');
+        
+        // Helper function to track events
+        function trackEvent(eventName, eventParams) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', eventName, eventParams || {});
+            }
+        }
+    </script>
+    
     <style>
         :root {
             --primary: #2563eb;
@@ -999,7 +1016,7 @@
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
                 <li><a href="#interactive-demo">Demo</a></li>
-                <li><a href="https://dashboard.llmintercept.com" target="_blank" style="position: relative;">Dashboard <span style="font-size: 0.7em; margin-left: 4px; opacity: 0.6;">↗</span></a></li>
+                <li><a href="https://dashboard.llmintercept.com" target="_blank" style="position: relative;" onclick="trackEvent('click_view_dashboard', { location: 'nav_desktop' });">Dashboard <span style="font-size: 0.7em; margin-left: 4px; opacity: 0.6;">↗</span></a></li>
                 <li><a href="#use-cases">Use Cases</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -1009,14 +1026,14 @@
                     <span></span>
                     <span></span>
                 </button>
-                <a href="#contact" class="cta-button">Request Demo</a>
+                <a href="#contact" class="cta-button" onclick="trackEvent('click_request_demo', { location: 'header' });">Request Demo</a>
             </div>
         </nav>
         <div class="mobile-menu" id="mobileMenu">
             <ul>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#interactive-demo">Demo</a></li>
-                <li><a href="https://dashboard.llmintercept.com" target="_blank">Dashboard ↗</a></li>
+                <li><a href="https://dashboard.llmintercept.com" target="_blank" onclick="trackEvent('click_view_dashboard', { location: 'nav_mobile' });">Dashboard ↗</a></li>
                 <li><a href="#use-cases">Use Cases</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -1047,9 +1064,9 @@
                     </ul>
                 </div>
                 <div class="hero-buttons">
-                    <a href="#contact" class="btn btn-primary">Request Enterprise Demo</a>
-                    <a href="#interactive-demo" class="btn btn-secondary">Try Interactive Demo</a>
-                    <a href="https://dashboard.llmintercept.com" target="_blank" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'hero' });">Request Enterprise Demo</a>
+                    <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'hero' });">Try Interactive Demo</a>
+                    <a href="https://dashboard.llmintercept.com" target="_blank" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem;" onclick="trackEvent('click_view_dashboard', { location: 'hero' });">
                         <span>View Dashboard</span>
                         <span style="font-size: 0.9em; opacity: 0.7;">↗</span>
                     </a>
@@ -1086,7 +1103,7 @@
                     <div class="step-number">4</div>
                     <h3>Unified Visibility</h3>
                     <p>Security teams get a single dashboard for all LLM usage: violations, users, apps, models.</p>
-                    <a href="https://dashboard.llmintercept.com" target="_blank" style="display: inline-flex; align-items: center; margin-top: 1rem; color: var(--primary); font-weight: 600; font-size: 0.9375rem; text-decoration: none; transition: all 0.2s;">
+                        <a href="https://dashboard.llmintercept.com" target="_blank" style="display: inline-flex; align-items: center; margin-top: 1rem; color: var(--primary); font-weight: 600; font-size: 0.9375rem; text-decoration: none; transition: all 0.2s;" onclick="trackEvent('click_view_dashboard', { location: 'how_it_works' });">
                         View Dashboard <span style="margin-left: 4px;">→</span>
                     </a>
                 </div>
@@ -1108,7 +1125,7 @@
                             See real-time statistics, detailed violation reports, comprehensive audit logs, and powerful policy management tools.<br>
                             Everything you need to monitor and secure your organization's LLM usage.
                         </p>
-                        <a href="https://dashboard.llmintercept.com" target="_blank" class="btn" style="display: inline-flex; background: var(--white); color: var(--primary); font-weight: 600; padding: 0.875rem 2rem; font-size: 1.0625rem; box-shadow: var(--shadow-md);">
+                        <a href="https://dashboard.llmintercept.com" target="_blank" class="btn" style="display: inline-flex; background: var(--white); color: var(--primary); font-weight: 600; padding: 0.875rem 2rem; font-size: 1.0625rem; box-shadow: var(--shadow-md);" onclick="trackEvent('click_view_dashboard', { location: 'dashboard_preview' });">
                             <span>View Full Dashboard</span>
                             <span style="margin-left: 8px;">→</span>
                         </a>
@@ -1533,8 +1550,8 @@ response = client.chat.completions.create(...)
             <h2>Ready to Secure Your AI Infrastructure?</h2>
             <p>Get complete protection for both internal apps and employees using ChatGPT/Claude/Gemini - via one SDK and one managed browser extension.</p>
             <div class="hero-buttons">
-                <a href="#contact" class="btn btn-primary">Request Enterprise Demo</a>
-                <a href="#interactive-demo" class="btn btn-secondary">Try Interactive Demo</a>
+                <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'cta_section' });">Request Enterprise Demo</a>
+                <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'cta_section' });">Try Interactive Demo</a>
             </div>
         </div>
     </section>
@@ -1713,6 +1730,7 @@ response = client.chat.completions.create(...)
         window.showDemoStep = function(step) {
             console.log('showDemoStep called with step:', step);
             currentStep = step;
+            trackEvent('demo_step_change', { step: step });
             const stepData = demoSteps[step];
             
             if (!stepData) {
@@ -1778,6 +1796,7 @@ response = client.chat.completions.create(...)
                 const testCustomBtn = document.getElementById('testCustomBtn');
                 if (testCustomBtn) {
                     testCustomBtn.addEventListener('click', () => {
+                        trackEvent('demo_test_prompt', { step: step });
                         window.runCustomPrompt(step);
                     });
                 }
@@ -1786,6 +1805,7 @@ response = client.chat.completions.create(...)
                 const loadExampleBtn = document.getElementById('loadExampleBtn');
                 if (loadExampleBtn) {
                     loadExampleBtn.addEventListener('click', () => {
+                        trackEvent('demo_load_example', { step: step });
                         const textarea = document.getElementById('demoPromptInput');
                         if (textarea) {
                             textarea.value = stepData.example;
@@ -2167,6 +2187,12 @@ response = client.chat.completions.create(...)
                 });
                 
                 if (response.ok) {
+                    // Track form submission
+                    trackEvent('submit_contact_form', {
+                        form_name: 'demo_request',
+                        company: formData.get('company') || 'unknown'
+                    });
+                    
                     // Show success message
                     messageDiv.style.display = 'block';
                     messageDiv.className = 'demo-result success show';
