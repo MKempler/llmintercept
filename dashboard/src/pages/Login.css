@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
   padding: 24px;
 }
 
@@ -46,7 +46,7 @@
 
 .login-logo-primary {
   font-size: 28px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #60a5fa 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -116,8 +116,8 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .form-group input::placeholder {
@@ -135,7 +135,7 @@
 .login-button {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -145,12 +145,12 @@
   cursor: pointer;
   transition: all 0.2s;
   margin-top: 8px;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 .login-button:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
 }
 
 .login-button:active:not(:disabled) {
@@ -170,7 +170,7 @@
 
 .forgot-password-link {
   display: block;
-  color: #667eea;
+  color: #2563eb;
   text-decoration: none;
   font-size: 14px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -181,7 +181,7 @@
 
 .forgot-password-link:hover {
   text-decoration: underline;
-  color: #5568d3;
+  color: #1d4ed8;
 }
 
 .contact-support {
@@ -192,7 +192,7 @@
 }
 
 .contact-support a {
-  color: #667eea;
+  color: #2563eb;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s;
@@ -200,7 +200,7 @@
 
 .contact-support a:hover {
   text-decoration: underline;
-  color: #5568d3;
+  color: #1d4ed8;
 }
 
 .success-message {
