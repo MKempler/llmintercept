@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { getApiUrl } from '../utils/api'
+import { getUser, clearAuth } from '../utils/auth'
+import type { User } from '../utils/auth'
 
 const API_URL = getApiUrl()
 
 export default function Navbar() {
   const location = useLocation()
+  const navigate = useNavigate()
   const [scrolled, setScrolled] = useState(false)
   const [demoMode, setDemoMode] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+  const [showUserMenu, setShowUserMenu] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,7 +28,15 @@ export default function Navbar() {
       .then(res => res.json())
       .then(data => setDemoMode(data.demo_mode || false))
       .catch(() => setDemoMode(false))
+    
+    // Get current user
+    setUser(getUser())
   }, [])
+
+  const handleLogout = () => {
+    clearAuth()
+    navigate('/login')
+  }
 
   const isActive = (path: string) => {
     if (path === '/' && location.pathname === '/') return true
@@ -224,28 +237,166 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Back to Demo Link - Subtle, Right Side */}
-          <div className="hidden lg:flex items-center flex-shrink-0">
-            <a
-              href="https://llmintercept.com"
-              className="inline-flex items-center px-3 py-2 text-xs font-medium transition-colors duration-200"
-              style={{
-                color: 'var(--gray)',
-                textDecoration: 'none'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'var(--primary)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'var(--gray)'
-              }}
-            >
-              ← Demo Site
-            </a>
+          {/* User Menu - Right Side */}
+          <div className="flex items-center gap-4 flex-shrink-0">
+            {user && (
+              <div style={{ position: 'relative' }}>
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--gray-border)',
+                    background: 'white',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--primary)'
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--gray-border)'
+                    e.currentTarget.style.boxShadow = 'none'
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'white',
+                      fontWeight: 600,
+                      fontSize: '14px'
+                    }}
+                  >
+                    {user.email.charAt(0).toUpperCase()}
+                  </div>
+                  <span style={{ fontSize: '14px', color: 'var(--dark)', fontWeight: 500 }}>
+                    {user.email}
+                  </span>
+                </button>
+                
+                {showUserMenu && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      right: 0,
+                      marginTop: '8px',
+                      background: 'white',
+                      border: '1px solid var(--gray-border)',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                      minWidth: '200px',
+                      zIndex: 1000
+                    }}
+                  >
+                    <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--gray-border)' }}>
+                      <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--dark)' }}>
+                        {user.email}
+                      </div>
+                      {user.company && (
+                        <div style={{ fontSize: '12px', color: 'var(--gray)', marginTop: '4px' }}>
+                          {user.company}
+                        </div>
+                      )}
+                    </div>
+                    <div style={{ padding: '8px' }}>
+                      <a
+                        href="mailto:support@aifirewall.com"
+                        style={{
+                          display: 'block',
+                          padding: '8px 12px',
+                          borderRadius: '6px',
+                          fontSize: '14px',
+                          color: 'var(--dark)',
+                          textDecoration: 'none',
+                          transition: 'background 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'var(--gray-light)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'transparent'
+                        }}
+                      >
+                        Contact Support
+                      </a>
+                      <button
+                        onClick={handleLogout}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          padding: '8px 12px',
+                          borderRadius: '6px',
+                          fontSize: '14px',
+                          color: '#c53030',
+                          background: 'transparent',
+                          border: 'none',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          marginTop: '4px'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = '#fed7d7'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'transparent'
+                        }}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {/* Back to Demo Link */}
+            <div className="hidden lg:flex items-center">
+              <a
+                href="https://llmintercept.com"
+                className="inline-flex items-center px-3 py-2 text-xs font-medium transition-colors duration-200"
+                style={{
+                  color: 'var(--gray)',
+                  textDecoration: 'none'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--primary)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--gray)'
+                }}
+              >
+                ← Demo Site
+              </a>
+            </div>
           </div>
         </div>
       </div>
+      
+      {/* Click outside to close menu */}
+      {showUserMenu && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 999
+          }}
+          onClick={() => setShowUserMenu(false)}
+        />
+      )}
     </nav>
   )
 }
-

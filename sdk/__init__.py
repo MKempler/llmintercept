@@ -1,4 +1,4 @@
-"""Python SDK for AI Prompt Firewall."""
+"""Python SDK for AI Prompt Firewall - Client implementations."""
 import os
 from typing import Optional, Dict, Any, List
 from openai import OpenAI as OpenAIClient
@@ -239,4 +239,8 @@ class Google:
 
 # For backward compatibility
 Client = OpenAI
+
+# Export all classes
+__all__ = ["OpenAI", "Anthropic", "Google", "Client"]
+__version__ = "1.0.0"
 

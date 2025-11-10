@@ -44,6 +44,11 @@ function updateToggleState(enabled) {
 async function saveGatewayUrl() {
   const url = document.getElementById('gateway-url').value.trim();
   const errorDiv = document.getElementById('gateway-error');
+  const successDiv = document.getElementById('gateway-success');
+  
+  // Hide previous messages
+  errorDiv.style.display = 'none';
+  successDiv.style.display = 'none';
   
   // Validate URL
   if (!url) {
@@ -66,6 +71,74 @@ async function saveGatewayUrl() {
   } catch (e) {
     errorDiv.textContent = 'Invalid URL format';
     errorDiv.style.display = 'block';
+  }
+}
+
+// Test gateway connection
+async function testConnection() {
+  const url = document.getElementById('gateway-url').value.trim();
+  const errorDiv = document.getElementById('gateway-error');
+  const successDiv = document.getElementById('gateway-success');
+  const testButton = document.getElementById('test-connection');
+  
+  // Hide previous messages
+  errorDiv.style.display = 'none';
+  successDiv.style.display = 'none';
+  
+  // Validate URL format first
+  if (!url) {
+    errorDiv.textContent = 'Please enter a gateway URL';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  try {
+    new URL(url);
+  } catch (e) {
+    errorDiv.textContent = 'Invalid URL format';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  // Disable button during test
+  testButton.disabled = true;
+  testButton.textContent = 'Testing...';
+  
+  try {
+    // Test health endpoint
+    const healthUrl = url.endsWith('/') ? `${url}health` : `${url}/health`;
+    const response = await fetch(healthUrl, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      signal: AbortSignal.timeout(5000) // 5 second timeout
+    });
+    
+    if (response.ok) {
+      // Connection successful
+      successDiv.style.display = 'block';
+      errorDiv.style.display = 'none';
+      
+      // Save the URL if test succeeds
+      await chrome.storage.local.set({ [GATEWAY_URL_KEY]: url });
+      
+      // Show success feedback on input
+      const input = document.getElementById('gateway-url');
+      input.style.borderColor = '#10b981';
+      setTimeout(() => {
+        input.style.borderColor = '#d1d5db';
+      }, 2000);
+    } else {
+      throw new Error(`Gateway returned status ${response.status}`);
+    }
+  } catch (e) {
+    // Connection failed
+    errorDiv.textContent = `Connection failed: ${e.message}. Make sure the gateway is running and accessible.`;
+    errorDiv.style.display = 'block';
+    successDiv.style.display = 'none';
+  } finally {
+    // Re-enable button
+    testButton.disabled = false;
+    testButton.textContent = 'Test';
   }
 }
 
@@ -111,6 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
       saveGatewayUrl();
     }
   });
+  
+  // Test connection button
+  document.getElementById('test-connection').addEventListener('click', testConnection);
   
   // Toggle enabled
   document.getElementById('toggle-enabled').addEventListener('click', toggleEnabled);

@@ -100,6 +100,13 @@ detection_engine = DetectionEngine(custom_pattern_manager=custom_pattern_manager
 policy_engine = PolicyEngine()
 audit_logger = AuditLogger(database_url=database_url)
 
+# Initialize user service (for authentication)
+from users.service import UserService
+from audit_logging import Base
+# Ensure user tables are created
+Base.metadata.create_all(audit_logger.engine)
+# UserService will be initialized per-request (needs session)
+
 # LLM API base URLs
 OPENAI_API_BASE = os.getenv("OPENAI_API_BASE", "https://api.openai.com/v1")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -735,6 +742,369 @@ async def get_webhooks():
     webhooks = webhook_manager.get_webhooks()
     response = JSONResponse(content={"webhooks": webhooks})
     return add_cors_headers(response)
+
+
+# Authentication Endpoints
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class LoginResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    user: Dict[str, Any]
+
+
+@app.post("/api/auth/login")
+async def login(request: LoginRequest):
+    """User login endpoint."""
+    from users.service import UserService
+    from users.jwt_utils import jwt_manager
+    
+    session = audit_logger.Session()
+    try:
+        user_service = UserService(session)
+        user = user_service.authenticate_user(request.email, request.password)
+        
+        if not user:
+            raise HTTPException(
+                status_code=401,
+                detail={
+                    "error": {
+                        "message": "Invalid email or password",
+                        "type": "authentication_error",
+                        "code": "invalid_credentials"
+                    }
+                }
+            )
+        
+        # Generate tokens
+        access_token = jwt_manager.generate_access_token(user.id, user.email)
+        refresh_token = jwt_manager.generate_refresh_token(user.id)
+        
+        response = JSONResponse(content={
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "user": user.to_dict(include_sensitive=False)
+        })
+        return add_cors_headers(response)
+    finally:
+        session.close()
+
+
+@app.post("/api/auth/logout")
+async def logout(req: Request):
+    """User logout endpoint (client-side token removal)."""
+    # For JWT, logout is handled client-side by removing token
+    response = JSONResponse(content={"message": "Logged out successfully"})
+    return add_cors_headers(response)
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: str
+
+
+@app.post("/api/auth/forgot-password")
+async def forgot_password(request: ForgotPasswordRequest):
+    """Request password reset."""
+    from users.service import UserService
+    import os
+    
+    session = audit_logger.Session()
+    try:
+        user_service = UserService(session)
+        token = user_service.create_password_reset_token(request.email)
+        
+        # If token was created, user exists - send email
+        if token:
+            # Get reset URL from environment or use default
+            reset_url_base = os.getenv("RESET_PASSWORD_URL", "https://your-dashboard.vercel.app/reset-password")
+            reset_url = f"{reset_url_base}?token={token}"
+            
+            # Try to send email if SMTP is configured
+            email_sent = False
+            smtp_host = os.getenv("SMTP_HOST")
+            smtp_port = os.getenv("SMTP_PORT")
+            smtp_user = os.getenv("SMTP_USER")
+            smtp_password = os.getenv("SMTP_PASSWORD")
+            smtp_from = os.getenv("SMTP_FROM", "noreply@aifirewall.com")
+            
+            if smtp_host and smtp_user and smtp_password:
+                try:
+                    import smtplib
+                    from email.mime.text import MIMEText
+                    from email.mime.multipart import MIMEMultipart
+                    
+                    msg = MIMEMultipart()
+                    msg['From'] = smtp_from
+                    msg['To'] = request.email
+                    msg['Subject'] = "Password Reset - AI Prompt Firewall"
+                    
+                    body = f"""Hello,
+
+You requested a password reset for your AI Prompt Firewall account.
+
+Click the link below to reset your password:
+{reset_url}
+
+This link will expire in 1 hour.
+
+If you didn't request this reset, please ignore this email.
+
+Best regards,
+AI Prompt Firewall Team
+"""
+                    msg.attach(MIMEText(body, 'plain'))
+                    
+                    port = int(smtp_port) if smtp_port else 587
+                    server = smtplib.SMTP(smtp_host, port)
+                    server.starttls()
+                    server.login(smtp_user, smtp_password)
+                    server.send_message(msg)
+                    server.quit()
+                    
+                    email_sent = True
+                except Exception as e:
+                    # Log error but don't fail the request
+                    print(f"Failed to send password reset email: {e}")
+            
+            # Response (same regardless of email sent for security)
+            response = JSONResponse(content={
+                "message": "If an account exists with this email, a password reset link has been sent."
+            })
+        else:
+            # User doesn't exist - don't reveal this (security best practice)
+            response = JSONResponse(content={
+                "message": "If an account exists with this email, a password reset link has been sent."
+            })
+        
+        return add_cors_headers(response)
+    finally:
+        session.close()
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+
+
+@app.post("/api/auth/reset-password")
+async def reset_password(request: ResetPasswordRequest):
+    """Reset password with token."""
+    from users.service import UserService
+    
+    session = audit_logger.Session()
+    try:
+        user_service = UserService(session)
+        success = user_service.use_reset_token(request.token, request.new_password)
+        
+        if not success:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": {
+                        "message": "Invalid or expired reset token",
+                        "type": "validation_error",
+                        "code": "invalid_token"
+                    }
+                }
+            )
+        
+        response = JSONResponse(content={"message": "Password reset successfully"})
+        return add_cors_headers(response)
+    finally:
+        session.close()
+
+
+@app.get("/api/auth/me")
+async def get_current_user(authorization: Optional[str] = Header(None)):
+    """Get current user info from JWT token."""
+    from users.service import UserService
+    from users.jwt_utils import jwt_manager
+    
+    if not authorization:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": {
+                    "message": "Authentication required",
+                    "type": "authentication_error",
+                    "code": "missing_token"
+                }
+            }
+        )
+    
+    # Extract token
+    token = authorization.replace("Bearer ", "").strip()
+    user_info = jwt_manager.get_user_from_token(token)
+    
+    if not user_info:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": {
+                    "message": "Invalid or expired token",
+                    "type": "authentication_error",
+                    "code": "invalid_token"
+                }
+            }
+        )
+    
+    session = audit_logger.Session()
+    try:
+        user_service = UserService(session)
+        user = user_service.get_user_by_id(user_info["user_id"])
+        
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        response = JSONResponse(content={"user": user.to_dict(include_sensitive=False)})
+        return add_cors_headers(response)
+    finally:
+        session.close()
+
+
+# Admin Endpoints (for manual account creation)
+class CreateUserRequest(BaseModel):
+    email: str
+    password: str
+    company: Optional[str] = None
+
+
+@app.post("/api/admin/users")
+async def create_user(request: CreateUserRequest, req: Request):
+    """Create a new user account (admin only)."""
+    from users.service import UserService
+    
+    # Check admin authentication (using FIREWALL_API_KEY)
+    api_key = auth_handler.extract_api_key(req)
+    if not auth_handler.verify_api_key(api_key):
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": {
+                    "message": "Admin authentication required",
+                    "type": "authentication_error",
+                    "code": "admin_required"
+                }
+            }
+        )
+    
+    session = audit_logger.Session()
+    try:
+        user_service = UserService(session)
+        user = user_service.create_user(
+            email=request.email,
+            password=request.password,
+            company=request.company,
+            generate_api_key=True
+        )
+        
+        response = JSONResponse(
+            status_code=201,
+            content={
+                "user": user.to_dict(include_sensitive=False),
+                "api_key": user.api_key,  # Include API key in response for admin
+                "message": "User created successfully"
+            }
+        )
+        return add_cors_headers(response)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        session.close()
+
+
+@app.get("/api/admin/users")
+async def list_users(req: Request, limit: int = 100, offset: int = 0):
+    """List all users (admin only)."""
+    from users.service import UserService
+    
+    # Check admin authentication
+    api_key = auth_handler.extract_api_key(req)
+    if not auth_handler.verify_api_key(api_key):
+        raise HTTPException(status_code=401, detail="Admin authentication required")
+    
+    session = audit_logger.Session()
+    try:
+        user_service = UserService(session)
+        users = user_service.list_users(limit=limit, offset=offset)
+        
+        response = JSONResponse(content={
+            "users": [user.to_dict(include_sensitive=False) for user in users],
+            "total": len(users)
+        })
+        return add_cors_headers(response)
+    finally:
+        session.close()
+
+
+class ResetPasswordAdminRequest(BaseModel):
+    new_password: Optional[str] = None
+
+
+@app.post("/api/admin/users/{user_id}/reset-password")
+async def admin_reset_password(user_id: str, request: ResetPasswordAdminRequest, req: Request):
+    """Reset user password (admin only)."""
+    from users.service import UserService
+    import secrets
+    import string
+    
+    # Check admin authentication
+    api_key = auth_handler.extract_api_key(req)
+    if not auth_handler.verify_api_key(api_key):
+        raise HTTPException(status_code=401, detail="Admin authentication required")
+    
+    session = audit_logger.Session()
+    try:
+        user_service = UserService(session)
+        
+        # Generate password if not provided
+        if not request.new_password:
+            # Generate secure random password
+            alphabet = string.ascii_letters + string.digits + "!@#$%^&*"
+            password = ''.join(secrets.choice(alphabet) for i in range(16))
+        else:
+            password = request.new_password
+        
+        user_service.reset_password(user_id, password)
+        
+        response = JSONResponse(content={
+            "message": "Password reset successfully",
+            "new_password": password if not request.new_password else None
+        })
+        return add_cors_headers(response)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    finally:
+        session.close()
+
+
+@app.post("/api/admin/users/{user_id}/api-key")
+async def regenerate_api_key(user_id: str, req: Request):
+    """Regenerate API key for user (admin only)."""
+    from users.service import UserService
+    
+    # Check admin authentication
+    api_key = auth_handler.extract_api_key(req)
+    if not auth_handler.verify_api_key(api_key):
+        raise HTTPException(status_code=401, detail="Admin authentication required")
+    
+    session = audit_logger.Session()
+    try:
+        user_service = UserService(session)
+        new_key = user_service.regenerate_api_key(user_id)
+        
+        response = JSONResponse(content={
+            "api_key": new_key,
+            "message": "API key regenerated successfully"
+        })
+        return add_cors_headers(response)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    finally:
+        session.close()
 
 
 @app.post("/v1/chat/completions")

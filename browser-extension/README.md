@@ -1,107 +1,70 @@
-# AI Prompt Firewall Browser Extension
+# AI Prompt Firewall - Browser Extension
 
-A Chrome/Firefox extension that protects employees from accidentally leaking sensitive data when using LLM web interfaces like ChatGPT, Claude, and Gemini.
+Browser extension that automatically protects employees from leaking secrets, PII, and prompt injection attacks when using ChatGPT, Claude, Gemini, and other LLM services.
 
 ## Features
 
-- 🛡️ **Automatic Protection** - Intercepts LLM API requests before they reach providers
-- 🔒 **Multi-LLM Support** - Works with ChatGPT, Claude, and Gemini
-- 🚫 **Real-time Blocking** - Blocks dangerous requests with clear violation details
+- 🛡️ **Automatic Protection** - Intercepts requests before they reach LLM APIs
+- 🔒 **Blocks Secrets** - Prevents API keys, passwords, tokens from being sent
+- 👤 **PII Protection** - Detects and blocks SSN, emails, credit cards, phone numbers
+- 🚫 **Prompt Injection Defense** - Catches jailbreak attempts and injection attacks
 - 📊 **Statistics Tracking** - Tracks blocked/allowed requests
-- ⚙️ **Easy Configuration** - Simple popup UI for gateway URL and settings
+- ⚙️ **Easy Configuration** - Simple gateway URL setup with connection testing
+
+## Supported Services
+
+- ✅ OpenAI ChatGPT (chat.openai.com)
+- ✅ Anthropic Claude (claude.ai)
+- ✅ Google Gemini/Bard (bard.google.com, gemini.google.com)
 
 ## Installation
 
-### Development Installation
+See [INSTALLATION.md](./INSTALLATION.md) for detailed installation instructions.
 
-1. Clone this repository
-2. Open Chrome/Edge and navigate to `chrome://extensions/`
-3. Enable "Developer mode" (toggle in top right)
-4. Click "Load unpacked"
-5. Select the `browser-extension` directory
-6. The extension icon should appear in your toolbar
-
-### Production Installation
-
-1. Install from Chrome Web Store (coming soon)
-2. Or download `.crx` file for enterprise distribution
+**Quick Install:**
+1. Download `aifirewall-extension-v1.0.0.zip`
+2. Extract the zip file
+3. Open Chrome → `chrome://extensions/`
+4. Enable "Developer mode"
+5. Click "Load unpacked"
+6. Select the extracted folder
 
 ## Configuration
 
-1. Click the extension icon in your browser toolbar
-2. Set your Gateway URL (default: `http://localhost:8000`)
-3. Toggle "Enable Firewall" on/off
-4. View statistics (blocked/allowed/errors)
+1. Click the extension icon in Chrome toolbar
+2. Enter your gateway URL (e.g., `https://your-gateway.railway.app`)
+3. Click "Test" to verify connection
+4. Toggle "Enable Firewall" to activate
 
 ## How It Works
 
-```
-Employee uses chat.openai.com
-    ↓
-Extension intercepts API request
-    ↓
-Routes through YOUR gateway
-    ↓
-Gateway scans for secrets/PII/injection
-    ↓
-If blocked: Shows error UI, cancels request
-If safe: Allows request to proceed
-```
+1. Extension intercepts LLM API requests from your browser
+2. Sends requests to your AI Prompt Firewall gateway
+3. Gateway scans for security violations
+4. If violations found, request is blocked and user sees blocking message
+5. If safe, request proceeds normally
 
-## Architecture
+## Requirements
 
-- **background.js** - Service worker that intercepts LLM API requests using `webRequest` API
-- **content.js** - Content script that injects blocking UI and provides fetch/XHR fallback
-- **popup.html/js** - Extension popup UI for configuration and statistics
-- **manifest.json** - Extension configuration and permissions
+- Google Chrome (version 88+)
+- AI Prompt Firewall gateway deployed and accessible
+- Gateway URL configured in extension
 
-## Supported LLM Providers
+## Documentation
 
-- ✅ **OpenAI (ChatGPT)** - `api.openai.com/v1/chat/completions`
-- ✅ **Anthropic (Claude)** - `api.anthropic.com/v1/messages`
-- ✅ **Google (Gemini)** - `generativelanguage.googleapis.com/v1beta/models/*:generateContent`
+- [Installation Guide](./INSTALLATION.md) - Step-by-step installation
+- [Troubleshooting](./TROUBLESHOOTING.md) - Common issues and solutions
+- [Changelog](./CHANGELOG.md) - Version history
 
-## Gateway Integration
+## Support
 
-The extension routes requests through your AI Prompt Firewall gateway:
+For issues or questions:
+- Check [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
+- Review gateway logs
+- Contact support: [your-support-email]
 
-- **OpenAI**: `{gateway_url}/v1/chat/completions`
-- **Anthropic**: `{gateway_url}/v1/anthropic/messages`
-- **Google**: `{gateway_url}/v1/google/models/{model}:generateContent`
+## Version
 
-## Error Handling
+Current version: **1.0.0**
 
-- **Gateway Unavailable**: Fails open (allows requests) to prevent breaking user experience
-- **Network Errors**: Logs error, allows request to proceed
-- **Invalid Responses**: Fails open with error logging
-
-## Limitations
-
-- **Streaming Responses**: Currently allows original request for streaming (future: proper streaming proxy)
-- **webRequest Limitations**: Some edge cases may fall back to content script fetch wrapping
-- **CORS**: Gateway must allow extension origins (already configured)
-
-## Development
-
-### Testing
-
-1. Start the gateway: `python -m gateway.server`
-2. Load extension in developer mode
-3. Visit `chat.openai.com` and try sending a request with a secret
-4. Should see blocking UI if secret detected
-
-### Building
-
-No build step required - extension uses vanilla JavaScript. Just load the `browser-extension` directory.
-
-## Privacy
-
-- Extension only intercepts LLM API requests
-- All scanning happens on YOUR gateway (not sent to third parties)
-- No data stored except statistics (blocked/allowed counts)
-- Gateway URL configurable (can use your own infrastructure)
-
-## License
-
-Same as main AI Prompt Firewall project.
-
+See [CHANGELOG.md](./CHANGELOG.md) for version history.

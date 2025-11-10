@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getToken, clearAuth } from './auth'
 
 // Utility to get API URL with proper protocol
 export function getApiUrl(): string {
@@ -20,27 +21,17 @@ export function getApiUrl(): string {
   return `https://${envUrl}`
 }
 
-// Get API key from environment variable
-function getApiKey(): string {
-  return (import.meta as any).env?.VITE_FIREWALL_API_KEY || ''
-}
-
-// Create axios instance with authentication headers
+// Create axios instance
 export const apiClient = axios.create({
-  headers: {
-    'Authorization': `Bearer ${getApiKey()}`
-  }
+  baseURL: getApiUrl()
 })
 
-// Set base URL for all requests
-apiClient.defaults.baseURL = getApiUrl()
-
-// Add request interceptor to ensure API key is always included
+// Add request interceptor to include JWT token
 apiClient.interceptors.request.use((config) => {
-  const apiKey = getApiKey()
-  if (apiKey) {
+  const token = getToken()
+  if (token) {
     config.headers = config.headers || {}
-    config.headers['Authorization'] = `Bearer ${apiKey}`
+    config.headers['Authorization'] = `Bearer ${token}`
   }
   return config
 })
@@ -50,8 +41,12 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.error('Authentication failed. Please check your API key.')
-      // Could redirect to login or show error message
+      // Token expired or invalid - clear auth and redirect to login
+      clearAuth()
+      // Only redirect if we're not already on login page
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   }

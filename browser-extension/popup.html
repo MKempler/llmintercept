@@ -257,8 +257,12 @@
     
     <div class="input-group">
       <label for="gateway-url">Gateway URL</label>
-      <input type="url" id="gateway-url" placeholder="http://localhost:8000" />
+      <div style="display: flex; gap: 8px;">
+        <input type="url" id="gateway-url" placeholder="http://localhost:8000" style="flex: 1;" />
+        <button id="test-connection" class="button" style="width: auto; padding: 8px 12px; margin: 0; white-space: nowrap;">Test</button>
+      </div>
       <div id="gateway-error" class="error" style="display: none;"></div>
+      <div id="gateway-success" style="color: #10b981; font-size: 12px; margin-top: 4px; display: none;">✓ Connection successful</div>
     </div>
     
     <div class="toggle" id="toggle-enabled">
