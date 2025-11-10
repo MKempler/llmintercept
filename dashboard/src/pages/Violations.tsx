@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import Table from '../components/Table'
 import Badge from '../components/Badge'
 import LoadingSpinner from '../components/LoadingSpinner'
-import { getApiUrl } from '../utils/api'
-
-const API_URL = getApiUrl()
+import { apiClient } from '../utils/api'
 
 function Violations() {
   const [violations, setViolations] = useState<any[]>([])
@@ -19,7 +16,7 @@ function Violations() {
 
   const fetchViolations = async () => {
     try {
-      const res = await axios.get(`${API_URL}/api/violations`)
+      const res = await apiClient.get('/api/violations')
       setViolations(res.data.violations || [])
       setLoading(false)
     } catch (error) {
@@ -36,6 +33,16 @@ function Violations() {
       injection: '⚠️'
     }
     return icons[type.toLowerCase()] || '🚨'
+  }
+
+  const getConfidenceBadge = (confidence: number) => {
+    if (confidence >= 0.8) {
+      return <Badge variant="high" style={{ backgroundColor: '#10b981', color: 'white' }}>{Math.round(confidence * 100)}%</Badge>
+    } else if (confidence >= 0.6) {
+      return <Badge variant="medium" style={{ backgroundColor: '#f59e0b', color: 'white' }}>{Math.round(confidence * 100)}%</Badge>
+    } else {
+      return <Badge variant="low" style={{ backgroundColor: '#ef4444', color: 'white' }}>{Math.round(confidence * 100)}%</Badge>
+    }
   }
 
   const columns = [
@@ -82,6 +89,15 @@ function Violations() {
         const severity = value[0].severity || 'medium'
         const variant = severity === 'high' ? 'high' : severity === 'medium' ? 'medium' : 'low'
         return <Badge variant={variant}>{severity}</Badge>
+      }
+    },
+    {
+      key: 'violations',
+      label: 'Confidence',
+      render: (value: any[]) => {
+        if (!value || value.length === 0) return '-'
+        const confidence = value[0].confidence ?? 0.8
+        return getConfidenceBadge(confidence)
       }
     }
   ]

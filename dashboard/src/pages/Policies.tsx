@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import Badge from '../components/Badge'
 import LoadingSpinner from '../components/LoadingSpinner'
 import StatCard from '../components/StatCard'
 import Table from '../components/Table'
 import PolicyModal from '../components/PolicyModal'
-import { getApiUrl } from '../utils/api'
+import { apiClient } from '../utils/api'
 import { 
   FiShield, 
   FiScissors, 
@@ -14,10 +13,9 @@ import {
   FiEdit2,
   FiTrash2,
   FiPlus,
-  FiTrendingUp
+  FiTrendingUp,
+  FiClock
 } from 'react-icons/fi'
-
-const API_URL = getApiUrl()
 
 function Policies() {
   const [policies, setPolicies] = useState<any[]>([])
@@ -25,6 +23,10 @@ function Policies() {
   const [modalOpen, setModalOpen] = useState(false)
   const [editingPolicy, setEditingPolicy] = useState<any | null>(null)
   const [deletingPolicyId, setDeletingPolicyId] = useState<string | null>(null)
+  const [historyModalOpen, setHistoryModalOpen] = useState(false)
+  const [selectedPolicyId, setSelectedPolicyId] = useState<string | null>(null)
+  const [policyHistory, setPolicyHistory] = useState<any[]>([])
+  const [loadingHistory, setLoadingHistory] = useState(false)
 
   useEffect(() => {
     fetchPolicies()
@@ -32,7 +34,7 @@ function Policies() {
 
   const fetchPolicies = async () => {
     try {
-      const res = await axios.get(`${API_URL}/api/policies`)
+      const res = await apiClient.get('/api/policies')
       setPolicies(res.data.policies || [])
       setLoading(false)
     } catch (error) {
@@ -55,10 +57,10 @@ function Policies() {
     try {
       if (policyData.id) {
         // Update existing policy
-        await axios.put(`${API_URL}/api/policies/${policyData.id}`, policyData)
+        await apiClient.put(`/api/policies/${policyData.id}`, policyData)
       } else {
         // Create new policy
-        await axios.post(`${API_URL}/api/policies`, policyData)
+        await apiClient.post('/api/policies', policyData)
       }
       await fetchPolicies()
     } catch (error: any) {
@@ -73,7 +75,7 @@ function Policies() {
     
     setDeletingPolicyId(policyId)
     try {
-      await axios.delete(`${API_URL}/api/policies/${policyId}`)
+      await apiClient.delete(`/api/policies/${policyId}`)
       await fetchPolicies()
     } catch (error: any) {
       alert(error.response?.data?.detail || 'Failed to delete policy')
@@ -82,14 +84,18 @@ function Policies() {
     }
   }
 
-  const handleToggleEnabled = async (policyId: string, currentEnabled: boolean) => {
+  const handleViewHistory = async (policyId: string) => {
+    setSelectedPolicyId(policyId)
+    setHistoryModalOpen(true)
+    setLoadingHistory(true)
     try {
-      await axios.put(`${API_URL}/api/policies/${policyId}`, {
-        enabled: !currentEnabled
-      })
-      await fetchPolicies()
-    } catch (error: any) {
-      alert(error.response?.data?.detail || 'Failed to update policy')
+      const res = await apiClient.get(`/api/policies/${policyId}/history`)
+      setPolicyHistory(res.data.history || [])
+    } catch (error) {
+      console.error('Error fetching policy history:', error)
+      setPolicyHistory([])
+    } finally {
+      setLoadingHistory(false)
     }
   }
 
@@ -283,6 +289,33 @@ function Policies() {
               <FiEdit2 size={14} />
               Edit
             </button>
+            <button
+              onClick={() => handleViewHistory(row.id)}
+              style={{
+                padding: '6px 12px',
+                border: '1px solid var(--gray-border)',
+                borderRadius: '6px',
+                background: 'white',
+                color: 'var(--dark)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '13px',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--primary)'
+                e.currentTarget.style.color = 'var(--primary)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--gray-border)'
+                e.currentTarget.style.color = 'var(--dark)'
+              }}
+            >
+              <FiClock size={14} />
+              History
+            </button>
             {!isDefault && (
               <button
                 onClick={() => handleDeletePolicy(row.id)}
@@ -432,6 +465,116 @@ function Policies() {
         onSave={handleSavePolicy}
         policy={editingPolicy}
       />
+
+      {/* Policy History Modal */}
+      {historyModalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000
+          }}
+          onClick={() => setHistoryModalOpen(false)}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              padding: '24px',
+              maxWidth: '800px',
+              width: '90%',
+              maxHeight: '80vh',
+              overflow: 'auto'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ margin: 0 }}>Policy Change History</h2>
+              <button
+                onClick={() => setHistoryModalOpen(false)}
+                style={{
+                  padding: '8px',
+                  border: 'none',
+                  background: 'transparent',
+                  cursor: 'pointer',
+                  fontSize: '20px',
+                  color: 'var(--gray)'
+                }}
+              >
+                ×
+              </button>
+            </div>
+            
+            {loadingHistory ? (
+              <div style={{ textAlign: 'center', padding: '40px' }}>
+                <LoadingSpinner />
+              </div>
+            ) : policyHistory.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '40px', color: 'var(--gray)' }}>
+                No history available for this policy
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {policyHistory.map((entry: any, idx: number) => (
+                  <div
+                    key={idx}
+                    style={{
+                      padding: '16px',
+                      border: '1px solid var(--gray-border)',
+                      borderRadius: '8px',
+                      backgroundColor: 'var(--gray-light)'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                      <div>
+                        <div style={{ fontWeight: 600, marginBottom: '4px', textTransform: 'capitalize' }}>
+                          {entry.change_type}
+                        </div>
+                        <div style={{ fontSize: '12px', color: 'var(--gray)' }}>
+                          {entry.timestamp ? new Date(entry.timestamp).toLocaleString() : '-'}
+                        </div>
+                      </div>
+                      {entry.changed_by && (
+                        <Badge variant="info" style={{ fontSize: '11px' }}>
+                          {entry.changed_by}
+                        </Badge>
+                      )}
+                    </div>
+                    {entry.change_summary && (
+                      <div style={{ fontSize: '14px', color: 'var(--dark)', marginBottom: '12px' }}>
+                        {entry.change_summary}
+                      </div>
+                    )}
+                    {entry.old_value && entry.new_value && (
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', fontSize: '12px' }}>
+                        <div>
+                          <div style={{ fontWeight: 600, marginBottom: '4px', color: 'var(--error)' }}>Before</div>
+                          <div style={{ padding: '8px', backgroundColor: 'white', borderRadius: '4px', fontFamily: 'monospace' }}>
+                            {JSON.stringify(entry.old_value, null, 2)}
+                          </div>
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 600, marginBottom: '4px', color: 'var(--success)' }}>After</div>
+                          <div style={{ padding: '8px', backgroundColor: 'white', borderRadius: '4px', fontFamily: 'monospace' }}>
+                            {JSON.stringify(entry.new_value, null, 2)}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

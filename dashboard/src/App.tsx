@@ -5,6 +5,8 @@ import Dashboard from './pages/Dashboard'
 import Violations from './pages/Violations'
 import Logs from './pages/Logs'
 import Policies from './pages/Policies'
+import Patterns from './pages/Patterns'
+import Webhooks from './pages/Webhooks'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
               <Route path="/violations" element={<Violations />} />
               <Route path="/logs" element={<Logs />} />
               <Route path="/policies" element={<Policies />} />
+              <Route path="/patterns" element={<Patterns />} />
+              <Route path="/webhooks" element={<Webhooks />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

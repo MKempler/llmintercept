@@ -819,341 +819,433 @@ async def chat_completions(
                     }
                 )
                 return add_cors_headers(response)
-        else:
-            # Prepare violation data for response
-            violation_data = [
-                {
-                    "type": v.type.value,
-                    "severity": v.severity,
-                    "message": v.message,
-                    "matched_text": v.matched_text[:100] if v.matched_text else None
-                }
-                for v in violations
-            ]
-            
-            # Mock successful response
-            response_data = {
-                "id": f"demo-{request_id}",
-                "object": "chat.completion",
-                "created": int(time.time()),
-                "model": request.model,
-                "choices": [{
-                    "index": 0,
-                    "message": {
-                        "role": "assistant",
-                        "content": "This is a demo response. In production, this would be the actual LLM response."
-                    },
-                    "finish_reason": "stop"
-                }],
-                "usage": {
-                    "prompt_tokens": len(prompt_text.split()),
-                    "completion_tokens": 10,
-                    "total_tokens": len(prompt_text.split()) + 10
-                }
-            }
-            
-            # Add firewall metadata if violations were detected and redacted
-            if violations and policy_result["action"] == Action.REDACT:
-                response_data["firewall_metadata"] = {
-                    "redacted": True,
-                    "violations": violation_data,
-                    "action": "redact"
-                }
-            
-            # Wrap in JSONResponse to ensure CORS headers are added
-            response = JSONResponse(content=response_data)
-            return add_cors_headers(response)
-    
-    if not api_key:
-        raise HTTPException(
-            status_code=401, 
-            detail={
-                "error": {
-                    "message": "OpenAI API key required. Provide it in the Authorization header or set OPENAI_API_KEY environment variable. For demo mode, set DEMO_MODE=true.",
-                    "type": "authentication_error",
-                    "code": "missing_api_key"
-                }
-            }
-        )
-    
-    # Extract prompt text from messages
-    prompt_text = "\n".join([msg.content for msg in request.messages])
-    
-    # Scan for violations with context
-    violations = detection_engine.scan(prompt_text, context=context)
-    
-    # Record violation metrics
-    for violation in violations:
-        metrics_collector.record_violation(
-            violation_type=violation.type.value,
-            severity=violation.severity,
-            tenant_id=tenant_id
-        )
-        alert_manager.record_event("violation", tenant_id)
-    
-    # Evaluate policies
-    policy_result = policy_engine.evaluate(violations)
-    
-    # Record policy evaluation metrics
-    for rule_id in policy_result.get("rules_applied", []):
-        metrics_collector.record_policy_evaluation(
-            policy_id=rule_id,
-            action=policy_result["action"].value,
-            tenant_id=tenant_id
-        )
-    
-    # Prepare violation data for logging
-    violation_data = [
-        {
-            "type": v.type.value,
-            "severity": v.severity,
-            "message": v.message,
-            "matched_text": v.matched_text[:100] if v.matched_text else None,
-            "confidence": v.confidence
-        }
-        for v in violations
-    ]
-    
-    # If blocked, return error immediately
-    if policy_result["blocked"]:
-        # Record metrics
-        metrics_collector.record_block(
-            violation_type=violations[0].type.value if violations else "unknown",
-            tenant_id=tenant_id
-        )
-        alert_manager.record_event("block", tenant_id)
-        
-        # Send webhook
-        await webhook_manager.send_webhook("blocked", {
-            "request_id": request_id,
-            "tenant_id": tenant_id,
-            "user_id": user_id,
-            "app_id": app_id,
-            "endpoint": "/v1/chat/completions",
-            "violations": violation_data
-        })
-        
-        audit_logger.log_request(
-            request_id=request_id,
-            endpoint="/v1/chat/completions",
-            method="POST",
-            status="blocked",
-            violations=violation_data,
-            request_data=prompt_text[:1000],
-            latency_ms=int((time.time() - start_time) * 1000),
-            user_id=user_id,
-            metadata={
-                "policy_action": policy_result["action"].value,
-                "tenant_id": tenant_id,
-                "app_id": app_id
-            }
-        )
-        
-        response = JSONResponse(
-            status_code=403,
-            content={
-                "error": {
-                    "message": "Request blocked due to security violations",
-                    "type": "security_violation",
-                    "violations": violation_data
-                }
-            }
-        )
-        return add_cors_headers(response)
-    
-    # Apply redaction if needed using improved redaction engine
-    modified_request = request
-    if policy_result["action"] == Action.REDACT:
-        # Use improved redaction engine
-        redacted_messages = []
-        for msg in request.messages:
-            redacted_content = redaction_engine.redact_text(
-                msg.content,
-                violations,
-                preserve_context=True
-            )
-            redacted_messages.append(ChatMessage(role=msg.role, content=redacted_content))
-        modified_request.messages = redacted_messages
-    
-    # Forward request to OpenAI
-    try:
-        async with httpx.AsyncClient() as client:
-            headers = {
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json"
-            }
-            
-            payload = {
-                "model": modified_request.model,
-                "messages": [{"role": msg.role, "content": msg.content} for msg in modified_request.messages]
-            }
-            
-            if modified_request.temperature is not None:
-                payload["temperature"] = modified_request.temperature
-            if modified_request.max_tokens is not None:
-                payload["max_tokens"] = modified_request.max_tokens
-            if modified_request.stream:
-                payload["stream"] = True
-            
-            response = await client.post(
-                f"{OPENAI_API_BASE}/chat/completions",
-                headers=headers,
-                json=payload,
-                timeout=60.0
-            )
-            
-            latency_ms = int((time.time() - start_time) * 1000)
-            
-            # Scan response BEFORE sending to user (if not streaming)
-            response_violations = []
-            response_data = None
-            response_json = None
-            
-            if not modified_request.stream:
-                response_json = response.json()
-                response_data = response.text[:1000]
+            else:
+                # Prepare violation data for response
+                violation_data = [
+                    {
+                        "type": v.type.value,
+                        "severity": v.severity,
+                        "message": v.message,
+                        "matched_text": v.matched_text[:100] if v.matched_text else None
+                    }
+                    for v in violations
+                ]
                 
-                # Check response content for secrets/PII BEFORE sending
-                if response_json.get("choices") and len(response_json["choices"]) > 0:
-                    response_text = response_json["choices"][0].get("message", {}).get("content", "")
-                    if response_text:
-                        response_violations = detection_engine.scan(response_text)
-                        
-                        # If response contains violations, evaluate policies
-                        if response_violations:
-                            response_policy_result = policy_engine.evaluate(response_violations)
-                            
-                            # If response should be blocked, return error instead
-                            if response_policy_result["blocked"]:
-                                audit_logger.log_request(
-                                    request_id=request_id,
-                                    endpoint="/v1/chat/completions",
-                                    method="POST",
-                                    status="blocked",
-                                    violations=[
-                                        {
-                                            "type": f"response_{v.type.value}",
-                                            "severity": v.severity,
-                                            "message": f"Response contains: {v.message}",
-                                            "matched_text": v.matched_text[:100] if v.matched_text else None
-                                        }
-                                        for v in response_violations
-                                    ],
-                                    request_data=prompt_text[:1000],
-                                    latency_ms=latency_ms,
-                                    metadata={"policy_action": response_policy_result["action"].value, "blocked_in_response": True}
-                                )
-                                
-                                raise HTTPException(
-                                    status_code=403,
-                                    detail={
-                                        "error": {
-                                            "message": "Response blocked due to security violations detected in LLM output",
-                                            "type": "security_violation",
-                                            "violations": [
-                                                {
-                                                    "type": f"response_{v.type.value}",
-                                                    "severity": v.severity,
-                                                    "message": f"Response contains: {v.message}",
-                                                    "matched_text": v.matched_text[:100] if v.matched_text else None
-                                                }
-                                                for v in response_violations
-                                            ]
-                                        }
-                                    }
-                                )
-                            
-                            # Log response violations (but allow if not blocked)
-                            violation_data.extend([
-                                {
-                                    "type": f"response_{v.type.value}",
-                                    "severity": v.severity,
-                                    "message": f"Response contains: {v.message}",
-                                    "matched_text": v.matched_text[:100] if v.matched_text else None
-                                }
-                                for v in response_violations
-                            ])
+                # Mock successful response
+                response_data = {
+                    "id": f"demo-{request_id}",
+                    "object": "chat.completion",
+                    "created": int(time.time()),
+                    "model": request.model,
+                    "choices": [{
+                        "index": 0,
+                        "message": {
+                            "role": "assistant",
+                            "content": "This is a demo response. In production, this would be the actual LLM response."
+                        },
+                        "finish_reason": "stop"
+                    }],
+                    "usage": {
+                        "prompt_tokens": len(prompt_text.split()),
+                        "completion_tokens": 10,
+                        "total_tokens": len(prompt_text.split()) + 10
+                    }
+                }
+                
+                # Add firewall metadata if violations were detected and redacted
+                if violations and policy_result["action"] == Action.REDACT:
+                    response_data["firewall_metadata"] = {
+                        "redacted": True,
+                        "violations": violation_data,
+                        "action": "redact"
+                    }
+                
+                # Wrap in JSONResponse to ensure CORS headers are added
+                response = JSONResponse(content=response_data)
+                return add_cors_headers(response)
+        
+        # Non-demo mode: check for API key
+        if not api_key:
+            raise HTTPException(
+                status_code=401, 
+                detail={
+                    "error": {
+                        "message": "OpenAI API key required. Provide it in the Authorization header or set OPENAI_API_KEY environment variable. For demo mode, set DEMO_MODE=true.",
+                        "type": "authentication_error",
+                        "code": "missing_api_key"
+                    }
+                }
+            )
+        
+        # Extract prompt text from messages
+        prompt_text = "\n".join([msg.content for msg in request.messages])
+        
+        # Scan for violations with context
+        violations = detection_engine.scan(prompt_text, context=context)
+        
+        # Record violation metrics
+        for violation in violations:
+            metrics_collector.record_violation(
+                violation_type=violation.type.value,
+                severity=violation.severity,
+                tenant_id=tenant_id
+            )
+            alert_manager.record_event("violation", tenant_id)
+        
+        # Evaluate policies
+        policy_result = policy_engine.evaluate(violations)
+        
+        # Record policy evaluation metrics
+        for rule_id in policy_result.get("rules_applied", []):
+            metrics_collector.record_policy_evaluation(
+                policy_id=rule_id,
+                action=policy_result["action"].value,
+                tenant_id=tenant_id
+            )
+        
+        # Prepare violation data for logging
+        violation_data = [
+            {
+                "type": v.type.value,
+                "severity": v.severity,
+                "message": v.message,
+                "matched_text": v.matched_text[:100] if v.matched_text else None,
+                "confidence": v.confidence
+            }
+            for v in violations
+        ]
+        
+        # If blocked, return error immediately
+        if policy_result["blocked"]:
+            # Record metrics
+            metrics_collector.record_block(
+                violation_type=violations[0].type.value if violations else "unknown",
+                tenant_id=tenant_id
+            )
+            alert_manager.record_event("block", tenant_id)
             
-            # Log successful request
+            # Send webhook
+            await webhook_manager.send_webhook("blocked", {
+                "request_id": request_id,
+                "tenant_id": tenant_id,
+                "user_id": user_id,
+                "app_id": app_id,
+                "endpoint": "/v1/chat/completions",
+                "violations": violation_data
+            })
+            
             audit_logger.log_request(
                 request_id=request_id,
                 endpoint="/v1/chat/completions",
                 method="POST",
-                status="allowed",
-                violations=violation_data if violations or response_violations else [],
+                status="blocked",
+                violations=violation_data,
                 request_data=prompt_text[:1000],
-                response_data=response_data,
-                latency_ms=latency_ms,
+                latency_ms=int((time.time() - start_time) * 1000),
                 user_id=user_id,
                 metadata={
                     "policy_action": policy_result["action"].value,
-                    "redacted": policy_result["action"] == Action.REDACT,
-                    "response_violations": len(response_violations) if response_violations else 0,
                     "tenant_id": tenant_id,
                     "app_id": app_id
                 }
             )
             
-            # Record metrics
-            metrics_collector.record_request(
-                endpoint="/v1/chat/completions",
-                status="allowed",
-                duration=(time.time() - start_time),
-                tenant_id=tenant_id
-            )
-            
-            # Send webhook for violations (if any)
-            if violations:
-                await webhook_manager.send_webhook("violation", {
-                    "request_id": request_id,
-                    "tenant_id": tenant_id,
-                    "user_id": user_id,
-                    "app_id": app_id,
-                    "endpoint": "/v1/chat/completions",
-                    "violations": violation_data,
-                    "action": policy_result["action"].value
-                })
-            
-            if modified_request.stream:
-                # For streaming, we can't scan before sending, but we log it
-                # TODO: Implement streaming response scanning with buffering
-                return StreamingResponse(
-                    response.iter_bytes(),
-                    media_type="text/event-stream"
-                )
-            else:
-                # response_json already parsed above if not streaming
-                if response_json is None:
-                    response_json = response.json()
-                
-                # Add firewall metadata to response
-                if violations and policy_result["action"] == Action.REDACT:
-                    # Include redaction info in response
-                    response_json["firewall_metadata"] = {
-                        "redacted": True,
-                        "violations": violation_data,
-                        "action": "redact"
+            response = JSONResponse(
+                status_code=403,
+                content={
+                    "error": {
+                        "message": "Request blocked due to security violations",
+                        "type": "security_violation",
+                        "violations": violation_data
                     }
-                elif violations:
-                    # Include violation info even if blocked (shouldn't reach here, but just in case)
-                    response_json["firewall_metadata"] = {
-                        "redacted": False,
+                }
+            )
+            return add_cors_headers(response)
+        
+        # Apply redaction if needed using improved redaction engine
+        modified_request = request
+        if policy_result["action"] == Action.REDACT:
+            # Use improved redaction engine
+            redacted_messages = []
+            for msg in request.messages:
+                redacted_content = redaction_engine.redact_text(
+                    msg.content,
+                    violations,
+                    preserve_context=True
+                )
+                redacted_messages.append(ChatMessage(role=msg.role, content=redacted_content))
+            modified_request.messages = redacted_messages
+        
+        # Forward request to OpenAI
+        try:
+            async with httpx.AsyncClient() as client:
+                headers = {
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json"
+                }
+                
+                payload = {
+                    "model": modified_request.model,
+                    "messages": [{"role": msg.role, "content": msg.content} for msg in modified_request.messages]
+                }
+                
+                if modified_request.temperature is not None:
+                    payload["temperature"] = modified_request.temperature
+                if modified_request.max_tokens is not None:
+                    payload["max_tokens"] = modified_request.max_tokens
+                if modified_request.stream:
+                    payload["stream"] = True
+                
+                response = await client.post(
+                    f"{OPENAI_API_BASE}/chat/completions",
+                    headers=headers,
+                    json=payload,
+                    timeout=60.0
+                )
+                
+                latency_ms = int((time.time() - start_time) * 1000)
+                
+                # Scan response BEFORE sending to user (if not streaming)
+                response_violations = []
+                response_data = None
+                response_json = None
+                
+                if not modified_request.stream:
+                    response_json = response.json()
+                    response_data = response.text[:1000]
+                    
+                    # Check response content for secrets/PII BEFORE sending
+                    if response_json.get("choices") and len(response_json["choices"]) > 0:
+                        response_text = response_json["choices"][0].get("message", {}).get("content", "")
+                        if response_text:
+                            response_violations = detection_engine.scan(response_text)
+                            
+                            # If response contains violations, evaluate policies
+                            if response_violations:
+                                response_policy_result = policy_engine.evaluate(response_violations)
+                                
+                                # If response should be blocked, return error instead
+                                if response_policy_result["blocked"]:
+                                    audit_logger.log_request(
+                                        request_id=request_id,
+                                        endpoint="/v1/chat/completions",
+                                        method="POST",
+                                        status="blocked",
+                                        violations=[
+                                            {
+                                                "type": f"response_{v.type.value}",
+                                                "severity": v.severity,
+                                                "message": f"Response contains: {v.message}",
+                                                "matched_text": v.matched_text[:100] if v.matched_text else None
+                                            }
+                                            for v in response_violations
+                                        ],
+                                        request_data=prompt_text[:1000],
+                                        latency_ms=latency_ms,
+                                        metadata={"policy_action": response_policy_result["action"].value, "blocked_in_response": True}
+                                    )
+                                    
+                                    raise HTTPException(
+                                        status_code=403,
+                                        detail={
+                                            "error": {
+                                                "message": "Response blocked due to security violations detected in LLM output",
+                                                "type": "security_violation",
+                                                "violations": [
+                                                    {
+                                                        "type": f"response_{v.type.value}",
+                                                        "severity": v.severity,
+                                                        "message": f"Response contains: {v.message}",
+                                                        "matched_text": v.matched_text[:100] if v.matched_text else None
+                                                    }
+                                                    for v in response_violations
+                                                ]
+                                            }
+                                        }
+                                    )
+                                
+                                # Log response violations (but allow if not blocked)
+                                violation_data.extend([
+                                    {
+                                        "type": f"response_{v.type.value}",
+                                        "severity": v.severity,
+                                        "message": f"Response contains: {v.message}",
+                                        "matched_text": v.matched_text[:100] if v.matched_text else None
+                                    }
+                                    for v in response_violations
+                                ])
+                
+                # Log successful request
+                audit_logger.log_request(
+                    request_id=request_id,
+                    endpoint="/v1/chat/completions",
+                    method="POST",
+                    status="allowed",
+                    violations=violation_data if violations or response_violations else [],
+                    request_data=prompt_text[:1000],
+                    response_data=response_data,
+                    latency_ms=latency_ms,
+                    user_id=user_id,
+                    metadata={
+                        "policy_action": policy_result["action"].value,
+                        "redacted": policy_result["action"] == Action.REDACT,
+                        "response_violations": len(response_violations) if response_violations else 0,
+                        "tenant_id": tenant_id,
+                        "app_id": app_id
+                    }
+                )
+                
+                # Record metrics
+                metrics_collector.record_request(
+                    endpoint="/v1/chat/completions",
+                    status="allowed",
+                    duration=(time.time() - start_time),
+                    tenant_id=tenant_id
+                )
+                
+                # Send webhook for violations (if any)
+                if violations:
+                    await webhook_manager.send_webhook("violation", {
+                        "request_id": request_id,
+                        "tenant_id": tenant_id,
+                        "user_id": user_id,
+                        "app_id": app_id,
+                        "endpoint": "/v1/chat/completions",
                         "violations": violation_data,
                         "action": policy_result["action"].value
+                    })
+                
+                if modified_request.stream:
+                    # For streaming, we can't scan before sending, but we log it
+                    # TODO: Implement streaming response scanning with buffering
+                    return StreamingResponse(
+                        response.iter_bytes(),
+                        media_type="text/event-stream"
+                    )
+                else:
+                    # response_json already parsed above if not streaming
+                    if response_json is None:
+                        response_json = response.json()
+                    
+                    # Add firewall metadata to response
+                    if violations and policy_result["action"] == Action.REDACT:
+                        # Include redaction info in response
+                        response_json["firewall_metadata"] = {
+                            "redacted": True,
+                            "violations": violation_data,
+                            "action": "redact"
+                        }
+                    elif violations:
+                        # Include violation info even if blocked (shouldn't reach here, but just in case)
+                        response_json["firewall_metadata"] = {
+                            "redacted": False,
+                            "violations": violation_data,
+                            "action": policy_result["action"].value
+                        }
+                    elif response_violations:
+                        # Include response violation info
+                        response_json["firewall_metadata"] = {
+                            "redacted": False,
+                            "violations": violation_data,
+                            "action": "allowed",
+                            "response_violations_detected": True
+                        }
+                    return response_json
+        
+        except ValueError as e:
+            # Input validation errors
+            metrics_collector.record_error("validation_error", "/v1/chat/completions", tenant_id)
+            alert_manager.record_event("error", tenant_id)
+            
+            audit_logger.log_request(
+                request_id=request_id,
+                endpoint="/v1/chat/completions",
+                method="POST",
+                status="error",
+                violations=[],
+                latency_ms=int((time.time() - start_time) * 1000),
+                user_id=user_id,
+                metadata={"error": str(e), "error_type": "validation_error", "tenant_id": tenant_id}
+            )
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": {
+                        "message": str(e),
+                        "type": "validation_error",
+                        "code": "invalid_request"
                     }
-                elif response_violations:
-                    # Include response violation info
-                    response_json["firewall_metadata"] = {
-                        "redacted": False,
-                        "violations": violation_data,
-                        "action": "allowed",
-                        "response_violations_detected": True
+                }
+            )
+        except httpx.HTTPError as e:
+            metrics_collector.record_error("http_error", "/v1/chat/completions", tenant_id)
+            alert_manager.record_event("error", tenant_id)
+            
+            error_detail = "Unable to connect to OpenAI API. Please check your API key and network connection."
+            error_code = "upstream_error"
+            
+            if hasattr(e, 'response') and e.response:
+                try:
+                    error_data = e.response.json()
+                    openai_error = error_data.get('error', {})
+                    error_detail = openai_error.get('message', error_detail)
+                    error_code = openai_error.get('code', error_code)
+                    
+                    # Handle common OpenAI errors
+                    if 'quota' in error_detail.lower() or 'billing' in error_detail.lower():
+                        error_detail = "OpenAI API quota exceeded. Please check your billing settings."
+                    elif 'invalid' in error_detail.lower() and 'key' in error_detail.lower():
+                        error_detail = "Invalid OpenAI API key. Please check your credentials."
+                except:
+                    pass
+            
+            audit_logger.log_request(
+                request_id=request_id,
+                endpoint="/v1/chat/completions",
+                method="POST",
+                status="error",
+                violations=violation_data,
+                latency_ms=int((time.time() - start_time) * 1000),
+                user_id=user_id,
+                metadata={"error": str(e), "error_type": type(e).__name__, "tenant_id": tenant_id}
+            )
+            raise HTTPException(
+                status_code=502,
+                detail={
+                    "error": {
+                        "message": error_detail,
+                        "type": "gateway_error",
+                        "code": "upstream_error"
                     }
-                return response_json
-    
-    except ValueError as e:
-        # Input validation errors
-        metrics_collector.record_error("validation_error", "/v1/chat/completions", tenant_id)
+                }
+            )
+        except Exception as e:
+            metrics_collector.record_error("internal_error", "/v1/chat/completions", tenant_id)
+            alert_manager.record_event("error", tenant_id)
+            
+            audit_logger.log_request(
+                request_id=request_id,
+                endpoint="/v1/chat/completions",
+                method="POST",
+                status="error",
+                violations=violation_data,
+                latency_ms=int((time.time() - start_time) * 1000),
+                user_id=user_id,
+                metadata={"error": str(e), "error_type": type(e).__name__, "tenant_id": tenant_id}
+            )
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": {
+                        "message": f"Internal server error: {str(e)}",
+                        "type": "internal_error",
+                        "code": "unexpected_error"
+                    }
+                }
+            )
+    except Exception as e:
+        # Outer try block exception handler for any unexpected errors
+        metrics_collector.record_error("unexpected_error", "/v1/chat/completions", tenant_id)
         alert_manager.record_event("error", tenant_id)
         
         audit_logger.log_request(
@@ -1162,72 +1254,6 @@ async def chat_completions(
             method="POST",
             status="error",
             violations=[],
-            latency_ms=int((time.time() - start_time) * 1000),
-            user_id=user_id,
-            metadata={"error": str(e), "error_type": "validation_error", "tenant_id": tenant_id}
-        )
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": {
-                    "message": str(e),
-                    "type": "validation_error",
-                    "code": "invalid_request"
-                }
-            }
-        )
-    except httpx.HTTPError as e:
-        metrics_collector.record_error("http_error", "/v1/chat/completions", tenant_id)
-        alert_manager.record_event("error", tenant_id)
-        
-        error_detail = "Unable to connect to OpenAI API. Please check your API key and network connection."
-        error_code = "upstream_error"
-        
-        if hasattr(e, 'response') and e.response:
-            try:
-                error_data = e.response.json()
-                openai_error = error_data.get('error', {})
-                error_detail = openai_error.get('message', error_detail)
-                error_code = openai_error.get('code', error_code)
-                
-                # Handle common OpenAI errors
-                if 'quota' in error_detail.lower() or 'billing' in error_detail.lower():
-                    error_detail = "OpenAI API quota exceeded. Please check your billing settings."
-                elif 'invalid' in error_detail.lower() and 'key' in error_detail.lower():
-                    error_detail = "Invalid OpenAI API key. Please check your credentials."
-            except:
-                pass
-        
-        audit_logger.log_request(
-            request_id=request_id,
-            endpoint="/v1/chat/completions",
-            method="POST",
-            status="error",
-            violations=violation_data,
-            latency_ms=int((time.time() - start_time) * 1000),
-            user_id=user_id,
-            metadata={"error": str(e), "error_type": type(e).__name__, "tenant_id": tenant_id}
-        )
-        raise HTTPException(
-            status_code=502,
-            detail={
-                "error": {
-                    "message": error_detail,
-                    "type": "gateway_error",
-                    "code": "upstream_error"
-                }
-            }
-        )
-    except Exception as e:
-        metrics_collector.record_error("internal_error", "/v1/chat/completions", tenant_id)
-        alert_manager.record_event("error", tenant_id)
-        
-        audit_logger.log_request(
-            request_id=request_id,
-            endpoint="/v1/chat/completions",
-            method="POST",
-            status="error",
-            violations=violation_data,
             latency_ms=int((time.time() - start_time) * 1000),
             user_id=user_id,
             metadata={"error": str(e), "error_type": type(e).__name__, "tenant_id": tenant_id}

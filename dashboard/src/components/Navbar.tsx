@@ -198,6 +198,30 @@ export default function Navbar() {
             >
               Policies
             </Link>
+            <Link
+              to="/patterns"
+              className="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200"
+              style={{
+                color: isActive('/patterns') ? 'var(--primary)' : 'var(--gray)',
+                borderBottom: isActive('/patterns') ? '2px solid var(--primary)' : '2px solid transparent',
+                marginBottom: '-2px',
+                fontWeight: isActive('/patterns') ? 600 : 500
+              }}
+            >
+              Patterns
+            </Link>
+            <Link
+              to="/webhooks"
+              className="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200"
+              style={{
+                color: isActive('/webhooks') ? 'var(--primary)' : 'var(--gray)',
+                borderBottom: isActive('/webhooks') ? '2px solid var(--primary)' : '2px solid transparent',
+                marginBottom: '-2px',
+                fontWeight: isActive('/webhooks') ? 600 : 500
+              }}
+            >
+              Webhooks
+            </Link>
           </div>
 
           {/* Back to Demo Link - Subtle, Right Side */}

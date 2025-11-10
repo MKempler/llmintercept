@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import Table from '../components/Table'
 import Badge from '../components/Badge'
 import LoadingSpinner from '../components/LoadingSpinner'
-import { getApiUrl } from '../utils/api'
-
-const API_URL = getApiUrl()
+import { apiClient } from '../utils/api'
 
 function Logs() {
   const [logs, setLogs] = useState<any[]>([])
@@ -19,7 +16,7 @@ function Logs() {
 
   const fetchLogs = async () => {
     try {
-      const res = await axios.get(`${API_URL}/api/logs`)
+      const res = await apiClient.get('/api/logs')
       setLogs(res.data.logs || [])
       setLoading(false)
     } catch (error) {

@@ -1,5 +1,4 @@
 import { useEffect, useState, useMemo } from 'react'
-import axios from 'axios'
 import { 
   BarChart, 
   Bar, 
@@ -25,9 +24,7 @@ import InsightsCard from '../components/InsightsCard'
 import ChartCard from '../components/ChartCard'
 import CustomTooltip from '../components/CustomTooltip'
 import { ChartIcon, ShieldIcon, CheckIcon, getViolationIcon, AlertIcon, ClockIcon } from '../components/Icons'
-import { getApiUrl } from '../utils/api'
-
-const API_URL = getApiUrl()
+import { apiClient, getApiUrl } from '../utils/api'
 
 type TimeRange = '24h' | '7d' | '30d' | 'all'
 
@@ -51,8 +48,8 @@ function Dashboard() {
   const fetchStats = async () => {
     try {
       const [logsRes, violationsRes] = await Promise.all([
-        axios.get(`${API_URL}/api/logs`),
-        axios.get(`${API_URL}/api/violations`)
+        apiClient.get('/api/logs'),
+        apiClient.get('/api/violations')
       ])
       
       const logs = logsRes.data.logs || []
@@ -233,6 +230,16 @@ function Dashboard() {
     }
   }, [filteredData])
 
+  const getConfidenceBadge = (confidence: number) => {
+    if (confidence >= 0.8) {
+      return <Badge variant="high" style={{ backgroundColor: '#10b981', color: 'white', fontSize: '12px' }}>{Math.round(confidence * 100)}%</Badge>
+    } else if (confidence >= 0.6) {
+      return <Badge variant="medium" style={{ backgroundColor: '#f59e0b', color: 'white', fontSize: '12px' }}>{Math.round(confidence * 100)}%</Badge>
+    } else {
+      return <Badge variant="low" style={{ backgroundColor: '#ef4444', color: 'white', fontSize: '12px' }}>{Math.round(confidence * 100)}%</Badge>
+    }
+  }
+
   const violationColumns = [
     {
       key: 'timestamp',
@@ -282,6 +289,15 @@ function Dashboard() {
         const variant = severity === 'high' ? 'high' : severity === 'medium' ? 'medium' : 'low'
         return <Badge variant={variant}>{severity}</Badge>
       }
+    },
+    {
+      key: 'violations',
+      label: 'Confidence',
+      render: (value: any[]) => {
+        if (!value || value.length === 0) return '-'
+        const confidence = value[0].confidence ?? 0.8
+        return getConfidenceBadge(confidence)
+      }
     }
   ]
 
@@ -325,7 +341,38 @@ function Dashboard() {
           <h1 className="page-title">Dashboard</h1>
           <p className="page-subtitle">Monitor your firewall activity in real-time</p>
         </div>
-        <TimeFilter selected={timeRange} onChange={(range) => setTimeRange(range as TimeRange)} />
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <a
+            href={`${getApiUrl()}/metrics`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              padding: '8px 16px',
+              backgroundColor: 'var(--primary)',
+              color: 'white',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              fontSize: '14px',
+              fontWeight: 500,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.opacity = '0.9'
+              e.currentTarget.style.transform = 'translateY(-1px)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.opacity = '1'
+              e.currentTarget.style.transform = 'translateY(0)'
+            }}
+          >
+            <ChartIcon size={16} />
+            Prometheus Metrics
+          </a>
+          <TimeFilter selected={timeRange} onChange={(range) => setTimeRange(range as TimeRange)} />
+        </div>
       </div>
       
       {/* Insights */}
