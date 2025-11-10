@@ -1,5 +1,5 @@
 """Prometheus metrics for performance monitoring."""
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from time import time
 from prometheus_client import Counter, Histogram, Gauge
 import os
