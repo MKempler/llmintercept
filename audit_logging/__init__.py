@@ -125,7 +125,8 @@ class AuditLogger:
         violation_type: Optional[str] = None,
         start_date: Optional[datetime] = None,
         end_date: Optional[datetime] = None,
-        search: Optional[str] = None
+        search: Optional[str] = None,
+        user_id: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         """
         Get audit logs with filtering support.
@@ -139,6 +140,7 @@ class AuditLogger:
             start_date: Filter logs after this date
             end_date: Filter logs before this date
             search: Search in request_id, endpoint, user_id
+            user_id: Filter by user_id (NEW)
         """
         session = self.Session()
         try:
@@ -150,6 +152,9 @@ class AuditLogger:
             
             if endpoint:
                 query = query.filter(AuditLog.endpoint == endpoint)
+            
+            if user_id:
+                query = query.filter(AuditLog.user_id == user_id)
             
             if start_date:
                 query = query.filter(AuditLog.timestamp >= start_date)
@@ -195,7 +200,8 @@ class AuditLogger:
         violation_type: Optional[str] = None,
         start_date: Optional[datetime] = None,
         end_date: Optional[datetime] = None,
-        search: Optional[str] = None
+        search: Optional[str] = None,
+        user_id: Optional[str] = None
     ) -> int:
         """
         Get total count of logs matching filters (for pagination).
@@ -207,6 +213,7 @@ class AuditLogger:
             start_date: Filter logs after this date
             end_date: Filter logs before this date
             search: Search in request_id, endpoint, user_id
+            user_id: Filter by user_id (NEW)
         """
         session = self.Session()
         try:
@@ -218,6 +225,9 @@ class AuditLogger:
             
             if endpoint:
                 query = query.filter(AuditLog.endpoint == endpoint)
+            
+            if user_id:
+                query = query.filter(AuditLog.user_id == user_id)
             
             if start_date:
                 query = query.filter(AuditLog.timestamp >= start_date)
@@ -242,6 +252,8 @@ class AuditLogger:
                     logs_query = logs_query.filter(AuditLog.status == status)
                 if endpoint:
                     logs_query = logs_query.filter(AuditLog.endpoint == endpoint)
+                if user_id:
+                    logs_query = logs_query.filter(AuditLog.user_id == user_id)
                 if start_date:
                     logs_query = logs_query.filter(AuditLog.timestamp >= start_date)
                 if end_date:
@@ -268,13 +280,16 @@ class AuditLogger:
         finally:
             session.close()
     
-    def get_violations(self, limit: int = 100) -> List[Dict[str, Any]]:
+    def get_violations(self, limit: int = 100, user_id: Optional[str] = None) -> List[Dict[str, Any]]:
         """Get logs with violations."""
         session = self.Session()
         try:
-            logs = session.query(AuditLog).filter(
+            query = session.query(AuditLog).filter(
                 AuditLog.status == "blocked"
-            ).order_by(
+            )
+            if user_id:
+                query = query.filter(AuditLog.user_id == user_id)
+            logs = query.order_by(
                 AuditLog.timestamp.desc()
             ).limit(limit).all()
             return [self._log_to_dict(log) for log in logs]

@@ -67,6 +67,12 @@ class TenantContext:
                 # Hash API key to create tenant ID
                 context["tenant_id"] = f"tenant_{hashlib.sha256(api_key.encode()).hexdigest()[:16]}"
         
+        # Method 4: Look up user_id from firewall API key (NEW)
+        if not context["user_id"]:
+            api_key = request.headers.get("X-API-Key")
+            if api_key:
+                context["user_id"] = self.get_user_id_from_api_key(api_key)
+        
         # Default tenant for demo mode
         if not context["tenant_id"]:
             demo_mode = os.getenv("DEMO_MODE", "false").lower() == "true"
@@ -74,6 +80,36 @@ class TenantContext:
                 context["tenant_id"] = "demo_tenant"
         
         return context
+    
+    def get_user_id_from_api_key(self, api_key: Optional[str]) -> Optional[str]:
+        """
+        Look up user_id from firewall API key.
+        
+        Args:
+            api_key: Firewall API key (from X-API-Key header)
+            
+        Returns:
+            user_id if found, None otherwise
+        """
+        if not api_key:
+            return None
+        
+        # Import here to avoid circular imports
+        from users.service import UserService
+        from audit_logging import AuditLogger
+        
+        database_url = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./firewall.db")
+        audit_logger = AuditLogger(database_url=database_url)
+        session = audit_logger.Session()
+        
+        try:
+            user_service = UserService(session)
+            user = user_service.get_user_by_api_key(api_key)
+            return user.id if user else None
+        except Exception:
+            return None
+        finally:
+            session.close()
     
     def get_tenant_namespace(self, tenant_id: Optional[str]) -> str:
         """

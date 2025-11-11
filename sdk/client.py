@@ -28,6 +28,7 @@ class OpenAI:
         self,
         api_key: Optional[str] = None,
         firewall_url: Optional[str] = None,
+        firewall_api_key: Optional[str] = None,
         base_url: Optional[str] = None,
         **kwargs
     ):
@@ -37,6 +38,7 @@ class OpenAI:
         Args:
             api_key: OpenAI API key
             firewall_url: URL of the firewall gateway (defaults to env var or localhost)
+            firewall_api_key: User's firewall API key (for account identification)
             base_url: Override base URL (uses firewall_url if provided)
             **kwargs: Additional arguments passed to OpenAI client
         """
@@ -44,14 +46,30 @@ class OpenAI:
         if not self.api_key:
             raise ValueError("OpenAI API key required")
         
+        # Store firewall API key (for user identification)
+        self.firewall_api_key = firewall_api_key or os.getenv("FIREWALL_API_KEY")
+        
         # Use firewall URL as base URL
         self.firewall_url = firewall_url or os.getenv("FIREWALL_URL", "http://localhost:8000")
         base_url = base_url or f"{self.firewall_url}/v1"
+        
+        # Create custom httpx client with firewall API key header
+        # OpenAI SDK uses httpx internally, so we create a client with default headers
+        http_client = None
+        if self.firewall_api_key:
+            # Extract timeout if provided
+            timeout_val = kwargs.pop("timeout", 60.0)
+            # Create httpx client with default headers for firewall API key
+            http_client = httpx.Client(
+                headers={"X-API-Key": self.firewall_api_key},
+                timeout=timeout_val
+            )
         
         # Initialize OpenAI client with firewall as base URL
         self.client = OpenAIClient(
             api_key=self.api_key,
             base_url=base_url,
+            http_client=http_client,
             **kwargs
         )
         
@@ -86,6 +104,7 @@ class Anthropic:
         self,
         api_key: Optional[str] = None,
         firewall_url: Optional[str] = None,
+        firewall_api_key: Optional[str] = None,
         **kwargs
     ):
         """
@@ -94,11 +113,15 @@ class Anthropic:
         Args:
             api_key: Anthropic API key
             firewall_url: URL of the firewall gateway (defaults to env var or localhost)
+            firewall_api_key: User's firewall API key (for account identification)
             **kwargs: Additional arguments (unused, for compatibility)
         """
         self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
         if not self.api_key:
             raise ValueError("Anthropic API key required")
+        
+        # Store firewall API key (for user identification)
+        self.firewall_api_key = firewall_api_key or os.getenv("FIREWALL_API_KEY")
         
         self.firewall_url = firewall_url or os.getenv("FIREWALL_URL", "http://localhost:8000")
         self._client = httpx.AsyncClient() if kwargs.get("async_client") else httpx.Client()
@@ -124,6 +147,9 @@ class Anthropic:
                 "x-api-key": self.parent.api_key,
                 "Content-Type": "application/json"
             }
+            # Add firewall API key for user identification
+            if self.parent.firewall_api_key:
+                headers["X-API-Key"] = self.parent.firewall_api_key
             
             payload = {
                 "model": model,
@@ -174,6 +200,7 @@ class Google:
         self,
         api_key: Optional[str] = None,
         firewall_url: Optional[str] = None,
+        firewall_api_key: Optional[str] = None,
         **kwargs
     ):
         """
@@ -182,11 +209,15 @@ class Google:
         Args:
             api_key: Google API key
             firewall_url: URL of the firewall gateway (defaults to env var or localhost)
+            firewall_api_key: User's firewall API key (for account identification)
             **kwargs: Additional arguments (unused, for compatibility)
         """
         self.api_key = api_key or os.getenv("GOOGLE_API_KEY")
         if not self.api_key:
             raise ValueError("Google API key required")
+        
+        # Store firewall API key (for user identification)
+        self.firewall_api_key = firewall_api_key or os.getenv("FIREWALL_API_KEY")
         
         self.firewall_url = firewall_url or os.getenv("FIREWALL_URL", "http://localhost:8000")
         self._client = httpx.AsyncClient() if kwargs.get("async_client") else httpx.Client()
@@ -211,6 +242,9 @@ class Google:
                 "Authorization": f"Bearer {self.parent.api_key}",
                 "Content-Type": "application/json"
             }
+            # Add firewall API key for user identification
+            if self.parent.firewall_api_key:
+                headers["X-API-Key"] = self.parent.firewall_api_key
             
             payload = {
                 "contents": contents

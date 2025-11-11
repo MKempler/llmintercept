@@ -246,8 +246,16 @@ async def get_violations(authorization: Optional[str] = Header(None)):
     is_authenticated = is_authenticated_user(authorization)
     
     if is_authenticated:
-        # Authenticated user - return real data from database
-        real_violations = audit_logger.get_violations(limit=100)
+        # Get logged-in user's ID
+        logged_in_user_id = None
+        from users.jwt_utils import jwt_manager
+        token = authorization.replace("Bearer ", "").strip()
+        user_info = jwt_manager.get_user_from_token(token)
+        if user_info:
+            logged_in_user_id = user_info["user_id"]
+        
+        # Authenticated user - return real data from database filtered by user_id
+        real_violations = audit_logger.get_violations(limit=100, user_id=logged_in_user_id)
         response = JSONResponse(content={"violations": real_violations})
         return add_cors_headers(response)
     
@@ -380,6 +388,14 @@ async def get_logs(
     # Authenticated user - return real data from database
     if is_authenticated:
         try:
+            # Get logged-in user's ID
+            logged_in_user_id = None
+            from users.jwt_utils import jwt_manager
+            token = authorization.replace("Bearer ", "").strip()
+            user_info = jwt_manager.get_user_from_token(token)
+            if user_info:
+                logged_in_user_id = user_info["user_id"]
+            
             # Parse date strings if provided
             start_dt = parse_date(start_date)
             end_dt = parse_date(end_date)
@@ -392,7 +408,8 @@ async def get_logs(
                 violation_type=violation_type,
                 start_date=start_dt,
                 end_date=end_dt,
-                search=search
+                search=search,
+                user_id=logged_in_user_id  # Filter by logged-in user
             )
             
             total_count = audit_logger.get_logs_count(
@@ -401,7 +418,8 @@ async def get_logs(
                 violation_type=violation_type,
                 start_date=start_dt,
                 end_date=end_dt,
-                search=search
+                search=search,
+                user_id=logged_in_user_id  # Filter by logged-in user
             )
             
             response = JSONResponse(content={
@@ -456,8 +474,16 @@ async def get_policies(authorization: Optional[str] = Header(None)):
     
     # Get logs for statistics calculation
     if is_authenticated:
-        # Authenticated user - use real logs from database
-        all_logs = audit_logger.get_recent_logs(limit=1000)
+        # Get logged-in user's ID
+        logged_in_user_id = None
+        from users.jwt_utils import jwt_manager
+        token = authorization.replace("Bearer ", "").strip()
+        user_info = jwt_manager.get_user_from_token(token)
+        if user_info:
+            logged_in_user_id = user_info["user_id"]
+        
+        # Authenticated user - use real logs from database filtered by user_id
+        all_logs = audit_logger.get_recent_logs(limit=1000, user_id=logged_in_user_id)
     else:
         # Not authenticated - use demo logs
         demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"

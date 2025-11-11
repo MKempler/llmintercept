@@ -19,8 +19,9 @@ pip install -e .
 from aifirewall import OpenAI
 
 client = OpenAI(
-    api_key="your-openai-key",
-    firewall_url="https://your-gateway.railway.app"
+    api_key="your-openai-key",  # OpenAI API key
+    firewall_url="https://your-gateway.railway.app",
+    firewall_api_key="fw_live_..."  # Your firewall API key from dashboard
 )
 
 response = client.chat.completions.create(
