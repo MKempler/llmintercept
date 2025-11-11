@@ -342,35 +342,6 @@ function Dashboard() {
           <p className="page-subtitle">Monitor your firewall activity in real-time</p>
         </div>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <a
-            href={`${getApiUrl()}/metrics`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              padding: '8px 16px',
-              backgroundColor: 'var(--primary)',
-              color: 'white',
-              borderRadius: '8px',
-              textDecoration: 'none',
-              fontSize: '14px',
-              fontWeight: 500,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              transition: 'all 0.2s'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = '0.9'
-              e.currentTarget.style.transform = 'translateY(-1px)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = '1'
-              e.currentTarget.style.transform = 'translateY(0)'
-            }}
-          >
-            <ChartIcon size={16} />
-            Prometheus Metrics
-          </a>
           <TimeFilter selected={timeRange} onChange={(range) => setTimeRange(range as TimeRange)} />
         </div>
       </div>
