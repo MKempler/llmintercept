@@ -292,27 +292,77 @@
         }
 
         .hero-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: stretch;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
             position: relative;
             z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .hero-left {
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
+            align-items: center;
+            width: 100%;
         }
 
         .hero-right {
             position: relative;
             display: flex;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
-            min-height: 100%;
-            overflow: visible;
+        }
+
+        .hero-dashboard-card {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
+        .hero-dashboard-card-inner {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            border: 1px solid rgba(30, 41, 59, 0.8);
+            background: rgba(2, 6, 23, 0.9);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 0;
+        }
+
+        .hero-dashboard-label {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            z-index: 20;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 9999px;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 0.25rem 0.75rem;
+            font-size: 10px;
+            font-weight: 500;
+            color: #f1f5f9;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-dashboard-label-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #34d399;
         }
 
         .hero-badge {
@@ -326,6 +376,8 @@
             color: var(--primary);
             border: 1px solid var(--gray-border);
             width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero h1 {
@@ -372,6 +424,8 @@
             flex-direction: column;
             gap: 1rem;
             margin-top: 1.5rem;
+            align-items: center;
+            width: 100%;
         }
 
         .hero-ctas-row {
@@ -379,26 +433,20 @@
             gap: 1rem;
             align-items: center;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .hero-dashboard-image {
             width: 100%;
             height: 100%;
-            object-fit: contain;
             display: block;
-            border-radius: 12px;
-            transform: scale(1.2);
-            transform-origin: center center;
+            object-fit: cover;
+            object-position: top center;
         }
 
         @media (max-width: 968px) {
             .hero-content {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-            }
-
-            .hero-right {
-                order: -1;
+                max-width: 100%;
             }
 
             .hero h1 {
@@ -1514,6 +1562,12 @@
             transition: transform 0.3s ease;
         }
 
+        @media (min-width: 769px) {
+            .mobile-menu {
+                display: none !important;
+            }
+        }
+
         .mobile-menu.active {
             transform: translateY(0);
         }
@@ -1625,31 +1679,18 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <!-- Left Column -->
                 <div class="hero-left">
-                <div class="hero-badge">Enterprise-Grade LLM Security</div>
-                <h1>Your Employees Are Leaking Data to AI. <span class="gradient">We Stop It.</span></h1>
+                    <div class="hero-badge">Enterprise-Grade LLM Security</div>
+                    <h1>Your Employees Are Leaking Data to AI. <span class="gradient">We Stop It.</span></h1>
                     <p class="hero-subhead">Protect every LLM interaction across your organization</p>
                     <p class="hero-oneliner">AI firewall that inspects every LLM request for secrets, PII, and prompt injection before it leaves your org.</p>
                     <p class="hero-integration">Protect employees, apps, and APIs via Browser Extension, SDK, or Gateway.</p>
                     <div class="hero-ctas">
                         <div class="hero-ctas-row">
-                    <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'hero' });">Request Enterprise Demo</a>
-                    <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'hero' });">Try Interactive Demo</a>
+                            <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'hero' });">Request Enterprise Demo</a>
+                            <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'hero' });">Try Interactive Demo</a>
                         </div>
-                        <a href="#dashboard-preview" style="color: var(--text-muted); text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; width: fit-content;" onmouseover="this.style.color='var(--text-secondary)';" onmouseout="this.style.color='var(--text-muted)';" onclick="trackEvent('click_view_dashboard', { location: 'hero' });">
-                            View Dashboard Preview <span style="font-size: 0.9em;">→</span>
-                    </a>
-                </div>
-            </div>
-
-                <!-- Right Column -->
-                <div class="hero-right">
-                    <img 
-                        src="aifirewall/dashboard.png" 
-                        alt="LLM Intercept dashboard showing requests, blocks, and violations"
-                        class="hero-dashboard-image"
-                    />
+                    </div>
                 </div>
             </div>
         </div>
