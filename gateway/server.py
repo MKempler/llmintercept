@@ -237,26 +237,122 @@ async def get_violations():
 
 
 @app.get("/api/logs")
-async def get_logs():
-    """Get recent audit logs."""
+async def get_logs(
+    status: Optional[str] = None,
+    endpoint: Optional[str] = None,
+    violation_type: Optional[str] = None,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    search: Optional[str] = None,
+    limit: int = 100,
+    offset: int = 0
+):
+    """Get audit logs with filtering support."""
     global _cached_demo_logs, _last_demo_data_generation_time
+    
+    from datetime import datetime
     
     # Default to True for MVP (no customers yet)
     demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
-    real_logs = audit_logger.get_recent_logs(limit=100)
     
-    if demo_mode or len(real_logs) == 0:
+    # Parse date strings if provided
+    start_dt = None
+    end_dt = None
+    if start_date:
+        try:
+            start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+        except:
+            pass
+    if end_date:
+        try:
+            end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+        except:
+            pass
+    
+    if demo_mode:
+        # For demo mode, filter demo logs in memory
         current_time = time.time()
-        # Check if cache is valid (exists and not expired)
         if (_cached_demo_logs is None or 
             (current_time - _last_demo_data_generation_time) > DEMO_DATA_CACHE_DURATION_SECONDS):
             from gateway.demo_data import generate_demo_logs
             _cached_demo_logs = generate_demo_logs()
             _last_demo_data_generation_time = current_time
-        response = JSONResponse(content={"logs": _cached_demo_logs})
+        
+        # Apply filters to demo logs
+        filtered_logs = _cached_demo_logs
+        
+        if status:
+            filtered_logs = [log for log in filtered_logs if log.get('status') == status]
+        
+        if endpoint:
+            filtered_logs = [log for log in filtered_logs if log.get('endpoint') == endpoint]
+        
+        if violation_type:
+            filtered_logs = [
+                log for log in filtered_logs 
+                if any(v.get('type') == violation_type for v in (log.get('violations') or []))
+            ]
+        
+        if search:
+            search_lower = search.lower()
+            filtered_logs = [
+                log for log in filtered_logs
+                if (search_lower in (log.get('request_id') or '').lower() or
+                    search_lower in (log.get('endpoint') or '').lower() or
+                    search_lower in (log.get('user_id') or '').lower())
+            ]
+        
+        if start_dt:
+            filtered_logs = [
+                log for log in filtered_logs
+                if log.get('timestamp') and datetime.fromisoformat(log['timestamp'].replace('Z', '+00:00')) >= start_dt
+            ]
+        
+        if end_dt:
+            filtered_logs = [
+                log for log in filtered_logs
+                if log.get('timestamp') and datetime.fromisoformat(log['timestamp'].replace('Z', '+00:00')) <= end_dt
+            ]
+        
+        # Apply pagination
+        total_count = len(filtered_logs)
+        paginated_logs = filtered_logs[offset:offset + limit]
+        
+        response = JSONResponse(content={
+            "logs": paginated_logs,
+            "total": total_count,
+            "limit": limit,
+            "offset": offset
+        })
         return add_cors_headers(response)
     
-    response = JSONResponse(content={"logs": real_logs})
+    # Real mode - use database filtering
+    real_logs = audit_logger.get_recent_logs(
+        limit=limit,
+        offset=offset,
+        status=status,
+        endpoint=endpoint,
+        violation_type=violation_type,
+        start_date=start_dt,
+        end_date=end_dt,
+        search=search
+    )
+    
+    total_count = audit_logger.get_logs_count(
+        status=status,
+        endpoint=endpoint,
+        violation_type=violation_type,
+        start_date=start_dt,
+        end_date=end_dt,
+        search=search
+    )
+    
+    response = JSONResponse(content={
+        "logs": real_logs,
+        "total": total_count,
+        "limit": limit,
+        "offset": offset
+    })
     return add_cors_headers(response)
 
 

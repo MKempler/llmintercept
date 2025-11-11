@@ -1,10 +1,10 @@
 """Audit logging for security events."""
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, asdict
 import json
 import os
-from sqlalchemy import create_engine, Column, String, Integer, DateTime, Text, JSON
+from sqlalchemy import create_engine, Column, String, Integer, DateTime, Text, JSON, and_, or_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
@@ -116,14 +116,155 @@ class AuditLogger:
         finally:
             session.close()
     
-    def get_recent_logs(self, limit: int = 100) -> List[Dict[str, Any]]:
-        """Get recent audit logs."""
+    def get_recent_logs(
+        self, 
+        limit: int = 100,
+        offset: int = 0,
+        status: Optional[str] = None,
+        endpoint: Optional[str] = None,
+        violation_type: Optional[str] = None,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
+        search: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Get audit logs with filtering support.
+        
+        Args:
+            limit: Maximum number of logs to return
+            offset: Number of logs to skip (for pagination)
+            status: Filter by status (blocked/allowed/error)
+            endpoint: Filter by endpoint
+            violation_type: Filter by violation type (pii/secret/prompt_injection)
+            start_date: Filter logs after this date
+            end_date: Filter logs before this date
+            search: Search in request_id, endpoint, user_id
+        """
         session = self.Session()
         try:
-            logs = session.query(AuditLog).order_by(
-                AuditLog.timestamp.desc()
-            ).limit(limit).all()
+            query = session.query(AuditLog)
+            
+            # Apply filters
+            if status:
+                query = query.filter(AuditLog.status == status)
+            
+            if endpoint:
+                query = query.filter(AuditLog.endpoint == endpoint)
+            
+            if start_date:
+                query = query.filter(AuditLog.timestamp >= start_date)
+            
+            if end_date:
+                query = query.filter(AuditLog.timestamp <= end_date)
+            
+            if search:
+                search_filter = or_(
+                    AuditLog.request_id.ilike(f'%{search}%'),
+                    AuditLog.endpoint.ilike(f'%{search}%'),
+                    AuditLog.user_id.ilike(f'%{search}%')
+                )
+                query = query.filter(search_filter)
+            
+            # Filter by violation type (if specified)
+            if violation_type:
+                # Need to filter logs that have violations of this type
+                # Since violations is JSON, we'll filter in Python after fetching
+                # For now, fetch all matching logs and filter in Python
+                logs = query.order_by(AuditLog.timestamp.desc()).offset(offset).limit(limit * 2).all()
+                filtered_logs = []
+                for log in logs:
+                    violations = log.violations or []
+                    for violation in violations:
+                        if isinstance(violation, dict) and violation.get('type') == violation_type:
+                            filtered_logs.append(log)
+                            break
+                    if len(filtered_logs) >= limit:
+                        break
+                return [self._log_to_dict(log) for log in filtered_logs[:limit]]
+            
+            # Apply ordering, pagination, and execute
+            logs = query.order_by(AuditLog.timestamp.desc()).offset(offset).limit(limit).all()
             return [self._log_to_dict(log) for log in logs]
+        finally:
+            session.close()
+    
+    def get_logs_count(
+        self,
+        status: Optional[str] = None,
+        endpoint: Optional[str] = None,
+        violation_type: Optional[str] = None,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
+        search: Optional[str] = None
+    ) -> int:
+        """
+        Get total count of logs matching filters (for pagination).
+        
+        Args:
+            status: Filter by status
+            endpoint: Filter by endpoint
+            violation_type: Filter by violation type
+            start_date: Filter logs after this date
+            end_date: Filter logs before this date
+            search: Search in request_id, endpoint, user_id
+        """
+        session = self.Session()
+        try:
+            query = session.query(func.count(AuditLog.id))
+            
+            # Apply same filters as get_recent_logs
+            if status:
+                query = query.filter(AuditLog.status == status)
+            
+            if endpoint:
+                query = query.filter(AuditLog.endpoint == endpoint)
+            
+            if start_date:
+                query = query.filter(AuditLog.timestamp >= start_date)
+            
+            if end_date:
+                query = query.filter(AuditLog.timestamp <= end_date)
+            
+            if search:
+                search_filter = or_(
+                    AuditLog.request_id.ilike(f'%{search}%'),
+                    AuditLog.endpoint.ilike(f'%{search}%'),
+                    AuditLog.user_id.ilike(f'%{search}%')
+                )
+                query = query.filter(search_filter)
+            
+            # For violation_type, we need to count logs that have violations of this type
+            # This is less efficient but necessary for JSON filtering
+            if violation_type:
+                # Fetch all matching logs and count in Python
+                logs_query = session.query(AuditLog)
+                if status:
+                    logs_query = logs_query.filter(AuditLog.status == status)
+                if endpoint:
+                    logs_query = logs_query.filter(AuditLog.endpoint == endpoint)
+                if start_date:
+                    logs_query = logs_query.filter(AuditLog.timestamp >= start_date)
+                if end_date:
+                    logs_query = logs_query.filter(AuditLog.timestamp <= end_date)
+                if search:
+                    search_filter = or_(
+                        AuditLog.request_id.ilike(f'%{search}%'),
+                        AuditLog.endpoint.ilike(f'%{search}%'),
+                        AuditLog.user_id.ilike(f'%{search}%')
+                    )
+                    logs_query = logs_query.filter(search_filter)
+                
+                all_logs = logs_query.all()
+                count = 0
+                for log in all_logs:
+                    violations = log.violations or []
+                    for violation in violations:
+                        if isinstance(violation, dict) and violation.get('type') == violation_type:
+                            count += 1
+                            break
+                return count
+            
+            return query.scalar() or 0
         finally:
             session.close()
     
@@ -152,6 +293,8 @@ class AuditLogger:
             "status": log.status,
             "violations": log.violations,
             "latency_ms": log.latency_ms,
-            "metadata": log.extra_metadata
+            "metadata": log.extra_metadata,
+            "request_data": log.request_data,
+            "response_data": log.response_data
         }
 

@@ -11,9 +11,16 @@ interface TableProps {
   data: any[]
   emptyMessage?: string
   className?: string
+  onRowClick?: (row: any) => void
 }
 
-export default function Table({ columns, data, emptyMessage = 'No data available', className = '' }: TableProps) {
+export default function Table({ 
+  columns, 
+  data, 
+  emptyMessage = 'No data available', 
+  className = '',
+  onRowClick
+}: TableProps) {
   return (
     <div className={`table-container ${className}`}>
       <table className="table">
@@ -37,7 +44,24 @@ export default function Table({ columns, data, emptyMessage = 'No data available
             </tr>
           ) : (
             data.map((row, idx) => (
-              <tr key={idx}>
+              <tr 
+                key={idx}
+                onClick={() => onRowClick && onRowClick(row)}
+                style={{
+                  cursor: onRowClick ? 'pointer' : 'default',
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  if (onRowClick) {
+                    e.currentTarget.style.backgroundColor = 'var(--gray-light)'
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (onRowClick) {
+                    e.currentTarget.style.backgroundColor = 'transparent'
+                  }
+                }}
+              >
                 {columns.map((column) => (
                   <td key={column.key}>
                     {column.render 
