@@ -1,6 +1,5 @@
 """Main package initialization."""
-from sdk import OpenAI
+from sdk import OpenAI, Anthropic, Google, Client
 
-__version__ = "0.1.0"
-__all__ = ["OpenAI"]
-
+__version__ = "1.0.0"
+__all__ = ["OpenAI", "Anthropic", "Google", "Client"]
