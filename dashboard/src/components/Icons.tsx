@@ -8,7 +8,8 @@ import {
   FiAlertTriangle,
   FiClock,
   FiTrendingUp,
-  FiTrendingDown
+  FiTrendingDown,
+  FiCopy
 } from 'react-icons/fi'
 
 interface IconProps {
@@ -51,6 +52,10 @@ export const TrendingUpIcon = ({ size = 24, color, className }: IconProps) => (
 
 export const TrendingDownIcon = ({ size = 24, color, className }: IconProps) => (
   <FiTrendingDown size={size} color={color} className={className} />
+)
+
+export const CopyIcon = ({ size = 24, color, className }: IconProps) => (
+  <FiCopy size={size} color={color} className={className} />
 )
 
 export const getViolationIcon = (type: string) => {

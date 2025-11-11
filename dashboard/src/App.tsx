@@ -11,6 +11,7 @@ import Logs from './pages/Logs'
 import Policies from './pages/Policies'
 import Patterns from './pages/Patterns'
 import Webhooks from './pages/Webhooks'
+import Settings from './pages/Settings'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -34,15 +35,16 @@ function App() {
                   paddingRight: '24px',
                   paddingBottom: '48px'
                 }}>
-                  <Routes>
-                    <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                    <Route path="/violations" element={<ProtectedRoute><Violations /></ProtectedRoute>} />
-                    <Route path="/logs" element={<ProtectedRoute><Logs /></ProtectedRoute>} />
-                    <Route path="/policies" element={<ProtectedRoute><Policies /></ProtectedRoute>} />
-                    <Route path="/patterns" element={<ProtectedRoute><Patterns /></ProtectedRoute>} />
-                    <Route path="/webhooks" element={<ProtectedRoute><Webhooks /></ProtectedRoute>} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
+                      <Routes>
+                        <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                        <Route path="/violations" element={<ProtectedRoute><Violations /></ProtectedRoute>} />
+                        <Route path="/logs" element={<ProtectedRoute><Logs /></ProtectedRoute>} />
+                        <Route path="/policies" element={<ProtectedRoute><Policies /></ProtectedRoute>} />
+                        <Route path="/patterns" element={<ProtectedRoute><Patterns /></ProtectedRoute>} />
+                        <Route path="/webhooks" element={<ProtectedRoute><Webhooks /></ProtectedRoute>} />
+                        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
                 </main>
               </div>
             }

@@ -345,6 +345,27 @@ export default function Navbar() {
                       )}
                     </div>
                     <div style={{ padding: '8px' }}>
+                      <Link
+                        to="/settings"
+                        style={{
+                          display: 'block',
+                          padding: '8px 12px',
+                          borderRadius: '6px',
+                          fontSize: '14px',
+                          color: 'var(--dark)',
+                          textDecoration: 'none',
+                          transition: 'background 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'var(--gray-light)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'transparent'
+                        }}
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        Settings
+                      </Link>
                       <a
                         href="mailto:support@aifirewall.com"
                         style={{
@@ -354,7 +375,8 @@ export default function Navbar() {
                           fontSize: '14px',
                           color: 'var(--dark)',
                           textDecoration: 'none',
-                          transition: 'background 0.2s'
+                          transition: 'background 0.2s',
+                          marginTop: '4px'
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background = 'var(--gray-light)'

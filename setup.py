@@ -13,7 +13,6 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/yourusername/aifirewall",
     packages=find_packages(exclude=["tests", "gateway", "detection", "policy", "audit_logging"]),
-    package_dir={"": "."},
     py_modules=[],
     classifiers=[
         "Development Status :: 4 - Beta",

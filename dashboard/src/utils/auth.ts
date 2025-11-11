@@ -11,6 +11,7 @@ export interface User {
   email_verified: boolean
   created_at?: string
   last_login?: string
+  api_key?: string  // Added for settings page
 }
 
 export function getToken(): string | null {
@@ -68,4 +69,30 @@ export function isDemoMode(): boolean {
 
 export function clearDemoMode(): void {
   localStorage.removeItem(DEMO_MODE_KEY)
+}
+
+// API key utilities
+export async function getUserApiKey(): Promise<string | null> {
+  const { apiClient } = await import('./api')
+  try {
+    const response = await apiClient.get('/api/auth/me/api-key')
+    return response.data.api_key || null
+  } catch (error) {
+    console.error('Failed to fetch API key:', error)
+    return null
+  }
+}
+
+// Refresh user data from server
+export async function refreshUser(): Promise<User | null> {
+  const { apiClient } = await import('./api')
+  try {
+    const response = await apiClient.get('/api/auth/me')
+    const user = response.data.user as User
+    setUser(user)
+    return user
+  } catch (error) {
+    console.error('Failed to refresh user data:', error)
+    return null
+  }
 }

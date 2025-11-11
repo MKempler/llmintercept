@@ -1205,7 +1205,7 @@ async def reset_password(request: ResetPasswordRequest):
 
 
 @app.get("/api/auth/me")
-async def get_current_user(authorization: Optional[str] = Header(None)):
+async def get_current_user(authorization: Optional[str] = Header(None), include_api_key: bool = False):
     """Get current user info from JWT token."""
     from users.service import UserService
     from users.jwt_utils import jwt_manager
@@ -1245,6 +1245,269 @@ async def get_current_user(authorization: Optional[str] = Header(None)):
         
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
+        
+        response = JSONResponse(content={"user": user.to_dict(include_sensitive=include_api_key)})
+        return add_cors_headers(response)
+    finally:
+        session.close()
+
+
+@app.get("/api/auth/me/api-key")
+async def get_user_api_key(authorization: Optional[str] = Header(None)):
+    """Get current user's API key."""
+    from users.service import UserService
+    from users.jwt_utils import jwt_manager
+    
+    if not authorization:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": {
+                    "message": "Authentication required",
+                    "type": "authentication_error",
+                    "code": "missing_token"
+                }
+            }
+        )
+    
+    # Extract token
+    token = authorization.replace("Bearer ", "").strip()
+    user_info = jwt_manager.get_user_from_token(token)
+    
+    if not user_info:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": {
+                    "message": "Invalid or expired token",
+                    "type": "authentication_error",
+                    "code": "invalid_token"
+                }
+            }
+        )
+    
+    session = audit_logger.Session()
+    try:
+        user_service = UserService(session)
+        user = user_service.get_user_by_id(user_info["user_id"])
+        
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        response = JSONResponse(content={"api_key": user.api_key})
+        return add_cors_headers(response)
+    finally:
+        session.close()
+
+
+class RegenerateApiKeyRequest(BaseModel):
+    password: str
+
+
+@app.post("/api/auth/me/api-key")
+async def regenerate_user_api_key(request: RegenerateApiKeyRequest, authorization: Optional[str] = Header(None)):
+    """Regenerate API key for current user (requires password confirmation)."""
+    from users.service import UserService
+    from users.jwt_utils import jwt_manager
+    
+    if not authorization:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": {
+                    "message": "Authentication required",
+                    "type": "authentication_error",
+                    "code": "missing_token"
+                }
+            }
+        )
+    
+    # Extract token
+    token = authorization.replace("Bearer ", "").strip()
+    user_info = jwt_manager.get_user_from_token(token)
+    
+    if not user_info:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": {
+                    "message": "Invalid or expired token",
+                    "type": "authentication_error",
+                    "code": "invalid_token"
+                }
+            }
+        )
+    
+    session = audit_logger.Session()
+    try:
+        user_service = UserService(session)
+        user = user_service.get_user_by_id(user_info["user_id"])
+        
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Verify password
+        if not user.check_password(request.password):
+            raise HTTPException(
+                status_code=401,
+                detail={
+                    "error": {
+                        "message": "Invalid password",
+                        "type": "authentication_error",
+                        "code": "invalid_password"
+                    }
+                }
+            )
+        
+        # Regenerate API key
+        new_key = user_service.regenerate_api_key(user.id)
+        
+        response = JSONResponse(content={
+            "api_key": new_key,
+            "message": "API key regenerated successfully"
+        })
+        return add_cors_headers(response)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    finally:
+        session.close()
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+
+
+@app.post("/api/auth/me/password")
+async def change_user_password(request: ChangePasswordRequest, authorization: Optional[str] = Header(None)):
+    """Change password for current user."""
+    from users.service import UserService
+    from users.jwt_utils import jwt_manager
+    
+    if not authorization:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": {
+                    "message": "Authentication required",
+                    "type": "authentication_error",
+                    "code": "missing_token"
+                }
+            }
+        )
+    
+    # Extract token
+    token = authorization.replace("Bearer ", "").strip()
+    user_info = jwt_manager.get_user_from_token(token)
+    
+    if not user_info:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": {
+                    "message": "Invalid or expired token",
+                    "type": "authentication_error",
+                    "code": "invalid_token"
+                }
+            }
+        )
+    
+    # Validate new password
+    if len(request.new_password) < 8:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": {
+                    "message": "Password must be at least 8 characters long",
+                    "type": "validation_error",
+                    "code": "password_too_short"
+                }
+            }
+        )
+    
+    session = audit_logger.Session()
+    try:
+        user_service = UserService(session)
+        user = user_service.get_user_by_id(user_info["user_id"])
+        
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Verify current password
+        if not user.check_password(request.current_password):
+            raise HTTPException(
+                status_code=401,
+                detail={
+                    "error": {
+                        "message": "Current password is incorrect",
+                        "type": "authentication_error",
+                        "code": "invalid_password"
+                    }
+                }
+            )
+        
+        # Change password
+        user_service.reset_password(user.id, request.new_password)
+        
+        response = JSONResponse(content={"message": "Password changed successfully"})
+        return add_cors_headers(response)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    finally:
+        session.close()
+
+
+class UpdateProfileRequest(BaseModel):
+    company: Optional[str] = None
+
+
+@app.patch("/api/auth/me")
+async def update_user_profile(request: UpdateProfileRequest, authorization: Optional[str] = Header(None)):
+    """Update user profile (company name)."""
+    from users.service import UserService
+    from users.jwt_utils import jwt_manager
+    
+    if not authorization:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": {
+                    "message": "Authentication required",
+                    "type": "authentication_error",
+                    "code": "missing_token"
+                }
+            }
+        )
+    
+    # Extract token
+    token = authorization.replace("Bearer ", "").strip()
+    user_info = jwt_manager.get_user_from_token(token)
+    
+    if not user_info:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": {
+                    "message": "Invalid or expired token",
+                    "type": "authentication_error",
+                    "code": "invalid_token"
+                }
+            }
+        )
+    
+    session = audit_logger.Session()
+    try:
+        user_service = UserService(session)
+        user = user_service.get_user_by_id(user_info["user_id"])
+        
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Update company if provided
+        if request.company is not None:
+            user.company = request.company
+            session.commit()
+            session.refresh(user)
         
         response = JSONResponse(content={"user": user.to_dict(include_sensitive=False)})
         return add_cors_headers(response)
