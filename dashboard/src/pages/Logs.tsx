@@ -175,8 +175,8 @@ function Logs() {
 
     return (
       <div>
-        <div style={{ fontSize: '13px', color: 'var(--dark)', fontWeight: 500 }}>{relativeTime}</div>
-        <div style={{ fontSize: '11px', color: 'var(--gray)', marginTop: '2px' }}>
+        <div style={{ fontSize: '13px', color: 'var(--text-primary)', fontWeight: 500 }}>{relativeTime}</div>
+        <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
           {date.toLocaleString()}
         </div>
       </div>
@@ -232,8 +232,8 @@ function Logs() {
             fontSize: '12px',
             padding: '2px 6px',
             borderRadius: '4px',
-            background: value === 'POST' ? 'var(--primary-light)' : 'var(--gray-light)',
-            color: value === 'POST' ? 'var(--primary-dark)' : 'var(--gray)'
+            background: value === 'POST' ? 'rgba(37, 99, 235, 0.2)' : 'rgba(156, 163, 175, 0.15)',
+            color: value === 'POST' ? 'var(--primary-light)' : 'var(--text-muted)'
           }}
         >
           {value || '-'}
@@ -248,7 +248,7 @@ function Logs() {
           style={{
             fontFamily: 'monospace',
             fontSize: '12px',
-            color: 'var(--dark)'
+            color: 'var(--text-secondary)'
           }}
         >
           {value || '-'}
@@ -271,7 +271,7 @@ function Logs() {
       label: 'Latency',
       render: (value: number) =>
         value ? (
-          <span style={{ color: value > 200 ? 'var(--warning)' : 'var(--gray)', fontSize: '13px' }}>
+          <span style={{ color: value > 200 ? 'var(--warning)' : 'var(--text-muted)', fontSize: '13px' }}>
             {value}ms
           </span>
         ) : (
@@ -327,7 +327,7 @@ function Logs() {
             onClick={handleExport}
             style={{
               padding: '8px 16px',
-              backgroundColor: 'white',
+              backgroundColor: 'var(--dark-surface)',
               color: 'var(--primary)',
               border: '1px solid var(--primary)',
               borderRadius: '8px',
@@ -338,10 +338,10 @@ function Logs() {
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = 'var(--primary)'
-              e.currentTarget.style.color = 'white'
+              e.currentTarget.style.color = 'var(--text-primary)'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'white'
+              e.currentTarget.style.background = 'var(--dark-surface)'
               e.currentTarget.style.color = 'var(--primary)'
             }}
           >
@@ -409,7 +409,7 @@ function Logs() {
 
       {/* Results Count */}
       {total > 0 && (
-        <div style={{ marginBottom: '16px', fontSize: '14px', color: 'var(--gray)' }}>
+        <div style={{ marginBottom: '16px', fontSize: '14px', color: 'var(--text-muted)' }}>
           Showing {offset + 1}-{Math.min(offset + limit, total)} of {total} logs
         </div>
       )}
@@ -417,7 +417,7 @@ function Logs() {
       {/* Table */}
       <div
         style={{
-          background: 'white',
+          background: 'var(--dark-surface)',
           borderRadius: '8px',
           border: '1px solid var(--gray-border)',
           overflow: 'hidden'

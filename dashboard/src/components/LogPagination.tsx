@@ -43,12 +43,13 @@ export default function LogPagination({
         alignItems: 'center',
         marginTop: '24px',
         padding: '16px',
-        background: 'var(--gray-light)',
-        borderRadius: '8px'
+        background: 'var(--dark-surface)',
+        borderRadius: '8px',
+        border: '1px solid var(--gray-border)'
       }}
     >
       {/* Results Count */}
-      <div style={{ fontSize: '14px', color: 'var(--gray)' }}>
+      <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
         Showing {startItem}-{endItem} of {total} logs
       </div>
 
@@ -62,9 +63,17 @@ export default function LogPagination({
             padding: '6px 12px',
             borderRadius: '6px',
             border: '1px solid var(--gray-border)',
-            background: 'white',
+            background: 'var(--dark-surface)',
+            color: 'var(--text-secondary)',
             fontSize: '13px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            transition: 'all 0.2s'
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = 'var(--primary)'
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = 'var(--gray-border)'
           }}
         >
           <option value={25}>25 per page</option>
@@ -80,11 +89,24 @@ export default function LogPagination({
             padding: '6px 12px',
             borderRadius: '6px',
             border: '1px solid var(--gray-border)',
-            background: offset === 0 ? 'var(--gray-light)' : 'white',
-            color: offset === 0 ? 'var(--gray)' : 'var(--dark)',
+            background: offset === 0 ? 'var(--dark-surface)' : 'var(--dark-surface)',
+            color: offset === 0 ? 'var(--text-muted)' : 'var(--text-secondary)',
             fontSize: '13px',
             cursor: offset === 0 ? 'not-allowed' : 'pointer',
-            transition: 'all 0.2s'
+            transition: 'all 0.2s',
+            opacity: offset === 0 ? 0.5 : 1
+          }}
+          onMouseEnter={(e) => {
+            if (offset !== 0) {
+              e.currentTarget.style.borderColor = 'var(--primary)'
+              e.currentTarget.style.background = 'rgba(37, 99, 235, 0.1)'
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (offset !== 0) {
+              e.currentTarget.style.borderColor = 'var(--gray-border)'
+              e.currentTarget.style.background = 'var(--dark-surface)'
+            }
           }}
         >
           Previous
@@ -112,8 +134,8 @@ export default function LogPagination({
                   padding: '6px 12px',
                   borderRadius: '6px',
                   border: '1px solid var(--gray-border)',
-                  background: currentPage === pageNum ? 'var(--primary)' : 'white',
-                  color: currentPage === pageNum ? 'white' : 'var(--dark)',
+                  background: currentPage === pageNum ? 'var(--primary)' : 'var(--dark-surface)',
+                  color: currentPage === pageNum ? 'var(--text-primary)' : 'var(--text-secondary)',
                   fontSize: '13px',
                   fontWeight: currentPage === pageNum ? 600 : 500,
                   cursor: 'pointer',
@@ -123,11 +145,13 @@ export default function LogPagination({
                 onMouseEnter={(e) => {
                   if (currentPage !== pageNum) {
                     e.currentTarget.style.borderColor = 'var(--primary)'
+                    e.currentTarget.style.background = 'rgba(37, 99, 235, 0.1)'
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (currentPage !== pageNum) {
                     e.currentTarget.style.borderColor = 'var(--gray-border)'
+                    e.currentTarget.style.background = 'var(--dark-surface)'
                   }
                 }}
               >
@@ -145,11 +169,24 @@ export default function LogPagination({
             padding: '6px 12px',
             borderRadius: '6px',
             border: '1px solid var(--gray-border)',
-            background: offset + limit >= total ? 'var(--gray-light)' : 'white',
-            color: offset + limit >= total ? 'var(--gray)' : 'var(--dark)',
+            background: 'var(--dark-surface)',
+            color: offset + limit >= total ? 'var(--text-muted)' : 'var(--text-secondary)',
             fontSize: '13px',
             cursor: offset + limit >= total ? 'not-allowed' : 'pointer',
-            transition: 'all 0.2s'
+            transition: 'all 0.2s',
+            opacity: offset + limit >= total ? 0.5 : 1
+          }}
+          onMouseEnter={(e) => {
+            if (offset + limit < total) {
+              e.currentTarget.style.borderColor = 'var(--primary)'
+              e.currentTarget.style.background = 'rgba(37, 99, 235, 0.1)'
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (offset + limit < total) {
+              e.currentTarget.style.borderColor = 'var(--gray-border)'
+              e.currentTarget.style.background = 'var(--dark-surface)'
+            }
           }}
         >
           Next

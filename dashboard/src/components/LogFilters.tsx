@@ -51,7 +51,18 @@ export default function LogFilters({
             border: '1px solid var(--gray-border)',
             borderRadius: '8px',
             fontSize: '14px',
-            fontFamily: 'Inter, sans-serif'
+            fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif',
+            background: 'var(--dark-surface)',
+            color: 'var(--text-secondary)',
+            transition: 'all 0.2s'
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = 'var(--primary)'
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.1)'
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = 'var(--gray-border)'
+            e.currentTarget.style.boxShadow = 'none'
           }}
         />
       </div>
@@ -60,7 +71,7 @@ export default function LogFilters({
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
         {/* Status Filter */}
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <span style={{ fontSize: '14px', color: 'var(--gray)', fontWeight: 500 }}>Status:</span>
+          <span style={{ fontSize: '14px', color: 'var(--text-muted)', fontWeight: 500 }}>Status:</span>
           {statusOptions.map((option) => (
             <button
               key={option.value || 'all'}
@@ -69,8 +80,8 @@ export default function LogFilters({
                 padding: '6px 12px',
                 borderRadius: '6px',
                 border: '1px solid var(--gray-border)',
-                background: status === option.value ? 'var(--primary)' : 'white',
-                color: status === option.value ? 'white' : 'var(--dark)',
+                background: status === option.value ? 'var(--primary)' : 'var(--dark-surface)',
+                color: status === option.value ? 'var(--text-primary)' : 'var(--text-secondary)',
                 fontSize: '13px',
                 fontWeight: status === option.value ? 600 : 500,
                 cursor: 'pointer',
@@ -79,11 +90,13 @@ export default function LogFilters({
               onMouseEnter={(e) => {
                 if (status !== option.value) {
                   e.currentTarget.style.borderColor = 'var(--primary)'
+                  e.currentTarget.style.background = 'rgba(37, 99, 235, 0.1)'
                 }
               }}
               onMouseLeave={(e) => {
                 if (status !== option.value) {
                   e.currentTarget.style.borderColor = 'var(--gray-border)'
+                  e.currentTarget.style.background = 'var(--dark-surface)'
                 }
               }}
             >
@@ -94,7 +107,7 @@ export default function LogFilters({
 
         {/* Violation Type Filter */}
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginLeft: '16px' }}>
-          <span style={{ fontSize: '14px', color: 'var(--gray)', fontWeight: 500 }}>Violation:</span>
+          <span style={{ fontSize: '14px', color: 'var(--text-muted)', fontWeight: 500 }}>Violation:</span>
           {violationTypeOptions.map((option) => (
             <button
               key={option.value || 'all'}
@@ -103,8 +116,8 @@ export default function LogFilters({
                 padding: '6px 12px',
                 borderRadius: '6px',
                 border: '1px solid var(--gray-border)',
-                background: violationType === option.value ? 'var(--primary)' : 'white',
-                color: violationType === option.value ? 'white' : 'var(--dark)',
+                background: violationType === option.value ? 'var(--primary)' : 'var(--dark-surface)',
+                color: violationType === option.value ? 'var(--text-primary)' : 'var(--text-secondary)',
                 fontSize: '13px',
                 fontWeight: violationType === option.value ? 600 : 500,
                 cursor: 'pointer',
@@ -113,11 +126,13 @@ export default function LogFilters({
               onMouseEnter={(e) => {
                 if (violationType !== option.value) {
                   e.currentTarget.style.borderColor = 'var(--primary)'
+                  e.currentTarget.style.background = 'rgba(37, 99, 235, 0.1)'
                 }
               }}
               onMouseLeave={(e) => {
                 if (violationType !== option.value) {
                   e.currentTarget.style.borderColor = 'var(--gray-border)'
+                  e.currentTarget.style.background = 'var(--dark-surface)'
                 }
               }}
             >
@@ -129,7 +144,7 @@ export default function LogFilters({
         {/* Endpoint Filter */}
         {availableEndpoints.length > 0 && (
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginLeft: '16px' }}>
-            <span style={{ fontSize: '14px', color: 'var(--gray)', fontWeight: 500 }}>Endpoint:</span>
+            <span style={{ fontSize: '14px', color: 'var(--text-muted)', fontWeight: 500 }}>Endpoint:</span>
             <select
               value={endpoint || ''}
               onChange={(e) => onEndpointChange(e.target.value || null)}
@@ -137,10 +152,18 @@ export default function LogFilters({
                 padding: '6px 12px',
                 borderRadius: '6px',
                 border: '1px solid var(--gray-border)',
-                background: 'white',
+                background: 'var(--dark-surface)',
+                color: 'var(--text-secondary)',
                 fontSize: '13px',
                 fontFamily: 'monospace',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = 'var(--primary)'
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = 'var(--gray-border)'
               }}
             >
               <option value="">All Endpoints</option>

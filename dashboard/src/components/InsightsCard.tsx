@@ -22,9 +22,9 @@ export default function InsightsCard({
             width: '40px', 
             height: '40px', 
             borderRadius: '8px',
-            background: type === 'error' ? 'rgba(220, 38, 38, 0.1)' : 
-                        type === 'warning' ? 'rgba(217, 119, 6, 0.1)' : 
-                        'rgba(37, 99, 235, 0.1)',
+            background: type === 'error' ? 'rgba(244, 63, 94, 0.2)' : 
+                        type === 'warning' ? 'rgba(249, 115, 22, 0.2)' : 
+                        'rgba(37, 99, 235, 0.2)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -42,14 +42,14 @@ export default function InsightsCard({
           <h4 style={{ 
             fontSize: '1rem', 
             fontWeight: 600, 
-            color: 'var(--dark)',
+            color: 'var(--text-primary)',
             marginBottom: '4px'
           }}>
             {title}
           </h4>
           <p style={{ 
             fontSize: '0.875rem', 
-            color: 'var(--gray)',
+            color: 'var(--text-muted)',
             margin: 0,
             lineHeight: 1.5
           }}>
