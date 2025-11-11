@@ -6,9 +6,6 @@
     <title>LLM Intercept - Enterprise LLM Security</title>
     <meta name="description" content="Enterprise-grade security layer for LLM interactions. Automatically detect and block secrets, PII, and prompt injection attacks before they reach your AI models.">
     <link rel="icon" type="image/png" href="logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
     
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-LKJ51BJ5DG"></script>
@@ -28,24 +25,28 @@
     
     <style>
         :root {
-            --primary: #2563eb;
+            --primary: #2563EB;
             --primary-dark: #1d4ed8;
             --primary-light: #3b82f6;
             --secondary: #64748b;
-            --accent: #0f172a;
+            --accent: #22D3EE;
             --success: #059669;
-            --warning: #d97706;
-            --error: #dc2626;
-            --dark: #0f172a;
-            --dark-light: #1e293b;
-            --gray: #64748b;
-            --gray-light: #f1f5f9;
-            --gray-border: #e2e8f0;
-            --white: #ffffff;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --warning: #F97316;
+            --error: #F43F5E;
+            --dark: #020817;
+            --dark-light: #050816;
+            --dark-surface: #0B1020;
+            --gray: #9CA3AF;
+            --gray-light: #0B1020;
+            --gray-border: rgba(148, 163, 253, 0.15);
+            --white: #0B1020;
+            --text-primary: #F9FAFB;
+            --text-secondary: #E5E7EB;
+            --text-muted: #9CA3AF;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
         }
 
         * {
@@ -59,38 +60,55 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
             line-height: 1.6;
-            color: var(--dark);
-            background: var(--white);
+            color: var(--text-secondary);
+            background: #020817;
             overflow-x: hidden;
             font-size: 16px;
+            font-weight: 400;
         }
 
         .container {
-            max-width: 1280px;
+            max-width: 1120px;
             margin: 0 auto;
             padding: 0 24px;
         }
 
+        /* Section Structure */
+        section:not(.hero) {
+            padding: 72px 0;
+        }
+
+        .section-eyebrow {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
         /* Header */
         header {
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(2, 8, 23, 0.98);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            border-bottom: 1px solid var(--gray-border);
         }
 
         header.scrolled {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+            background: rgba(2, 8, 23, 0.95);
         }
 
         nav {
@@ -120,14 +138,14 @@
         .logo {
             font-size: 1.75rem;
             font-weight: 800;
-            color: var(--dark);
+            color: var(--text-primary);
             letter-spacing: -0.03em;
             display: flex;
             align-items: center;
             gap: 0.875rem;
             transition: all 0.3s ease;
             text-decoration: none;
-            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
         }
 
         .logo:hover {
@@ -170,14 +188,14 @@
             background-clip: text;
             font-weight: 800;
             letter-spacing: -0.02em;
-            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
         }
 
         .logo-text .logo-name {
-            color: var(--dark);
+            color: var(--text-primary);
             font-weight: 700;
             letter-spacing: -0.02em;
-            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
         }
 
         .nav-links {
@@ -191,7 +209,7 @@
 
         .nav-links a {
             text-decoration: none;
-            color: var(--gray);
+            color: var(--text-secondary);
             font-weight: 500;
             font-size: 0.9375rem;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -212,7 +230,7 @@
         }
 
         .nav-links a:hover {
-            color: var(--dark);
+            color: var(--primary);
         }
 
         .nav-links a:hover::after {
@@ -251,62 +269,484 @@
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            color: var(--dark);
+            background: #020817;
+            background-image: radial-gradient(circle at top right, rgba(37, 99, 235, 0.15) 0%, rgba(139, 92, 246, 0.08) 50%, transparent 70%);
+            color: var(--text-primary);
             padding: 8rem 0 6rem;
             margin-top: 80px;
             position: relative;
             border-bottom: 1px solid var(--gray-border);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, rgba(139, 92, 246, 0.06) 40%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .hero-content {
-            text-align: center;
-            max-width: 900px;
-            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .hero-right {
+            position: relative;
         }
 
         .hero-badge {
             display: inline-block;
-            background: var(--gray-light);
+            background: var(--dark-surface);
             padding: 0.5rem 1rem;
             border-radius: 6px;
             font-size: 0.875rem;
             font-weight: 600;
-            margin-bottom: 2rem;
+            margin-bottom: 0.5rem;
             color: var(--primary);
             border: 1px solid var(--gray-border);
+            width: fit-content;
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
+            font-size: clamp(40px, 5vw, 56px);
+            font-weight: 700;
+            margin-bottom: 0;
+            line-height: 1.1;
             letter-spacing: -0.02em;
-            color: var(--dark);
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
+            color: var(--text-primary);
         }
 
         .hero h1 .gradient {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             display: inline-block;
-            margin-left: 0.5rem;
         }
 
-        .hero p {
-            font-size: clamp(1.125rem, 2vw, 1.375rem);
-            margin-top: 1rem;
-            margin-bottom: 2.5rem;
-            color: var(--gray);
-            line-height: 1.7;
-            max-width: 700px;
+        .hero-subhead {
+            font-size: clamp(20px, 2.5vw, 24px);
+            font-weight: 500;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-top: 0.5rem;
+        }
+
+        .hero-oneliner {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-top: 0.5rem;
+        }
+
+        .hero-integration {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-top: 0.25rem;
+        }
+
+        .hero-ctas {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .hero-ctas-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-dashboard-card {
+            background: var(--dark-surface);
+            border-radius: 16px;
+            border: 1px solid var(--gray-border);
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .hero-dashboard-label {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(2, 8, 23, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            border: 1px solid var(--gray-border);
+            z-index: 2;
+        }
+
+        .hero-dashboard-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        @media (max-width: 968px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .hero-right {
+                order: -1;
+            }
+
+            .hero h1 {
+                text-align: center;
+            }
+
+            .hero-subhead,
+            .hero-oneliner,
+            .hero-integration {
+                text-align: center;
+            }
+
+            .hero-ctas-row {
+                justify-content: center;
+            }
+        }
+
+        /* Key Outcomes Cards */
+        .key-outcomes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 0;
+        }
+
+        .key-outcome-card {
+            background: var(--dark-surface);
+            border: 1px solid rgba(148, 163, 253, 0.12);
+            border-radius: 16px;
+            padding: 16px 18px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .key-outcome-card:hover {
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+            border-color: rgba(148, 163, 253, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .key-outcome-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .key-outcome-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .key-outcome-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .key-outcomes {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        /* Integration Cards */
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .integration-card {
+            background: var(--dark-surface);
+            border: 1px solid rgba(148, 163, 253, 0.12);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .integration-card:hover {
+            border-color: rgba(148, 163, 253, 0.25);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .integration-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .integration-icon {
+            width: 32px;
+            height: 32px;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .integration-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .integration-bullets {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .integration-bullet {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .integration-bullet strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .integration-link {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .integration-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .integration-link a:hover {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 968px) {
+            .integration-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        /* Dashboard Preview Section */
+        .dashboard-preview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-top: 3rem;
+        }
+
+        .dashboard-bullets {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .dashboard-bullet {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .dashboard-bullet-icon {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+
+        .dashboard-image-wrapper {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--gray-border);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .works-with {
+            margin-top: 3rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--gray-border);
+        }
+
+        .works-with-label {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .works-with-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .works-with-logo {
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            filter: grayscale(100%);
+        }
+
+        .works-with-logo:hover {
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+
+        .works-with-logo img {
+            height: 32px;
+            width: auto;
+        }
+
+        .works-with-logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 968px) {
+            .dashboard-preview-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .dashboard-image-wrapper {
+                order: -1;
+            }
+        }
+
+        /* Enterprise Security Grid */
+        .enterprise-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+            max-width: 800px;
             margin-left: auto;
             margin-right: auto;
+        }
+
+        .enterprise-card {
+            background: var(--dark-surface);
+            border: 1px solid rgba(148, 163, 253, 0.12);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: left;
+        }
+
+        .enterprise-card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .enterprise-card-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .enterprise-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Final CTA */
+        .final-cta {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .final-cta-title {
+            font-size: clamp(28px, 4vw, 32px);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .final-cta-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .final-cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .hero-buttons {
@@ -341,14 +781,15 @@
         }
 
         .btn-secondary {
-            background: var(--white);
-            color: var(--dark);
+            background: var(--dark-surface);
+            color: var(--text-primary);
             border: 1px solid var(--gray-border);
         }
 
         .btn-secondary:hover {
             border-color: var(--primary);
             color: var(--primary);
+            background: var(--dark-light);
         }
 
         /* Features */
@@ -359,21 +800,23 @@
 
         .section-title {
             text-align: center;
-            font-size: clamp(2rem, 4vw, 2.75rem);
-            font-weight: 800;
+            font-size: clamp(28px, 4vw, 32px);
+            font-weight: 600;
             margin-bottom: 1rem;
-            color: var(--dark);
-            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            line-height: 1.3;
         }
 
         .section-subtitle {
             text-align: center;
-            font-size: 1.125rem;
-            color: var(--gray);
+            font-size: 14px;
+            color: var(--text-muted);
             margin-bottom: 4rem;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
+            line-height: 1.6;
         }
 
         .features-grid {
@@ -395,6 +838,9 @@
         }
 
         @media (max-width: 768px) {
+            section:not(.hero) {
+                padding: 40px 0 !important;
+            }
             .features-grid {
                 grid-template-columns: 1fr;
             }
@@ -417,7 +863,7 @@
         }
 
         .feature-card {
-            background: var(--white);
+            background: var(--dark-surface);
             padding: 2.5rem;
             border-radius: 12px;
             border: 1px solid var(--gray-border);
@@ -441,99 +887,132 @@
         }
 
         .feature-card h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: clamp(20px, 2vw, 22px);
+            font-weight: 600;
             margin-bottom: 1rem;
-            color: var(--dark);
+            color: var(--text-primary);
             letter-spacing: -0.01em;
+            line-height: 1.3;
         }
 
         .feature-card p {
-            color: var(--gray);
-            line-height: 1.7;
-            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 16px;
         }
 
         /* How It Works */
         .how-it-works-steps {
             display: flex;
             align-items: flex-start;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            position: relative;
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 3rem auto 0;
+            padding: 0 2rem;
+        }
+
+        .how-it-works-steps::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: 2rem;
+            right: 2rem;
+            height: 1px;
+            background: linear-gradient(to right, transparent 0%, rgba(148, 163, 253, 0.2) 10%, rgba(148, 163, 253, 0.2) 90%, transparent 100%);
+            z-index: 0;
         }
 
         .step-card {
             flex: 1;
-            min-width: 200px;
-            max-width: 250px;
-            background: var(--white);
-            padding: 2rem;
+            background: var(--dark-surface);
+            border: 1px solid rgba(148, 163, 253, 0.12);
             border-radius: 12px;
-            border: 1px solid var(--gray-border);
-            text-align: center;
+            padding: 1.5rem;
+            text-align: left;
             transition: all 0.3s ease;
             position: relative;
+            z-index: 1;
+            max-width: 260px;
         }
 
         .step-card:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-4px);
+            border-color: rgba(148, 163, 253, 0.25);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+            transform: translateY(-2px);
         }
 
         .step-number {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: var(--white);
-            font-size: 1.5rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
+            display: inline-block;
+            background: var(--primary);
+            color: #FFFFFF;
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            margin-bottom: 1rem;
         }
 
         .step-card h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            color: var(--dark);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            line-height: 1.3;
         }
 
         .step-card p {
-            color: var(--gray);
-            line-height: 1.6;
-            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            font-size: 14px;
+            margin: 0;
         }
 
         .step-arrow {
-            font-size: 2rem;
-            color: var(--primary);
-            font-weight: 300;
-            align-self: center;
-            margin: 0 0.5rem;
-            flex-shrink: 0;
+            display: none;
         }
 
         @media (max-width: 968px) {
             .how-it-works-steps {
                 flex-direction: column;
-                align-items: center;
+                align-items: stretch;
+                gap: 1.5rem;
+                padding: 0;
             }
-            
+
+            .how-it-works-steps::before {
+                display: none;
+            }
+
+            .how-it-works-steps::after {
+                content: '';
+                position: absolute;
+                left: 24px;
+                top: 0;
+                bottom: 0;
+                width: 1px;
+                background: linear-gradient(to bottom, transparent 0%, rgba(148, 163, 253, 0.2) 10%, rgba(148, 163, 253, 0.2) 90%, transparent 100%);
+                z-index: 0;
+            }
+
             .step-card {
                 max-width: 100%;
-                width: 100%;
+                margin-left: 3rem;
+                position: relative;
             }
-            
-            .step-arrow {
-                transform: rotate(90deg);
-                margin: 0.5rem 0;
+
+            .step-card::before {
+                content: '';
+                position: absolute;
+                left: -3rem;
+                top: 24px;
+                width: 1px;
+                height: calc(100% + 1.5rem);
+                background: rgba(148, 163, 253, 0.2);
+            }
+
+            .step-card:last-child::before {
+                display: none;
             }
         }
 
@@ -612,8 +1091,97 @@
             margin-top: 1.5rem;
         }
 
+        /* Segmented Control */
+        .segmented-control {
+            display: inline-flex;
+            background: var(--dark-surface);
+            border: 1px solid rgba(148, 163, 253, 0.12);
+            border-radius: 8px;
+            padding: 0.25rem;
+            gap: 0.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .segmented-control-btn {
+            padding: 0.625rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: transparent;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .segmented-control-btn:hover {
+            color: var(--text-primary);
+            background: rgba(148, 163, 253, 0.08);
+        }
+
+        .segmented-control-btn.active {
+            background: var(--primary);
+            color: #FFFFFF;
+        }
+
+        .segmented-control-btn.active:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Demo Card */
+        .demo-card {
+            background: var(--dark-surface);
+            border: 1px solid rgba(148, 163, 253, 0.12);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .demo-card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .demo-card-blurb {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-textarea {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            border: 1px solid var(--gray-border);
+            background: #020817;
+            color: var(--text-secondary);
+            resize: vertical;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .demo-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .demo-card-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
         .demo-btn {
-            padding: 0.875rem 1.5rem;
+            padding: 0.75rem 1.5rem;
             border: none;
             border-radius: 8px;
             font-weight: 600;
@@ -628,7 +1196,7 @@
 
         .demo-btn.primary {
             background: var(--primary);
-            color: var(--white);
+            color: #FFFFFF;
         }
 
         .demo-btn.primary:hover {
@@ -637,14 +1205,15 @@
         }
 
         .demo-btn.secondary {
-            background: var(--gray-light);
-            color: var(--dark);
+            background: transparent;
+            color: var(--text-secondary);
             border: 1px solid var(--gray-border);
         }
 
         .demo-btn.secondary:hover {
-            border-color: var(--primary);
-            color: var(--primary);
+            border-color: rgba(148, 163, 253, 0.25);
+            color: var(--text-primary);
+            background: rgba(148, 163, 253, 0.05);
         }
 
         .demo-result {
@@ -1058,67 +1627,99 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <div class="hero-badge">Enterprise-Grade LLM Security</div>
-                <h1>Your Employees Are Leaking Data to AI. <span class="gradient">We Stop It.</span></h1>
-                <p style="font-size: 1.125rem; line-height: 1.7; margin-bottom: 1rem;">LLM Intercept is an AI firewall that inspects every LLM request for secrets, PII, and prompt injection before it leaves your org.</p>
-                <p style="font-size: 0.9375rem; color: var(--gray); margin-bottom: 2.5rem;">Protect employees, apps, and APIs via Browser Extension, SDK, or Gateway.</p>
-                <div class="hero-buttons">
-                    <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'hero' });">Request Enterprise Demo</a>
-                    <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'hero' });">Try Interactive Demo</a>
-                    <a href="https://dashboard.llmintercept.com" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;" onmouseover="this.style.color='var(--primary-dark)'; this.style.textDecoration='underline';" onmouseout="this.style.color='var(--primary)'; this.style.textDecoration='none';" onclick="trackEvent('click_view_dashboard', { location: 'hero' });">
-                        View Dashboard <span style="font-size: 0.9em;">→</span>
-                    </a>
+                <!-- Left Column -->
+                <div class="hero-left">
+                    <div class="hero-badge">Enterprise-Grade LLM Security</div>
+                    <h1>Your Employees Are Leaking Data to AI. <span class="gradient">We Stop It.</span></h1>
+                    <p class="hero-subhead">Protect every LLM interaction across your organization</p>
+                    <p class="hero-oneliner">AI firewall that inspects every LLM request for secrets, PII, and prompt injection before it leaves your org.</p>
+                    <p class="hero-integration">Protect employees, apps, and APIs via Browser Extension, SDK, or Gateway.</p>
+                    <div class="hero-ctas">
+                        <div class="hero-ctas-row">
+                            <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'hero' });">Request Enterprise Demo</a>
+                            <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'hero' });">Try Interactive Demo</a>
+                        </div>
+                        <a href="#dashboard-preview" style="color: var(--text-muted); text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; width: fit-content;" onmouseover="this.style.color='var(--text-secondary)';" onmouseout="this.style.color='var(--text-muted)';" onclick="trackEvent('click_view_dashboard', { location: 'hero' });">
+                            View Dashboard Preview <span style="font-size: 0.9em;">→</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Right Column -->
+                <div class="hero-right">
+                    <div class="hero-dashboard-card">
+                        <div class="hero-dashboard-label">Live firewall activity</div>
+                        <img src="aifirewall/dashboard.png" alt="LLM Intercept Security Dashboard" class="hero-dashboard-image" />
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Key Value Props -->
-    <section style="padding: 2.5rem 0; background: var(--white); border-bottom: 1px solid var(--gray-border);">
+    <section style="background: #020817; border-bottom: 1px solid var(--gray-border);">
         <div class="container">
-            <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; max-width: 1000px; margin: 0 auto;">
-                <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; color: var(--dark);">
-                    <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">✓</span>
-                    <span><strong>Stop Data Leaks</strong> – Block secrets & PII before they ever reach LLMs.</span>
+            <div class="key-outcomes">
+                <div class="key-outcome-card fade-in">
+                    <div class="key-outcome-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3 class="key-outcome-title">Stop Data Leaks</h3>
+                    <p class="key-outcome-description">Block secrets & PII before they ever reach LLMs.</p>
                 </div>
-                <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; color: var(--dark);">
-                    <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">✓</span>
-                    <span><strong>Meet Compliance</strong> – Centralized logging & policies for audits.</span>
+                <div class="key-outcome-card fade-in">
+                    <div class="key-outcome-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </div>
+                    <h3 class="key-outcome-title">Meet Compliance</h3>
+                    <p class="key-outcome-description">Centralized logging & policies for audits.</p>
                 </div>
-                <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; color: var(--dark);">
-                    <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">✓</span>
-                    <span><strong>Adopt AI Safely</strong> – Let teams use ChatGPT/Claude/Gemini without security tickets.</span>
+                <div class="key-outcome-card fade-in">
+                    <div class="key-outcome-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                    </div>
+                    <h3 class="key-outcome-title">Adopt AI Safely</h3>
+                    <p class="key-outcome-description">Let teams use ChatGPT/Claude/Gemini without security tickets.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works" style="padding: 6rem 0; background: var(--white);">
+    <section class="how-it-works" id="how-it-works" style="background: #020817;">
         <div class="container">
             <h2 class="section-title fade-in">How It Works</h2>
             <p class="section-subtitle fade-in">Four steps to complete protection</p>
             <div class="how-it-works-steps">
                 <div class="step-card fade-in">
-                    <div class="step-number">1</div>
+                    <span class="step-number">1</span>
                     <h3>Traffic Routed</h3>
                     <p>Browser extension, SDK, or Gateway routes each request to LLM Intercept first.</p>
                 </div>
-                <div class="step-arrow">→</div>
                 <div class="step-card fade-in">
-                    <div class="step-number">2</div>
+                    <span class="step-number">2</span>
                     <h3>Real-Time Inspection</h3>
                     <p>Secrets, PII, and prompt injection detected in &lt;100ms using pattern matching + ML.</p>
                 </div>
-                <div class="step-arrow">→</div>
                 <div class="step-card fade-in">
-                    <div class="step-number">3</div>
+                    <span class="step-number">3</span>
                     <h3>Automatic Enforcement</h3>
                     <p>Block, redact, mask, or allow based on your policies.</p>
                 </div>
-                <div class="step-arrow">→</div>
                 <div class="step-card fade-in">
-                    <div class="step-number">4</div>
+                    <span class="step-number">4</span>
                     <h3>Unified Visibility</h3>
                     <p>Security teams see all LLM usage: violations, users, apps, and models in one place.</p>
                 </div>
@@ -1127,36 +1728,27 @@
     </section>
 
     <!-- Interactive Demo -->
-    <section class="demo" id="interactive-demo" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
+    <section class="demo" id="interactive-demo" style="background: #050816; border-top: 1px solid var(--gray-border);">
         <div class="container">
             <div class="demo-container">
                 <h2 class="section-title fade-in">Test Real Threat Scenarios</h2>
                 <p class="section-subtitle fade-in">See how the firewall protects against actual security threats in real-time.</p>
                 
                 <!-- Demo Scenarios -->
-                <div class="demo-box fade-in" style="margin-top: 3rem;">
-                    <div style="margin-bottom: 2rem;">
-                        <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                            <button class="demo-btn secondary" id="stepBtn1" style="flex: 1; min-width: 150px;">
-                                <span>Secrets Detection</span>
-                            </button>
-                            <button class="demo-btn secondary" id="stepBtn2" style="flex: 1; min-width: 150px;">
-                                <span>PII Protection</span>
-                            </button>
-                            <button class="demo-btn secondary" id="stepBtn3" style="flex: 1; min-width: 150px;">
-                                <span>Injection Defense</span>
-                            </button>
-                            <button class="demo-btn secondary" id="stepBtn4" style="flex: 1; min-width: 150px;">
-                                <span>Clean Request</span>
-                            </button>
-                        </div>
-                        
-                        <div id="demoStepContent" style="min-height: 300px;">
-                            <div style="padding: 2rem; text-align: center; color: var(--gray);">
-                                <p>Loading demo...</p>
-                            </div>
+                <div class="fade-in" style="margin-top: 3rem; display: flex; flex-direction: column; align-items: center;">
+                    <div class="segmented-control">
+                        <button class="segmented-control-btn active" id="stepBtn1">Secrets</button>
+                        <button class="segmented-control-btn" id="stepBtn2">PII</button>
+                        <button class="segmented-control-btn" id="stepBtn3">Injection</button>
+                        <button class="segmented-control-btn" id="stepBtn4">Clean</button>
+                    </div>
+                    
+                    <div class="demo-card" id="demoStepContent">
+                        <div style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                            <p>Loading demo...</p>
                         </div>
                     </div>
+                </div>
                     
                     <div class="stats" style="margin-top: 2rem;">
                         <div class="stat">
@@ -1182,133 +1774,142 @@
     </section>
 
     <!-- Three Integration Options -->
-    <section class="demo" id="integration-options" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
+    <section class="demo" id="integration-options" style="background: #050816; border-top: 1px solid var(--gray-border);">
         <div class="container">
             <h2 class="section-title fade-in">Three Ways to Integrate</h2>
-            <p class="section-subtitle fade-in">One security solution, three integration methods. Pick what fits your use case.</p>
             
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
+            <div class="integration-grid">
                 <!-- Option 1: Browser Extension -->
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
-                    <div style="font-size: 0.875rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Option 1</div>
-                    <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--dark); font-weight: 700;">Browser Extension</h3>
-                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
-                        <strong style="color: var(--dark);">Best for:</strong> Employees using ChatGPT/Claude/Gemini directly
-                    </p>
-                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
-                        <strong style="color: var(--dark);">Setup:</strong> ~5 minutes via MDM
-                    </p>
-                    <p style="margin: 0; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
-                        <strong style="color: var(--dark);">Value:</strong> Auto-scans prompts in browser, no code, no behavior change.
-                        </p>
+                <div class="integration-card fade-in">
+                    <div class="integration-label">Option 1</div>
+                    <div class="integration-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                    </div>
+                    <h3 class="integration-title">Browser Extension</h3>
+                    <div class="integration-bullets">
+                        <div class="integration-bullet"><strong>Best for:</strong> Employees using ChatGPT/Claude/Gemini directly</div>
+                        <div class="integration-bullet"><strong>Setup:</strong> ~5 minutes via MDM</div>
+                        <div class="integration-bullet"><strong>Value:</strong> Auto-scans prompts in browser, no code, no behavior change.</div>
+                    </div>
                 </div>
                 
                 <!-- Option 2: Python SDK -->
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
-                    <div style="font-size: 0.875rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Option 2</div>
-                    <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--dark); font-weight: 700;">Python SDK</h3>
-                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
-                        <strong style="color: var(--dark);">Best for:</strong> Python apps using LLM APIs
-                    </p>
-                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
-                        <strong style="color: var(--dark);">Setup:</strong> 2-line client swap
-                    </p>
-                    <p style="margin: 0; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
-                        <strong style="color: var(--dark);">Value:</strong> Every API call scanned before OpenAI/Anthropic/Gemini.
-                        </p>
+                <div class="integration-card fade-in">
+                    <div class="integration-label">Option 2</div>
+                    <div class="integration-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6"/>
+                            <polyline points="8 6 2 12 8 18"/>
+                        </svg>
+                    </div>
+                    <h3 class="integration-title">Python SDK</h3>
+                    <div class="integration-bullets">
+                        <div class="integration-bullet"><strong>Best for:</strong> Python apps using LLM APIs</div>
+                        <div class="integration-bullet"><strong>Setup:</strong> 2-line client swap</div>
+                        <div class="integration-bullet"><strong>Value:</strong> Every API call scanned before OpenAI/Anthropic/Gemini.</div>
+                    </div>
                 </div>
                 
                 <!-- Option 3: Gateway Proxy -->
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
-                    <div style="font-size: 0.875rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Option 3</div>
-                    <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--dark); font-weight: 700;">Gateway Proxy</h3>
-                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
-                        <strong style="color: var(--dark);">Best for:</strong> Any language / multi-team environments
-                    </p>
-                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
-                        <strong style="color: var(--dark);">Setup:</strong> Change endpoint URL
-                    </p>
-                    <p style="margin: 0; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
-                        <strong style="color: var(--dark);">Value:</strong> Centralized enforcement across all LLM traffic.
-                    </p>
+                <div class="integration-card fade-in">
+                    <div class="integration-label">Option 3</div>
+                    <div class="integration-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="2"/>
+                            <line x1="12" y1="2" x2="12" y2="10"/>
+                            <line x1="12" y1="14" x2="12" y2="22"/>
+                            <line x1="2" y1="12" x2="10" y2="12"/>
+                            <line x1="14" y1="12" x2="22" y2="12"/>
+                        </svg>
                     </div>
+                    <h3 class="integration-title">Gateway Proxy</h3>
+                    <div class="integration-bullets">
+                        <div class="integration-bullet"><strong>Best for:</strong> Any language / multi-team environments</div>
+                        <div class="integration-bullet"><strong>Setup:</strong> Change endpoint URL</div>
+                        <div class="integration-bullet"><strong>Value:</strong> Centralized enforcement across all LLM traffic.</div>
                     </div>
-                    
-            <div style="text-align: center; margin-top: 3rem;">
-                <a href="/docs/SDK_INTEGRATION_GUIDE.md" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;" onmouseover="this.style.color='var(--primary-dark)'; this.style.textDecoration='underline';" onmouseout="this.style.color='var(--primary)'; this.style.textDecoration='none';">
-                    See implementation examples <span style="font-size: 0.9em;">→</span>
-                </a>
+                </div>
+            </div>
+            
+            <div class="integration-link">
+                <a href="/docs/SDK_INTEGRATION_GUIDE.md" target="_blank">View implementation examples <span style="font-size: 0.9em;">→</span></a>
             </div>
         </div>
     </section>
 
     <!-- Unified Firewall & Dashboard -->
-    <section class="demo" id="dashboard-preview" style="padding: 6rem 0; background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); border-top: 1px solid var(--gray-border);">
+    <section class="demo" id="dashboard-preview" style="background: linear-gradient(180deg, #050816 0%, #020817 100%); border-top: 1px solid var(--gray-border);">
         <div class="container">
-            <div class="demo-container">
-                <h2 class="section-title fade-in">One Firewall. One Dashboard. Any Integration.</h2>
+            <h2 class="section-title fade-in">One Firewall. One Dashboard. Any Integration.</h2>
             
-                <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2.5rem; flex-wrap: wrap; max-width: 800px; margin-left: auto; margin-right: auto;">
-                    <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; color: var(--dark);">
-                        <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">✓</span>
+            <div class="dashboard-preview-grid fade-in">
+                <!-- Left: Bullets -->
+                <div class="dashboard-bullets">
+                    <div class="dashboard-bullet">
+                        <span class="dashboard-bullet-icon">✓</span>
                         <span>Same policies across browser, SDK, and gateway</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; color: var(--dark);">
-                        <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">✓</span>
+                    <div class="dashboard-bullet">
+                        <span class="dashboard-bullet-icon">✓</span>
                         <span>Unified logs & violations</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; color: var(--dark);">
-                        <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">✓</span>
+                    <div class="dashboard-bullet">
+                        <span class="dashboard-bullet-icon">✓</span>
                         <span>Real-time insights & exports</span>
                     </div>
                 </div>
                 
-                <div class="demo-box fade-in" style="margin-top: 3rem;">
-                    <div style="background: var(--white); border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; border: 1px solid var(--gray-border); position: relative;">
-                        <div style="padding: 0; background: var(--white); position: relative;">
-                            <img src="aifirewall/dashboard.png" alt="LLM Intercept Security Dashboard showing real-time statistics, violation details, audit logs, and policy management" style="width: 100%; height: auto; display: block; border-radius: 16px;" />
-                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, transparent 0%, transparent 85%, rgba(255, 255, 255, 0.95) 100%); pointer-events: none; border-radius: 16px;"></div>
-                    </div>
+                <!-- Right: Dashboard Screenshot -->
+                <div class="dashboard-image-wrapper">
+                    <img src="aifirewall/dashboard.png" alt="LLM Intercept Security Dashboard showing real-time statistics, violation details, audit logs, and policy management" />
                 </div>
             </div>
             
-                <div style="text-align: center; margin-top: 2rem;">
-                    <a href="https://dashboard.llmintercept.com" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;" onmouseover="this.style.color='var(--primary-dark)'; this.style.textDecoration='underline';" onmouseout="this.style.color='var(--primary)'; this.style.textDecoration='none';" onclick="trackEvent('click_view_dashboard', { location: 'dashboard_preview' });">
-                        Open Dashboard Preview <span style="font-size: 0.9em;">→</span>
-                    </a>
-                    </div>
+            <!-- Works with Logos -->
+            <div class="works-with">
+                <div class="works-with-label">Works with</div>
+                <div class="works-with-logos">
+                    <div class="works-with-logo works-with-logo-text">OpenAI</div>
+                    <div class="works-with-logo works-with-logo-text">Anthropic</div>
+                    <div class="works-with-logo works-with-logo-text">Google Gemini</div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Multi-LLM Support -->
-    <section class="demo" id="llm-support" style="padding: 6rem 0; background: var(--white); border-top: 1px solid var(--gray-border);">
+    <section class="demo" id="llm-support" style="background: #020817; border-top: 1px solid var(--gray-border);">
         <div class="container">
             <h2 class="section-title fade-in">Works with All Major LLMs</h2>
             <p class="section-subtitle fade-in">Vendor-agnostic security that protects regardless of which AI your team uses</p>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem;">
                 <div class="feature-card fade-in" style="text-align: center; padding: 2rem;">
-                    <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">ChatGPT</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem; font-size: 0.9375rem;">Full support for OpenAI's GPT-3.5, GPT-4, and all models.</p>
-                    <div style="background: var(--gray-light); padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600;">
-                        ✓ Browser Extension • ✓ Python SDK • ✓ Gateway Proxy
+                    <h3 style="font-size: clamp(20px, 2vw, 22px); margin-bottom: 0.75rem; color: var(--text-primary); font-weight: 600;">ChatGPT</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; font-size: 14px;">Full support for OpenAI's GPT-3.5, GPT-4, and all models.</p>
+                    <div style="background: var(--dark-surface); padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; color: var(--text-primary); font-weight: 600; border: 1px solid var(--gray-border);">
+                        <span style="color: var(--primary);">✓</span> Browser Extension • <span style="color: var(--primary);">✓</span> Python SDK • <span style="color: var(--primary);">✓</span> Gateway Proxy
                     </div>
                 </div>
                 
                 <div class="feature-card fade-in" style="text-align: center; padding: 2rem;">
-                    <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">Claude</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem; font-size: 0.9375rem;">Complete protection for Anthropic's Claude models.</p>
-                    <div style="background: var(--gray-light); padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600;">
-                        ✓ Browser Extension • ✓ Python SDK • ✓ Gateway Proxy
+                    <h3 style="font-size: clamp(20px, 2vw, 22px); margin-bottom: 0.75rem; color: var(--text-primary); font-weight: 600;">Claude</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; font-size: 14px;">Complete protection for Anthropic's Claude models.</p>
+                    <div style="background: var(--dark-surface); padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; color: var(--text-primary); font-weight: 600; border: 1px solid var(--gray-border);">
+                        <span style="color: var(--primary);">✓</span> Browser Extension • <span style="color: var(--primary);">✓</span> Python SDK • <span style="color: var(--primary);">✓</span> Gateway Proxy
                     </div>
                 </div>
                 
                 <div class="feature-card fade-in" style="text-align: center; padding: 2rem;">
-                    <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">Gemini</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem; font-size: 0.9375rem;">Full support for Google's Gemini Pro, Ultra, and all models.</p>
-                    <div style="background: var(--gray-light); padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600;">
-                        ✓ Browser Extension • ✓ Python SDK • ✓ Gateway Proxy
+                    <h3 style="font-size: clamp(20px, 2vw, 22px); margin-bottom: 0.75rem; color: var(--text-primary); font-weight: 600;">Gemini</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; font-size: 14px;">Full support for Google's Gemini Pro, Ultra, and all models.</p>
+                    <div style="background: var(--dark-surface); padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; color: var(--text-primary); font-weight: 600; border: 1px solid var(--gray-border);">
+                        <span style="color: var(--primary);">✓</span> Browser Extension • <span style="color: var(--primary);">✓</span> Python SDK • <span style="color: var(--primary);">✓</span> Gateway Proxy
                     </div>
                 </div>
             </div>
@@ -1316,42 +1917,26 @@
     </section>
 
     <!-- Enterprise Security -->
-    <section class="use-cases" id="use-cases" style="padding: 6rem 0; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border-top: 1px solid var(--gray-border);">
+    <section class="use-cases" id="use-cases" style="background: linear-gradient(180deg, #020817 0%, #050816 100%); border-top: 1px solid var(--gray-border);">
         <div class="container">
             <h2 class="section-title fade-in">Enterprise Security</h2>
-            <p class="section-subtitle fade-in">Built for security teams with security-first architecture</p>
             
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; max-width: 1200px; margin-left: auto; margin-right: auto;">
-                <!-- Top Row: Use Cases -->
-                <div class="feature-card fade-in" style="text-align: left; padding: 1.75rem; border-top: 3px solid var(--success);">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--dark); font-weight: 700;">Regulated Industries</h3>
-                    <p style="color: var(--gray); line-height: 1.6; margin: 0; font-size: 0.9375rem;">HIPAA/PCI/SOX, provable controls.</p>
-            </div>
-            
-                <div class="feature-card fade-in" style="text-align: left; padding: 1.75rem; border-top: 3px solid var(--primary);">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--dark); font-weight: 700;">Security Teams & CISOs</h3>
-                    <p style="color: var(--gray); line-height: 1.6; margin: 0; font-size: 0.9375rem;">Visibility, policies, SIEM export.</p>
-                    </div>
-                    
-                <div class="feature-card fade-in" style="text-align: left; padding: 1.75rem; border-top: 3px solid var(--gray-border);">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--dark); font-weight: 700;">How Detection Works</h3>
-                    <p style="color: var(--gray); line-height: 1.6; margin: 0; font-size: 0.9375rem;">Pattern matching + ML models + allowlist/denylist rules. Detects secrets, PII, and prompt injection in &lt;100ms.</p>
-                    </div>
-                
-                <!-- Bottom Row: Technical Architecture -->
-                <div class="feature-card fade-in" style="text-align: left; padding: 1.75rem; border-top: 3px solid var(--gray-border);">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--dark); font-weight: 700;">Low False Positives</h3>
-                    <p style="color: var(--gray); line-height: 1.6; margin: 0; font-size: 0.9375rem;">Tuned models minimize false positives. Whitelist patterns and custom rules prevent breaking normal prompts.</p>
+            <div class="enterprise-grid fade-in">
+                <div class="enterprise-card">
+                    <h3 class="enterprise-card-title">How Detection Works</h3>
+                    <p class="enterprise-card-desc">Pattern matching + ML models + allowlist/denylist rules. Detects secrets, PII, and prompt injection in &lt;100ms.</p>
                 </div>
-                
-                <div class="feature-card fade-in" style="text-align: left; padding: 1.75rem; border-top: 3px solid var(--gray-border);">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--dark); font-weight: 700;">Self-Host/VPC</h3>
-                    <p style="color: var(--gray); line-height: 1.6; margin: 0; font-size: 0.9375rem;">Deploy gateway in your VPC or self-host for complete data control.</p>
+                <div class="enterprise-card">
+                    <h3 class="enterprise-card-title">Low False Positives</h3>
+                    <p class="enterprise-card-desc">Tuned models minimize false positives. Whitelist patterns and custom rules prevent breaking normal prompts.</p>
                 </div>
-                
-                <div class="feature-card fade-in" style="text-align: left; padding: 1.75rem; border-top: 3px solid var(--gray-border);">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--dark); font-weight: 700;">Data Privacy</h3>
-                    <p style="color: var(--gray); line-height: 1.6; margin: 0; font-size: 0.9375rem;">No training on your data. Data minimization (truncate, hash) ensures only necessary content is scanned.</p>
+                <div class="enterprise-card">
+                    <h3 class="enterprise-card-title">Self-Host/VPC</h3>
+                    <p class="enterprise-card-desc">Deploy gateway in your VPC or self-host for complete data control.</p>
+                </div>
+                <div class="enterprise-card">
+                    <h3 class="enterprise-card-title">Data Privacy</h3>
+                    <p class="enterprise-card-desc">No training on your data. Data minimization (truncate, hash) ensures only necessary content is scanned.</p>
                 </div>
             </div>
         </div>
@@ -1359,38 +1944,40 @@
 
 
     <!-- CTA Section -->
-    <section class="cta-section" id="pricing" style="padding: 6rem 0; background: var(--white); border-top: 1px solid var(--gray-border);">
+    <section class="cta-section" id="pricing" style="background: #020817; border-top: 1px solid var(--gray-border);">
         <div class="container">
-            <h2 style="text-align: center; font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; margin-bottom: 2rem; color: var(--dark);">Ready to secure your AI stack?</h2>
-            <div class="hero-buttons" style="justify-content: center;">
-                <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'cta_section' });">Request Demo</a>
-                <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'cta_section' });">Try Interactive Demo</a>
+            <div class="final-cta">
+                <h2 class="final-cta-title">Ready to secure your AI stack?</h2>
+                <p class="final-cta-subtitle">One firewall for employees and apps.</p>
+                <div class="final-cta-buttons">
+                    <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'cta_section' });">Request Demo</a>
+                    <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'cta_section' });">Try Interactive Demo</a>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Form -->
-    <section class="contact" id="contact" style="padding: 6rem 0; background: var(--white); border-top: 1px solid var(--gray-border);">
+    <section class="contact" id="contact" style="background: #020817; border-top: 1px solid var(--gray-border);">
         <div class="container">
             <div style="max-width: 600px; margin: 0 auto;">
                 <h2 class="section-title fade-in">Request a Demo</h2>
-                <p class="section-subtitle fade-in">We'll set up a trial account for you.</p>
                 <form id="contactForm" style="margin-top: 3rem;" class="fade-in">
                     <div style="margin-bottom: 1.5rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark);">Name</label>
-                        <input type="text" name="name" required style="width: 100%; padding: 0.875rem; border: 1px solid var(--gray-border); border-radius: 8px; font-size: 1rem; font-family: inherit;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Name</label>
+                        <input type="text" name="name" required style="width: 100%; padding: 0.875rem; border: 1px solid var(--gray-border); border-radius: 8px; font-size: 1rem; font-family: inherit; background: var(--dark-surface); color: var(--text-secondary);">
                     </div>
                     <div style="margin-bottom: 1.5rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark);">Email</label>
-                        <input type="email" name="email" required style="width: 100%; padding: 0.875rem; border: 1px solid var(--gray-border); border-radius: 8px; font-size: 1rem; font-family: inherit;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Email</label>
+                        <input type="email" name="email" required style="width: 100%; padding: 0.875rem; border: 1px solid var(--gray-border); border-radius: 8px; font-size: 1rem; font-family: inherit; background: var(--dark-surface); color: var(--text-secondary);">
                     </div>
                     <div style="margin-bottom: 1.5rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark);">Company</label>
-                        <input type="text" name="company" required style="width: 100%; padding: 0.875rem; border: 1px solid var(--gray-border); border-radius: 8px; font-size: 1rem; font-family: inherit;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Company</label>
+                        <input type="text" name="company" required style="width: 100%; padding: 0.875rem; border: 1px solid var(--gray-border); border-radius: 8px; font-size: 1rem; font-family: inherit; background: var(--dark-surface); color: var(--text-secondary);">
                     </div>
                     <div style="margin-bottom: 1.5rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark);">How do you plan to use this?</label>
-                        <textarea name="use-case" rows="4" style="width: 100%; padding: 0.875rem; border: 1px solid var(--gray-border); border-radius: 8px; font-size: 1rem; font-family: inherit; resize: vertical;"></textarea>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">How do you plan to use this?</label>
+                        <textarea name="use-case" rows="4" style="width: 100%; padding: 0.875rem; border: 1px solid var(--gray-border); border-radius: 8px; font-size: 1rem; font-family: inherit; resize: vertical; background: var(--dark-surface); color: var(--text-secondary);"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
                         <span>Request Demo</span>
@@ -1402,10 +1989,10 @@
     </section>
 
     <!-- Footer -->
-    <footer style="padding: 3rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
+    <footer style="padding: 3rem 0; background: #050816; border-top: 1px solid var(--gray-border);">
         <div class="container">
             <div style="text-align: center;">
-                <p style="color: var(--gray); font-size: 0.9375rem; margin: 0;">&copy; 2025 LLM Intercept. All rights reserved.</p>
+                <p style="color: var(--text-muted); font-size: 14px; margin: 0;">&copy; 2025 LLM Intercept. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -1542,48 +2129,32 @@
             
             console.log('Updating content for step:', step, stepData);
             
-            // Update button styles
+            // Update segmented control button styles
             for (let i = 1; i <= 4; i++) {
                 const btn = document.getElementById(`stepBtn${i}`);
                 if (btn) {
                     if (i === step) {
-                        btn.className = 'demo-btn primary';
+                        btn.classList.add('active');
                     } else {
-                        btn.className = 'demo-btn secondary';
+                        btn.classList.remove('active');
                     }
                 }
             }
             
             // Show step content
             contentDiv.innerHTML = `
-                <div style="margin-bottom: 1.5rem;">
-                    <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--dark);">${stepData.title}</h3>
-                    <p style="color: var(--gray); margin-bottom: 1.5rem; line-height: 1.7;">${stepData.description}</p>
-                </div>
-                
-                <div style="background: var(--gray-light); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid var(--primary);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                        <label style="font-weight: 600; color: var(--dark);">Try Your Own Prompt:</label>
-                        <button id="loadExampleBtn" class="demo-btn secondary" style="padding: 0.375rem 0.75rem; font-size: 0.875rem; min-width: auto;">
-                            <span>Load Example</span>
-                        </button>
-                    </div>
-                    <textarea id="demoPromptInput" rows="4" placeholder="Type your prompt here or modify the example above..." style="width: 100%; padding: 1rem; border-radius: 6px; font-family: 'Courier New', 'Monaco', 'Menlo', monospace; font-size: 0.9rem; border: 1px solid var(--gray-border); background: var(--white); color: var(--dark); resize: vertical; line-height: 1.6;">${stepData.example}</textarea>
-                </div>
-                
-                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                    <button class="demo-btn primary" id="testCustomBtn" style="flex: 1;">
-                        <span>Test Your Prompt</span>
+                <h3 class="demo-card-title">${stepData.title}</h3>
+                <p class="demo-card-blurb">${stepData.description}</p>
+                <textarea id="demoPromptInput" class="demo-textarea" rows="4" placeholder="Type your prompt here or modify the example above...">${stepData.example}</textarea>
+                <div class="demo-card-actions">
+                    <button id="loadExampleBtn" class="demo-btn secondary">
+                        <span>Load Example</span>
+                    </button>
+                    <button class="demo-btn primary" id="testCustomBtn">
+                        <span>Run through firewall</span>
                     </button>
                 </div>
-                
-                <div id="stepResult" style="display: none;"></div>
-                
-                <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; margin-top: 1.5rem; border: 1px solid var(--gray-border);">
-                    <p style="color: var(--gray); font-size: 0.95rem; line-height: 1.7; margin: 0;">
-                        <strong style="color: var(--dark);">How it works:</strong> ${stepData.explanation}
-                    </p>
-                </div>
+                <div id="stepResult" style="display: none; margin-top: 1.5rem;"></div>
             `;
             
             // Attach event listeners AFTER a short delay to ensure DOM is ready
