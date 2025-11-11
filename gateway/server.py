@@ -329,43 +329,6 @@ async def get_logs(
             "offset": offset
         })
         return add_cors_headers(response)
-    
-@app.get("/api/logs")
-async def get_logs(
-    status: Optional[str] = None,
-    endpoint: Optional[str] = None,
-    violation_type: Optional[str] = None,
-    start_date: Optional[str] = None,
-    end_date: Optional[str] = None,
-    search: Optional[str] = None,
-    limit: int = 100,
-    offset: int = 0
-):
-    """Get audit logs with filtering support."""
-    global _cached_demo_logs, _last_demo_data_generation_time
-    
-    from datetime import datetime
-    
-    try:
-        # Default to True for MVP (no customers yet)
-        demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
-        
-        # Parse date strings if provided
-        start_dt = None
-        end_dt = None
-        if start_date:
-            try:
-                start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
-            except:
-                pass
-        if end_date:
-            try:
-                end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
-            except:
-                pass
-        
-        # Always return demo data if in demo mode OR if no real logs exist
-        if demo_mode:
 
 
 @app.get("/api/policies")
