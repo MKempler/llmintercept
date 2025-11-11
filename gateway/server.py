@@ -85,6 +85,28 @@ app.add_middleware(RateLimitMiddleware, rate_limiter=rate_limiter)
 # Add authentication middleware (after rate limiting)
 app.add_middleware(AuthMiddleware, auth=auth_handler)
 
+# Helper function to check if user is authenticated
+def is_authenticated_user(authorization: Optional[str] = None) -> bool:
+    """
+    Check if request has valid JWT authentication.
+    
+    Args:
+        authorization: Authorization header value
+        
+    Returns:
+        True if valid JWT token present, False otherwise
+    """
+    if not authorization:
+        return False
+    
+    try:
+        from users.jwt_utils import jwt_manager
+        token = authorization.replace("Bearer ", "").strip()
+        user_info = jwt_manager.get_user_from_token(token)
+        return user_info is not None
+    except Exception:
+        return False
+
 # Helper function to add CORS headers to responses
 def add_cors_headers(response):
     """Add CORS headers to response."""
@@ -216,26 +238,28 @@ async def get_demo_mode():
 
 
 @app.get("/api/violations")
-async def get_violations():
+async def get_violations(authorization: Optional[str] = Header(None)):
     """Get recent violations."""
     global _cached_demo_violations, _last_demo_data_generation_time
     
-    # Default to True for MVP (no customers yet)
-    demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
-    real_violations = audit_logger.get_violations(limit=100)
+    # Check if user is authenticated
+    is_authenticated = is_authenticated_user(authorization)
     
-    if demo_mode or len(real_violations) == 0:
-        current_time = time.time()
-        # Check if cache is valid (exists and not expired)
-        if (_cached_demo_violations is None or 
-            (current_time - _last_demo_data_generation_time) > DEMO_DATA_CACHE_DURATION_SECONDS):
-            from gateway.demo_data import generate_demo_violations
-            _cached_demo_violations = generate_demo_violations()
-            _last_demo_data_generation_time = current_time
-        response = JSONResponse(content={"violations": _cached_demo_violations})
+    if is_authenticated:
+        # Authenticated user - return real data from database
+        real_violations = audit_logger.get_violations(limit=100)
+        response = JSONResponse(content={"violations": real_violations})
         return add_cors_headers(response)
     
-    response = JSONResponse(content={"violations": real_violations})
+    # Not authenticated - return demo data
+    current_time = time.time()
+    # Check if cache is valid (exists and not expired)
+    if (_cached_demo_violations is None or 
+        (current_time - _last_demo_data_generation_time) > DEMO_DATA_CACHE_DURATION_SECONDS):
+        from gateway.demo_data import generate_demo_violations
+        _cached_demo_violations = generate_demo_violations()
+        _last_demo_data_generation_time = current_time
+    response = JSONResponse(content={"violations": _cached_demo_violations})
     return add_cors_headers(response)
 
 
@@ -248,12 +272,16 @@ async def get_logs(
     end_date: Optional[str] = None,
     search: Optional[str] = None,
     limit: int = 100,
-    offset: int = 0
+    offset: int = 0,
+    authorization: Optional[str] = Header(None)
 ):
     """Get audit logs with filtering support."""
     global _cached_demo_logs, _last_demo_data_generation_time
     
     from datetime import datetime
+    
+    # Check if user is authenticated
+    is_authenticated = is_authenticated_user(authorization)
     
     # Helper function to generate demo logs safely
     def get_demo_logs():
@@ -348,25 +376,13 @@ async def get_logs(
         
         return paginated, total_count
     
-    try:
-        # Default to True for MVP (no customers yet)
-        demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
-        
-        # Always return demo data if in demo mode
-        if demo_mode:
-            demo_logs = get_demo_logs()
-            paginated_logs, total_count = filter_and_paginate_logs(demo_logs)
-            
-            response = JSONResponse(content={
-                "logs": paginated_logs,
-                "total": total_count,
-                "limit": limit,
-                "offset": offset
-            })
-            return add_cors_headers(response)
-        
-        # Real mode - try database, fall back to demo on error
+    # Authenticated user - return real data from database
+    if is_authenticated:
         try:
+            # Parse date strings if provided
+            start_dt = parse_date(start_date)
+            end_dt = parse_date(end_date)
+            
             real_logs = audit_logger.get_recent_logs(
                 limit=limit,
                 offset=offset,
@@ -387,10 +403,6 @@ async def get_logs(
                 search=search
             )
             
-            # If no real logs, fall back to demo
-            if len(real_logs) == 0:
-                raise ValueError("No real logs found")
-            
             response = JSONResponse(content={
                 "logs": real_logs,
                 "total": total_count,
@@ -398,86 +410,61 @@ async def get_logs(
                 "offset": offset
             })
             return add_cors_headers(response)
-        except Exception as db_error:
-            # Fall back to demo data on database error
-            print(f"Database error, falling back to demo data: {db_error}")
-            # Continue to demo data generation below
+        except Exception as e:
+            # On database error, return empty results (not demo data)
+            print(f"Database error for authenticated user: {e}")
+            response = JSONResponse(content={
+                "logs": [],
+                "total": 0,
+                "limit": limit,
+                "offset": offset
+            })
+            return add_cors_headers(response)
     
+    # Not authenticated - return demo data
+    try:
+        demo_logs = get_demo_logs()
+        paginated_logs, total_count = filter_and_paginate_logs(demo_logs)
+        
+        response = JSONResponse(content={
+            "logs": paginated_logs,
+            "total": total_count,
+            "limit": limit,
+            "offset": offset
+        })
+        return add_cors_headers(response)
     except Exception as e:
-        # On any error, log and continue to demo data
-        print(f"Error in get_logs endpoint: {e}")
-        import traceback
-        traceback.print_exc()
-    
-    # Fallback: always return demo data
-    current_time = time.time()
-    if (_cached_demo_logs is None or 
-        (current_time - _last_demo_data_generation_time) > DEMO_DATA_CACHE_DURATION_SECONDS):
-        from gateway.demo_data import generate_demo_logs
-        _cached_demo_logs = generate_demo_logs()
-        _last_demo_data_generation_time = current_time
-    
-    # Apply filters to demo logs
-    filtered_logs = _cached_demo_logs.copy()
-    
-    if status:
-        filtered_logs = [log for log in filtered_logs if log.get('status') == status]
-    
-    if endpoint:
-        filtered_logs = [log for log in filtered_logs if log.get('endpoint') == endpoint]
-    
-    if violation_type:
-        filtered_logs = [
-            log for log in filtered_logs 
-            if any(v.get('type') == violation_type for v in (log.get('violations') or []))
-        ]
-    
-    if search:
-        search_lower = search.lower()
-        filtered_logs = [
-            log for log in filtered_logs
-            if (search_lower in (log.get('request_id') or '').lower() or
-                search_lower in (log.get('endpoint') or '').lower() or
-                search_lower in (log.get('user_id') or '').lower())
-        ]
-    
-    if start_dt:
-        filtered_logs = [
-            log for log in filtered_logs
-            if log.get('timestamp') and datetime.fromisoformat(log['timestamp'].replace('Z', '+00:00')) >= start_dt
-        ]
-    
-    if end_dt:
-        filtered_logs = [
-            log for log in filtered_logs
-            if log.get('timestamp') and datetime.fromisoformat(log['timestamp'].replace('Z', '+00:00')) <= end_dt
-        ]
-    
-    # Apply pagination
-    total_count = len(filtered_logs)
-    paginated_logs = filtered_logs[offset:offset + limit]
-    
-    response = JSONResponse(content={
-        "logs": paginated_logs,
-        "total": total_count,
-        "limit": limit,
-        "offset": offset
-    })
-    return add_cors_headers(response)
+        # On error generating demo data, return empty
+        print(f"Error generating demo logs: {e}")
+        response = JSONResponse(content={
+            "logs": [],
+            "total": 0,
+            "limit": limit,
+            "offset": offset
+        })
+        return add_cors_headers(response)
 
 
 @app.get("/api/policies")
-async def get_policies():
+async def get_policies(authorization: Optional[str] = Header(None)):
     """Get current policies with statistics."""
     rules = policy_engine.get_rules()
     
-    # Get all logs for statistics calculation
-    demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
-    if demo_mode:
-        from gateway.demo_data import generate_demo_logs
-        all_logs = generate_demo_logs(80)
-    else:
+    # Check if user is authenticated
+    is_authenticated = is_authenticated_user(authorization)
+    
+    # Get logs for statistics calculation
+    if is_authenticated:
+        # Authenticated user - use real logs from database
         all_logs = audit_logger.get_recent_logs(limit=1000)
+    else:
+        # Not authenticated - use demo logs
+        demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
+        if demo_mode:
+            from gateway.demo_data import generate_demo_logs
+            all_logs = generate_demo_logs(80)
+        else:
+            all_logs = []
     
     # Calculate statistics for each policy
     policies_with_stats = []
@@ -560,8 +547,23 @@ class PolicyUpdateRequest(BaseModel):
 
 
 @app.post("/api/policies")
-async def create_policy(request: PolicyCreateRequest, req: Request):
+async def create_policy(request: PolicyCreateRequest, req: Request, authorization: Optional[str] = Header(None)):
     """Create a new policy."""
+    # Check if user is authenticated
+    is_authenticated = is_authenticated_user(authorization)
+    
+    if not is_authenticated:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": {
+                    "message": "Authentication required",
+                    "type": "authentication_error",
+                    "code": "missing_token"
+                }
+            }
+        )
+    
     from datetime import datetime
     
     # Extract context for audit trail
@@ -796,16 +798,34 @@ async def delete_policy(policy_id: str, req: Request):
 
 # Policy History Endpoints
 @app.get("/api/policies/{policy_id}/history")
-async def get_policy_history(policy_id: str, limit: int = 50):
+async def get_policy_history(policy_id: str, limit: int = 50, authorization: Optional[str] = Header(None)):
     """Get change history for a policy."""
+    # Check if user is authenticated
+    is_authenticated = is_authenticated_user(authorization)
+    
+    if not is_authenticated:
+        # Not authenticated - return empty history
+        response = JSONResponse(content={"history": []})
+        return add_cors_headers(response)
+    
+    # Authenticated user - return real history
     history = policy_audit_trail.get_policy_history(policy_id, limit=limit)
     response = JSONResponse(content={"history": history})
     return add_cors_headers(response)
 
 
 @app.get("/api/policies/history")
-async def get_recent_policy_changes(limit: int = 100, tenant_id: Optional[str] = None):
+async def get_recent_policy_changes(limit: int = 100, tenant_id: Optional[str] = None, authorization: Optional[str] = Header(None)):
     """Get recent policy changes."""
+    # Check if user is authenticated
+    is_authenticated = is_authenticated_user(authorization)
+    
+    if not is_authenticated:
+        # Not authenticated - return empty changes
+        response = JSONResponse(content={"changes": []})
+        return add_cors_headers(response)
+    
+    # Authenticated user - return real changes
     changes = policy_audit_trail.get_recent_changes(tenant_id=tenant_id, limit=limit)
     response = JSONResponse(content={"changes": changes})
     return add_cors_headers(response)
@@ -824,9 +844,19 @@ class PatternCreateRequest(BaseModel):
 async def get_patterns(
     violation_type: Optional[str] = None,
     enabled_only: bool = False,
-    req: Request = None
+    req: Request = None,
+    authorization: Optional[str] = Header(None)
 ):
     """Get custom detection patterns."""
+    # Check if user is authenticated
+    is_authenticated = is_authenticated_user(authorization)
+    
+    if not is_authenticated:
+        # Not authenticated - return empty list
+        response = JSONResponse(content={"patterns": []})
+        return add_cors_headers(response)
+    
+    # Authenticated user - return real patterns
     context = tenant_context.extract_context(req) if req else {}
     tenant_id = context.get("tenant_id")
     
@@ -856,8 +886,23 @@ async def get_patterns(
 
 
 @app.post("/api/patterns")
-async def create_pattern(request: PatternCreateRequest, req: Request):
+async def create_pattern(request: PatternCreateRequest, req: Request, authorization: Optional[str] = Header(None)):
     """Create a custom detection pattern."""
+    # Check if user is authenticated
+    is_authenticated = is_authenticated_user(authorization)
+    
+    if not is_authenticated:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": {
+                    "message": "Authentication required",
+                    "type": "authentication_error",
+                    "code": "missing_token"
+                }
+            }
+        )
+    
     context = tenant_context.extract_context(req)
     tenant_id = context.get("tenant_id")
     
@@ -943,8 +988,17 @@ async def get_metrics():
 
 # Webhook Management Endpoints
 @app.get("/api/webhooks")
-async def get_webhooks():
+async def get_webhooks(authorization: Optional[str] = Header(None)):
     """Get webhook configurations."""
+    # Check if user is authenticated
+    is_authenticated = is_authenticated_user(authorization)
+    
+    if not is_authenticated:
+        # Not authenticated - return empty list
+        response = JSONResponse(content={"webhooks": []})
+        return add_cors_headers(response)
+    
+    # Authenticated user - return real webhooks
     webhooks = webhook_manager.get_webhooks()
     response = JSONResponse(content={"webhooks": webhooks})
     return add_cors_headers(response)
