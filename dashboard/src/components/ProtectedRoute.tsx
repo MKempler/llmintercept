@@ -1,13 +1,14 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom'
-import { isAuthenticated } from '../utils/auth'
+import { isAuthenticated, isDemoMode } from '../utils/auth'
 
 interface ProtectedRouteProps {
   children: React.ReactElement
 }
 
 function ProtectedRoute({ children }: ProtectedRouteProps) {
-  if (!isAuthenticated()) {
+  // Allow access if authenticated OR in demo mode
+  if (!isAuthenticated() && !isDemoMode()) {
     return <Navigate to="/login" replace />
   }
   return children

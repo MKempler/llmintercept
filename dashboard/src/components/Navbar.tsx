@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { getApiUrl } from '../utils/api'
-import { getUser, clearAuth } from '../utils/auth'
+import { getUser, clearAuth, isDemoMode } from '../utils/auth'
 import type { User } from '../utils/auth'
 
 const API_URL = getApiUrl()
@@ -23,14 +23,25 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
-    // Check if demo mode is active
+    // Check if demo mode is active (from localStorage)
+    const inDemoMode = isDemoMode()
+    setDemoMode(inDemoMode)
+    
+    // Also check backend demo mode (for server-side demo mode)
     fetch(`${API_URL}/api/demo-mode`)
       .then(res => res.json())
-      .then(data => setDemoMode(data.demo_mode || false))
-      .catch(() => setDemoMode(false))
+      .then(data => {
+        // Show demo badge if either client-side or server-side demo mode
+        if (inDemoMode || data.demo_mode) {
+          setDemoMode(true)
+        }
+      })
+      .catch(() => {})
     
-    // Get current user
-    setUser(getUser())
+    // Get current user (only if not in demo mode)
+    if (!inDemoMode) {
+      setUser(getUser())
+    }
   }, [])
 
   const handleLogout = () => {
@@ -239,6 +250,30 @@ export default function Navbar() {
 
           {/* User Menu - Right Side */}
           <div className="flex items-center gap-4 flex-shrink-0">
+            {demoMode && !user && (
+              <Link
+                to="/login"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200"
+                style={{
+                  color: 'var(--primary)',
+                  border: '1px solid var(--primary)',
+                  borderRadius: '8px',
+                  textDecoration: 'none',
+                  fontWeight: 600
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--primary)'
+                  e.currentTarget.style.color = 'white'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent'
+                  e.currentTarget.style.color = 'var(--primary)'
+                }}
+              >
+                Sign In
+              </Link>
+            )}
+            
             {user && (
               <div style={{ position: 'relative' }}>
                 <button

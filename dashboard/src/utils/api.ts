@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken, clearAuth } from './auth'
+import { getToken, clearAuth, isDemoMode } from './auth'
 
 // Utility to get API URL with proper protocol
 export function getApiUrl(): string {
@@ -26,8 +26,13 @@ export const apiClient = axios.create({
   baseURL: getApiUrl()
 })
 
-// Add request interceptor to include JWT token
+// Add request interceptor to include JWT token (skip if demo mode)
 apiClient.interceptors.request.use((config) => {
+  // Don't add auth headers if in demo mode
+  if (isDemoMode()) {
+    return config
+  }
+  
   const token = getToken()
   if (token) {
     config.headers = config.headers || {}
@@ -40,6 +45,11 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Don't redirect to login if in demo mode
+    if (isDemoMode()) {
+      return Promise.reject(error)
+    }
+    
     if (error.response?.status === 401) {
       // Token expired or invalid - clear auth and redirect to login
       clearAuth()

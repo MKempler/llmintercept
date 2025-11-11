@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import { getApiUrl } from '../utils/api'
-import { setToken, setRefreshToken, setUser, type User } from '../utils/auth'
+import { setToken, setRefreshToken, setUser, clearDemoMode, setDemoMode, type User } from '../utils/auth'
 import './Login.css'
 
 function Login() {
@@ -26,6 +26,9 @@ function Login() {
 
       const { access_token, refresh_token, user } = response.data
 
+      // Clear demo mode when logging in for real
+      clearDemoMode()
+
       // Store tokens and user info
       setToken(access_token)
       setRefreshToken(refresh_token)
@@ -42,6 +45,13 @@ function Login() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleDemoMode = () => {
+    // Set demo mode flag
+    setDemoMode()
+    // Navigate to dashboard
+    navigate('/')
   }
 
   return (
@@ -104,6 +114,60 @@ function Login() {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+
+        <div style={{ marginTop: '16px', textAlign: 'center' }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '12px',
+            marginBottom: '16px',
+            padding: '16px',
+            background: 'var(--gray-light)',
+            borderRadius: '8px'
+          }}>
+            <div style={{ flex: 1, height: '1px', background: 'var(--gray-border)' }}></div>
+            <span style={{ color: 'var(--gray)', fontSize: '14px' }}>OR</span>
+            <div style={{ flex: 1, height: '1px', background: 'var(--gray-border)' }}></div>
+          </div>
+          
+          <button
+            type="button"
+            onClick={handleDemoMode}
+            className="demo-button"
+            style={{
+              width: '100%',
+              padding: '14px',
+              background: 'white',
+              color: 'var(--primary)',
+              border: '2px solid var(--primary)',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: '600',
+              fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              marginBottom: '16px'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'var(--primary)'
+              e.currentTarget.style.color = 'white'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'white'
+              e.currentTarget.style.color = 'var(--primary)'
+            }}
+          >
+            Try Demo
+          </button>
+          <p style={{ 
+            margin: 0, 
+            fontSize: '13px', 
+            color: 'var(--gray)',
+            lineHeight: '1.5'
+          }}>
+            Explore the dashboard with sample data. No account required.
+          </p>
+        </div>
 
         <div className="login-footer">
           <Link to="/forgot-password" className="forgot-password-link">
