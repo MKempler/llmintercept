@@ -42,7 +42,7 @@ export default function Navbar() {
     if (!inDemoMode) {
       setUser(getUser())
     }
-  }, [])
+  }, [location.pathname]) // Re-check when route changes
 
   const handleLogout = () => {
     clearAuth()

@@ -383,6 +383,7 @@
             overflow: hidden;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
             position: relative;
+            aspect-ratio: 16 / 10;
         }
 
         .hero-dashboard-label {
@@ -400,10 +401,56 @@
             z-index: 2;
         }
 
-        .hero-dashboard-image {
+        .hero-dashboard-iframe {
             width: 100%;
-            height: auto;
+            height: 100%;
+            border: none;
             display: block;
+            background: var(--dark-surface);
+        }
+
+        .hero-dashboard-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(2, 8, 23, 0.3) 0%, rgba(2, 8, 23, 0.7) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .hero-dashboard-card:hover .hero-dashboard-overlay {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .hero-dashboard-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.875rem 1.75rem;
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-dashboard-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-dashboard-button:active {
+            transform: translateY(0);
         }
 
         @media (max-width: 968px) {
@@ -418,6 +465,11 @@
 
             .hero h1 {
                 text-align: center;
+            }
+
+            .hero-dashboard-card {
+                aspect-ratio: 16 / 9;
+                min-height: 300px;
             }
 
             .hero-subhead,
@@ -963,7 +1015,7 @@
                 -webkit-overflow-scrolling: touch;
                 scroll-snap-type: x mandatory;
             }
-
+            
             .how-step {
                 flex: 0 0 280px;
                 scroll-snap-align: start;
@@ -1583,27 +1635,41 @@
             <div class="hero-content">
                 <!-- Left Column -->
                 <div class="hero-left">
-                    <div class="hero-badge">Enterprise-Grade LLM Security</div>
-                    <h1>Your Employees Are Leaking Data to AI. <span class="gradient">We Stop It.</span></h1>
+                <div class="hero-badge">Enterprise-Grade LLM Security</div>
+                <h1>Your Employees Are Leaking Data to AI. <span class="gradient">We Stop It.</span></h1>
                     <p class="hero-subhead">Protect every LLM interaction across your organization</p>
                     <p class="hero-oneliner">AI firewall that inspects every LLM request for secrets, PII, and prompt injection before it leaves your org.</p>
                     <p class="hero-integration">Protect employees, apps, and APIs via Browser Extension, SDK, or Gateway.</p>
                     <div class="hero-ctas">
                         <div class="hero-ctas-row">
-                            <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'hero' });">Request Enterprise Demo</a>
-                            <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'hero' });">Try Interactive Demo</a>
+                    <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'hero' });">Request Enterprise Demo</a>
+                    <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'hero' });">Try Interactive Demo</a>
                         </div>
                         <a href="#dashboard-preview" style="color: var(--text-muted); text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; width: fit-content;" onmouseover="this.style.color='var(--text-secondary)';" onmouseout="this.style.color='var(--text-muted)';" onclick="trackEvent('click_view_dashboard', { location: 'hero' });">
                             View Dashboard Preview <span style="font-size: 0.9em;">→</span>
-                        </a>
-                    </div>
+                    </a>
                 </div>
-                
+            </div>
+
                 <!-- Right Column -->
                 <div class="hero-right">
                     <div class="hero-dashboard-card">
                         <div class="hero-dashboard-label">Live firewall activity</div>
-                        <img src="aifirewall/dashboard.png" alt="LLM Intercept Security Dashboard" class="hero-dashboard-image" />
+                        <iframe 
+                            src="https://dashboard.llmintercept.com/" 
+                            class="hero-dashboard-iframe"
+                            title="LLM Intercept Security Dashboard Preview"
+                            loading="lazy"
+                            allow="clipboard-read; clipboard-write"
+                        ></iframe>
+                        <div class="hero-dashboard-overlay">
+                            <button 
+                                class="hero-dashboard-button"
+                                onclick="window.open('https://dashboard.llmintercept.com', '_blank'); trackEvent('click_view_full_dashboard', { location: 'hero_iframe' });"
+                            >
+                                View Full Dashboard →
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1622,7 +1688,7 @@
                     </div>
                     <h3 class="key-outcome-title">Stop Data Leaks</h3>
                     <p class="key-outcome-description">Block secrets & PII before they ever reach LLMs.</p>
-                </div>
+                        </div>
                 <div class="key-outcome-card fade-in">
                     <div class="key-outcome-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1632,10 +1698,10 @@
                             <line x1="16" y1="17" x2="8" y2="17"/>
                             <polyline points="10 9 9 9 8 9"/>
                         </svg>
-                    </div>
+                        </div>
                     <h3 class="key-outcome-title">Meet Compliance</h3>
                     <p class="key-outcome-description">Centralized logging & policies for audits.</p>
-                </div>
+                        </div>
                 <div class="key-outcome-card fade-in">
                     <div class="key-outcome-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1643,7 +1709,7 @@
                             <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
                             <line x1="12" y1="22.08" x2="12" y2="12"/>
                         </svg>
-                    </div>
+                        </div>
                     <h3 class="key-outcome-title">Adopt AI Safely</h3>
                     <p class="key-outcome-description">Let teams use ChatGPT/Claude/Gemini without security tickets.</p>
                 </div>
@@ -1661,17 +1727,17 @@
                     <div class="step-number">1</div>
                     <h3>Traffic Routed</h3>
                     <p>Browser extension, SDK, or Gateway routes each request to LLM Intercept first.</p>
-                </div>
+                    </div>
                 <div class="how-step fade-in">
                     <div class="step-number">2</div>
                     <h3>Real-Time Inspection</h3>
                     <p>Secrets, PII, and prompt injection detected in &lt;100ms using pattern matching + ML.</p>
-                </div>
+                    </div>
                 <div class="how-step fade-in">
                     <div class="step-number">3</div>
                     <h3>Automatic Enforcement</h3>
                     <p>Block, redact, mask, or allow based on your policies.</p>
-                </div>
+                    </div>
                 <div class="how-step fade-in">
                     <div class="step-number">4</div>
                     <h3>Unified Visibility</h3>
@@ -1695,14 +1761,14 @@
                         <button class="segmented-control-btn" id="stepBtn2">PII</button>
                         <button class="segmented-control-btn" id="stepBtn3">Injection</button>
                         <button class="segmented-control-btn" id="stepBtn4">Clean</button>
-                    </div>
-                    
+                        </div>
+                        
                     <div class="demo-card" id="demoStepContent">
                         <div style="padding: 2rem; text-align: center; color: var(--text-muted);">
-                            <p>Loading demo...</p>
+                                <p>Loading demo...</p>
+                            </div>
                         </div>
                     </div>
-                </div>
                     
                     <div class="stats" style="margin-top: 2rem;">
                         <div class="stat">
@@ -1831,7 +1897,7 @@
                     <div class="works-with-logo works-with-logo-text">OpenAI</div>
                     <div class="works-with-logo works-with-logo-text">Anthropic</div>
                     <div class="works-with-logo works-with-logo-text">Google Gemini</div>
-                </div>
+                    </div>
             </div>
         </div>
     </section>
@@ -1879,15 +1945,15 @@
                 <div class="enterprise-card">
                     <h3 class="enterprise-card-title">How Detection Works</h3>
                     <p class="enterprise-card-desc">Pattern matching + ML models + allowlist/denylist rules. Detects secrets, PII, and prompt injection in &lt;100ms.</p>
-                </div>
+            </div>
                 <div class="enterprise-card">
                     <h3 class="enterprise-card-title">Low False Positives</h3>
                     <p class="enterprise-card-desc">Tuned models minimize false positives. Whitelist patterns and custom rules prevent breaking normal prompts.</p>
-                </div>
+                        </div>
                 <div class="enterprise-card">
                     <h3 class="enterprise-card-title">Self-Host/VPC</h3>
                     <p class="enterprise-card-desc">Deploy gateway in your VPC or self-host for complete data control.</p>
-                </div>
+                        </div>
                 <div class="enterprise-card">
                     <h3 class="enterprise-card-title">Data Privacy</h3>
                     <p class="enterprise-card-desc">No training on your data. Data minimization (truncate, hash) ensures only necessary content is scanned.</p>
@@ -1905,7 +1971,7 @@
                 <p class="final-cta-subtitle">One firewall for employees and apps.</p>
                 <div class="final-cta-buttons">
                     <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'cta_section' });">Request Demo</a>
-                    <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'cta_section' });">Try Interactive Demo</a>
+                <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'cta_section' });">Try Interactive Demo</a>
                 </div>
             </div>
         </div>
@@ -2102,8 +2168,8 @@
                 <textarea id="demoPromptInput" class="demo-textarea" rows="4" placeholder="Type your prompt here or modify the example above...">${stepData.example}</textarea>
                 <div class="demo-card-actions">
                     <button id="loadExampleBtn" class="demo-btn secondary">
-                        <span>Load Example</span>
-                    </button>
+                            <span>Load Example</span>
+                        </button>
                     <button class="demo-btn primary" id="testCustomBtn">
                         <span>Run through firewall</span>
                     </button>
