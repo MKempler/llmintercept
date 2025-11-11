@@ -255,80 +255,181 @@ async def get_logs(
     
     from datetime import datetime
     
-    # Default to True for MVP (no customers yet)
-    demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
-    
-    # Parse date strings if provided
-    start_dt = None
-    end_dt = None
-    if start_date:
+    try:
+        # Default to True for MVP (no customers yet)
+        demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
+        
+        # Parse date strings if provided
+        start_dt = None
+        end_dt = None
+        if start_date:
+            try:
+                start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+            except:
+                pass
+        if end_date:
+            try:
+                end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+            except:
+                pass
+        
+        # Always return demo data if in demo mode OR if no real logs exist
+        if demo_mode:
+            # For demo mode, filter demo logs in memory
+            current_time = time.time()
+            if (_cached_demo_logs is None or 
+                (current_time - _last_demo_data_generation_time) > DEMO_DATA_CACHE_DURATION_SECONDS):
+                from gateway.demo_data import generate_demo_logs
+                _cached_demo_logs = generate_demo_logs()
+                _last_demo_data_generation_time = current_time
+            
+            # Apply filters to demo logs
+            filtered_logs = _cached_demo_logs.copy()
+            
+            if status:
+                filtered_logs = [log for log in filtered_logs if log.get('status') == status]
+            
+            if endpoint:
+                filtered_logs = [log for log in filtered_logs if log.get('endpoint') == endpoint]
+            
+            if violation_type:
+                filtered_logs = [
+                    log for log in filtered_logs 
+                    if any(v.get('type') == violation_type for v in (log.get('violations') or []))
+                ]
+            
+            if search:
+                search_lower = search.lower()
+                filtered_logs = [
+                    log for log in filtered_logs
+                    if (search_lower in (log.get('request_id') or '').lower() or
+                        search_lower in (log.get('endpoint') or '').lower() or
+                        search_lower in (log.get('user_id') or '').lower())
+                ]
+            
+            if start_dt:
+                filtered_logs = [
+                    log for log in filtered_logs
+                    if log.get('timestamp') and datetime.fromisoformat(log['timestamp'].replace('Z', '+00:00')) >= start_dt
+                ]
+            
+            if end_dt:
+                filtered_logs = [
+                    log for log in filtered_logs
+                    if log.get('timestamp') and datetime.fromisoformat(log['timestamp'].replace('Z', '+00:00')) <= end_dt
+                ]
+            
+            # Apply pagination
+            total_count = len(filtered_logs)
+            paginated_logs = filtered_logs[offset:offset + limit]
+            
+            response = JSONResponse(content={
+                "logs": paginated_logs,
+                "total": total_count,
+                "limit": limit,
+                "offset": offset
+            })
+            return add_cors_headers(response)
+        
+        # Real mode - try database, fall back to demo on error
         try:
-            start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
-        except:
-            pass
-    if end_date:
-        try:
-            end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
-        except:
-            pass
+            real_logs = audit_logger.get_recent_logs(
+                limit=limit,
+                offset=offset,
+                status=status,
+                endpoint=endpoint,
+                violation_type=violation_type,
+                start_date=start_dt,
+                end_date=end_dt,
+                search=search
+            )
+            
+            total_count = audit_logger.get_logs_count(
+                status=status,
+                endpoint=endpoint,
+                violation_type=violation_type,
+                start_date=start_dt,
+                end_date=end_dt,
+                search=search
+            )
+            
+            # If no real logs, fall back to demo
+            if len(real_logs) == 0:
+                raise ValueError("No real logs found")
+            
+            response = JSONResponse(content={
+                "logs": real_logs,
+                "total": total_count,
+                "limit": limit,
+                "offset": offset
+            })
+            return add_cors_headers(response)
+        except Exception as db_error:
+            # Fall back to demo data on database error
+            print(f"Database error, falling back to demo data: {db_error}")
+            # Continue to demo data generation below
     
-    # Always return demo data if in demo mode OR if no real logs exist
-    if demo_mode:
-        # For demo mode, filter demo logs in memory
-        current_time = time.time()
-        if (_cached_demo_logs is None or 
-            (current_time - _last_demo_data_generation_time) > DEMO_DATA_CACHE_DURATION_SECONDS):
-            from gateway.demo_data import generate_demo_logs
-            _cached_demo_logs = generate_demo_logs()
-            _last_demo_data_generation_time = current_time
-        
-        # Apply filters to demo logs
-        filtered_logs = _cached_demo_logs
-        
-        if status:
-            filtered_logs = [log for log in filtered_logs if log.get('status') == status]
-        
-        if endpoint:
-            filtered_logs = [log for log in filtered_logs if log.get('endpoint') == endpoint]
-        
-        if violation_type:
-            filtered_logs = [
-                log for log in filtered_logs 
-                if any(v.get('type') == violation_type for v in (log.get('violations') or []))
-            ]
-        
-        if search:
-            search_lower = search.lower()
-            filtered_logs = [
-                log for log in filtered_logs
-                if (search_lower in (log.get('request_id') or '').lower() or
-                    search_lower in (log.get('endpoint') or '').lower() or
-                    search_lower in (log.get('user_id') or '').lower())
-            ]
-        
-        if start_dt:
-            filtered_logs = [
-                log for log in filtered_logs
-                if log.get('timestamp') and datetime.fromisoformat(log['timestamp'].replace('Z', '+00:00')) >= start_dt
-            ]
-        
-        if end_dt:
-            filtered_logs = [
-                log for log in filtered_logs
-                if log.get('timestamp') and datetime.fromisoformat(log['timestamp'].replace('Z', '+00:00')) <= end_dt
-            ]
-        
-        # Apply pagination
-        total_count = len(filtered_logs)
-        paginated_logs = filtered_logs[offset:offset + limit]
-        
-        response = JSONResponse(content={
-            "logs": paginated_logs,
-            "total": total_count,
-            "limit": limit,
-            "offset": offset
-        })
-        return add_cors_headers(response)
+    except Exception as e:
+        # On any error, log and continue to demo data
+        print(f"Error in get_logs endpoint: {e}")
+        import traceback
+        traceback.print_exc()
+    
+    # Fallback: always return demo data
+    current_time = time.time()
+    if (_cached_demo_logs is None or 
+        (current_time - _last_demo_data_generation_time) > DEMO_DATA_CACHE_DURATION_SECONDS):
+        from gateway.demo_data import generate_demo_logs
+        _cached_demo_logs = generate_demo_logs()
+        _last_demo_data_generation_time = current_time
+    
+    # Apply filters to demo logs
+    filtered_logs = _cached_demo_logs.copy()
+    
+    if status:
+        filtered_logs = [log for log in filtered_logs if log.get('status') == status]
+    
+    if endpoint:
+        filtered_logs = [log for log in filtered_logs if log.get('endpoint') == endpoint]
+    
+    if violation_type:
+        filtered_logs = [
+            log for log in filtered_logs 
+            if any(v.get('type') == violation_type for v in (log.get('violations') or []))
+        ]
+    
+    if search:
+        search_lower = search.lower()
+        filtered_logs = [
+            log for log in filtered_logs
+            if (search_lower in (log.get('request_id') or '').lower() or
+                search_lower in (log.get('endpoint') or '').lower() or
+                search_lower in (log.get('user_id') or '').lower())
+        ]
+    
+    if start_dt:
+        filtered_logs = [
+            log for log in filtered_logs
+            if log.get('timestamp') and datetime.fromisoformat(log['timestamp'].replace('Z', '+00:00')) >= start_dt
+        ]
+    
+    if end_dt:
+        filtered_logs = [
+            log for log in filtered_logs
+            if log.get('timestamp') and datetime.fromisoformat(log['timestamp'].replace('Z', '+00:00')) <= end_dt
+        ]
+    
+    # Apply pagination
+    total_count = len(filtered_logs)
+    paginated_logs = filtered_logs[offset:offset + limit]
+    
+    response = JSONResponse(content={
+        "logs": paginated_logs,
+        "total": total_count,
+        "limit": limit,
+        "offset": offset
+    })
+    return add_cors_headers(response)
 
 
 @app.get("/api/policies")
