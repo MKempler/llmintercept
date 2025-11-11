@@ -286,6 +286,7 @@ async def get_logs(
     # Helper function to generate demo logs safely
     def get_demo_logs():
         """Get demo logs, generating if needed."""
+        global _cached_demo_logs, _last_demo_data_generation_time
         current_time = time.time()
         if (_cached_demo_logs is None or 
             (current_time - _last_demo_data_generation_time) > DEMO_DATA_CACHE_DURATION_SECONDS):
