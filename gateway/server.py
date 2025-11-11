@@ -255,73 +255,107 @@ async def get_logs(
     
     from datetime import datetime
     
+    # Helper function to generate demo logs safely
+    def get_demo_logs():
+        """Get demo logs, generating if needed."""
+        current_time = time.time()
+        if (_cached_demo_logs is None or 
+            (current_time - _last_demo_data_generation_time) > DEMO_DATA_CACHE_DURATION_SECONDS):
+            try:
+                from gateway.demo_data import generate_demo_logs
+                _cached_demo_logs = generate_demo_logs()
+                _last_demo_data_generation_time = current_time
+            except Exception as e:
+                print(f"Error generating demo logs: {e}")
+                # Return empty list if generation fails
+                return []
+        return _cached_demo_logs or []
+    
+    # Helper function to parse dates safely
+    def parse_date(date_str):
+        """Parse date string safely."""
+        if not date_str:
+            return None
+        try:
+            # Handle ISO format with Z or timezone
+            if date_str.endswith('Z'):
+                date_str = date_str.replace('Z', '+00:00')
+            return datetime.fromisoformat(date_str)
+        except Exception as e:
+            print(f"Error parsing date {date_str}: {e}")
+            return None
+    
+    # Helper function to filter and paginate logs
+    def filter_and_paginate_logs(logs_list):
+        """Apply filters and pagination to logs."""
+        filtered = logs_list.copy() if logs_list else []
+        
+        # Apply filters
+        if status:
+            filtered = [log for log in filtered if log.get('status') == status]
+        
+        if endpoint:
+            filtered = [log for log in filtered if log.get('endpoint') == endpoint]
+        
+        if violation_type:
+            filtered = [
+                log for log in filtered 
+                if any(v.get('type') == violation_type for v in (log.get('violations') or []))
+            ]
+        
+        if search:
+            search_lower = search.lower()
+            filtered = [
+                log for log in filtered
+                if (search_lower in (log.get('request_id') or '').lower() or
+                    search_lower in (log.get('endpoint') or '').lower() or
+                    search_lower in (log.get('user_id') or '').lower())
+            ]
+        
+        start_dt = parse_date(start_date)
+        if start_dt:
+            temp_filtered = []
+            for log in filtered:
+                if not log.get('timestamp'):
+                    continue
+                try:
+                    log_dt = parse_date(log['timestamp'])
+                    if log_dt and log_dt >= start_dt:
+                        temp_filtered.append(log)
+                except:
+                    # If we can't parse, include it (better than excluding)
+                    temp_filtered.append(log)
+            filtered = temp_filtered
+        
+        end_dt = parse_date(end_date)
+        if end_dt:
+            temp_filtered = []
+            for log in filtered:
+                if not log.get('timestamp'):
+                    continue
+                try:
+                    log_dt = parse_date(log['timestamp'])
+                    if log_dt and log_dt <= end_dt:
+                        temp_filtered.append(log)
+                except:
+                    # If we can't parse, include it (better than excluding)
+                    temp_filtered.append(log)
+            filtered = temp_filtered
+        
+        # Apply pagination
+        total_count = len(filtered)
+        paginated = filtered[offset:offset + limit]
+        
+        return paginated, total_count
+    
     try:
         # Default to True for MVP (no customers yet)
         demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
         
-        # Parse date strings if provided
-        start_dt = None
-        end_dt = None
-        if start_date:
-            try:
-                start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
-            except:
-                pass
-        if end_date:
-            try:
-                end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
-            except:
-                pass
-        
-        # Always return demo data if in demo mode OR if no real logs exist
+        # Always return demo data if in demo mode
         if demo_mode:
-            # For demo mode, filter demo logs in memory
-            current_time = time.time()
-            if (_cached_demo_logs is None or 
-                (current_time - _last_demo_data_generation_time) > DEMO_DATA_CACHE_DURATION_SECONDS):
-                from gateway.demo_data import generate_demo_logs
-                _cached_demo_logs = generate_demo_logs()
-                _last_demo_data_generation_time = current_time
-            
-            # Apply filters to demo logs
-            filtered_logs = _cached_demo_logs.copy()
-            
-            if status:
-                filtered_logs = [log for log in filtered_logs if log.get('status') == status]
-            
-            if endpoint:
-                filtered_logs = [log for log in filtered_logs if log.get('endpoint') == endpoint]
-            
-            if violation_type:
-                filtered_logs = [
-                    log for log in filtered_logs 
-                    if any(v.get('type') == violation_type for v in (log.get('violations') or []))
-                ]
-            
-            if search:
-                search_lower = search.lower()
-                filtered_logs = [
-                    log for log in filtered_logs
-                    if (search_lower in (log.get('request_id') or '').lower() or
-                        search_lower in (log.get('endpoint') or '').lower() or
-                        search_lower in (log.get('user_id') or '').lower())
-                ]
-            
-            if start_dt:
-                filtered_logs = [
-                    log for log in filtered_logs
-                    if log.get('timestamp') and datetime.fromisoformat(log['timestamp'].replace('Z', '+00:00')) >= start_dt
-                ]
-            
-            if end_dt:
-                filtered_logs = [
-                    log for log in filtered_logs
-                    if log.get('timestamp') and datetime.fromisoformat(log['timestamp'].replace('Z', '+00:00')) <= end_dt
-                ]
-            
-            # Apply pagination
-            total_count = len(filtered_logs)
-            paginated_logs = filtered_logs[offset:offset + limit]
+            demo_logs = get_demo_logs()
+            paginated_logs, total_count = filter_and_paginate_logs(demo_logs)
             
             response = JSONResponse(content={
                 "logs": paginated_logs,
