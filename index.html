@@ -1048,16 +1048,21 @@
                 <h1>Your Employees Are Leaking Data to AI. <span class="gradient">We Stop It.</span></h1>
                 <p>Every prompt to ChatGPT, Claude, or Gemini is scanned before it leaves your organization. LLM Intercept blocks secrets, PII, and prompt injection attacks in real time - so you can enable AI without leaking data or breaking compliance.</p>
                 <div style="margin: 2rem 0; padding: 1.5rem; background: rgba(37, 99, 235, 0.05); border-left: 4px solid var(--primary); border-radius: 8px;">
+                    <p style="margin: 0 0 1rem 0; font-size: 0.9375rem; font-weight: 600; color: var(--dark);">Three Integration Options:</p>
                     <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
                         <li style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.9375rem;">
                             <span style="color: var(--success); font-weight: 700;">✓</span>
-                            <span>One SDK for all LLM apps</span>
+                            <span><strong>Browser Extension</strong> - Protect employees using ChatGPT/Claude/Gemini websites</span>
                         </li>
                         <li style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.9375rem;">
                             <span style="color: var(--success); font-weight: 700;">✓</span>
-                            <span>Managed browser extension for ChatGPT/Claude/Gemini</span>
+                            <span><strong>Python SDK</strong> - Drop-in replacement for Python applications</span>
                         </li>
                         <li style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.9375rem;">
+                            <span style="color: var(--success); font-weight: 700;">✓</span>
+                            <span><strong>Gateway Proxy</strong> - Works with any language, centralized security</span>
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.9375rem; margin-top: 0.5rem; padding-top: 0.75rem; border-top: 1px solid rgba(37, 99, 235, 0.2);">
                             <span style="color: var(--success); font-weight: 700;">✓</span>
                             <span>Centralized policies, logs, and alerts for security teams</span>
                         </li>
@@ -1084,7 +1089,7 @@
                 <div class="step-card fade-in">
                     <div class="step-number">1</div>
                     <h3>Traffic Routed</h3>
-                    <p>SDK or browser extension sends each request to LLM Intercept first.</p>
+                    <p>Browser extension, Python SDK, or Gateway Proxy routes each request to LLM Intercept first.</p>
                 </div>
                 <div class="step-arrow">→</div>
                 <div class="step-card fade-in">
@@ -1270,10 +1275,16 @@
     <!-- Code Integration Demo -->
     <section class="demo" id="integration" style="padding: 6rem 0; background: var(--white);">
         <div class="container">
-            <h2 class="section-title fade-in">SDK Integration - Drop-in Replacement</h2>
+            <h2 class="section-title fade-in">Option 2: Python SDK - Drop-in Replacement</h2>
             <p class="section-subtitle fade-in">Swap your OpenAI/Anthropic/Gemini client for ours. All requests are transparently routed through LLM Intercept for inspection and policy enforcement - no code changes, no new APIs.</p>
             
             <div style="margin-top: 2rem; padding: 1.5rem; background: var(--gray-light); border-radius: 8px; border-left: 4px solid var(--primary);">
+                <p style="margin: 0; color: var(--dark); font-size: 0.9375rem; line-height: 1.7;">
+                    <strong>This is Option 2: Python SDK (for Python applications).</strong> Not using Python? See <a href="#gateway-proxy" style="color: var(--primary); text-decoration: none; font-weight: 600;">Gateway Proxy (Option 3)</a> below, or <a href="#integration-options" style="color: var(--primary); text-decoration: none; font-weight: 600;">Browser Extension (Option 1)</a> for web-based usage.
+                </p>
+            </div>
+            
+            <div style="margin-top: 1rem; padding: 1.5rem; background: #f0f9ff; border-radius: 8px; border-left: 4px solid var(--primary);">
                 <p style="margin: 0; color: var(--dark); font-size: 0.9375rem; line-height: 1.7;">
                     <strong>Supports Python, Node.js, and backend frameworks commonly used in production (FastAPI, Express, etc.).</strong>
                 </p>
@@ -1348,53 +1359,214 @@ response = client.chat.completions.create(...)
         </div>
     </section>
 
-    <!-- Deployment Options -->
-    <section class="demo" id="deployment" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
+    <!-- Gateway Proxy Section -->
+    <section class="demo" id="gateway-proxy" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
         <div class="container">
-            <h2 class="section-title fade-in">Two Ways to Protect Your Organization</h2>
-            <p class="section-subtitle fade-in">Choose how your team uses AI - we protect both scenarios</p>
+            <h2 class="section-title fade-in">Option 3: Gateway Proxy - Works with Any Language</h2>
+            <p class="section-subtitle fade-in">Route API calls through our gateway. No SDK needed, works with any HTTP client.</p>
             
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-top: 3rem;" class="two-column-grid">
-                <div class="feature-card fade-in" style="text-align: left;">
-                    <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem;">For Applications Your Team Builds</h3>
-                    <p style="margin-bottom: 1.5rem; color: var(--gray); line-height: 1.7;">Your developers are building apps that use ChatGPT, Claude, or Gemini APIs. Add our SDK to automatically scan every request before it reaches the AI.</p>
-                    <div style="background: var(--white); padding: 1rem; border-radius: 8px; border: 1px solid var(--gray-border); margin-top: 1rem;">
-                        <p style="font-size: 0.875rem; color: var(--gray); margin-bottom: 0.5rem; font-weight: 600;">Who uses this:</p>
-                        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: var(--dark);">
-                            <li style="margin-bottom: 0.5rem;">✓ Your development team</li>
-                            <li style="margin-bottom: 0.5rem;">✓ Apps using LLM APIs</li>
-                            <li style="margin-bottom: 0.5rem;">✓ Custom integrations</li>
-                        </ul>
+            <div style="margin-top: 2rem; padding: 1.5rem; background: var(--white); border-radius: 8px; border-left: 4px solid var(--primary);">
+                <p style="margin: 0; color: var(--dark); font-size: 0.9375rem; line-height: 1.7;">
+                    <strong>This is Option 3: Gateway Proxy (for any language).</strong> Perfect for multi-language teams, centralized security control, or when you prefer not to use an SDK. See also <a href="#integration" style="color: var(--primary); text-decoration: none; font-weight: 600;">Python SDK (Option 2)</a> or <a href="#integration-options" style="color: var(--primary); text-decoration: none; font-weight: 600;">Browser Extension (Option 1)</a>.
+                </p>
+            </div>
+            
+            <!-- Code Examples -->
+            <div class="demo-box fade-in" style="margin-top: 3rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div>
+                        <h3 style="color: var(--error); margin-bottom: 1rem; font-size: 1.125rem; font-weight: 600;">❌ Without Firewall</h3>
+                        <div style="background: #fef2f2; padding: 1.5rem; border-radius: 8px; border: 1px solid #fecaca; overflow-x: auto;">
+                            <pre style="margin: 0; padding: 0; font-family: 'Courier New', 'Monaco', 'Menlo', monospace; font-size: 0.875rem; line-height: 1.6; color: #991b1b; white-space: pre-wrap; word-wrap: break-word;"><code style="display: block; font-family: inherit;"># Python
+import requests
+
+response = requests.post(
+    "https://api.openai.com/v1/chat/completions",
+    headers={"Authorization": "Bearer sk-..."},
+    json={"model": "gpt-3.5-turbo", ...}
+)
+# ⚠️ Direct to OpenAI - no protection!</code></pre>
+                        </div>
                     </div>
-                    <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-top: 1rem;">
-                        <p style="margin: 0; font-size: 0.875rem; color: var(--dark); line-height: 1.6;">
-                            <strong style="color: var(--primary);">How it works:</strong> Developers add our SDK to their code. Every API call goes through our firewall first, gets scanned, then reaches the AI. Two lines of code.
-                        </p>
+                    <div>
+                        <h3 style="color: var(--success); margin-bottom: 1rem; font-size: 1.125rem; font-weight: 600;">✅ With Gateway Proxy</h3>
+                        <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 8px; border: 1px solid #bbf7d0; overflow-x: auto;">
+                            <pre style="margin: 0; padding: 0; font-family: 'Courier New', 'Monaco', 'Menlo', monospace; font-size: 0.875rem; line-height: 1.6; color: #065f46; white-space: pre-wrap; word-wrap: break-word;"><code style="display: block; font-family: inherit;"># Python - Just change the URL!
+import requests
+
+response = requests.post(
+    "https://your-gateway.railway.app/v1/chat/completions",
+    headers={
+        "Authorization": "Bearer sk-...",
+        "X-API-Key": "your-firewall-api-key"
+    },
+    json={"model": "gpt-3.5-turbo", ...}
+)
+# ✅ Protected by firewall!</code></pre>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="feature-card fade-in" style="text-align: left;">
-                    <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem;">For Employees Using Web Interfaces</h3>
-                    <p style="margin-bottom: 1.5rem; color: var(--gray); line-height: 1.7;">Your employees are using chat.openai.com, claude.ai, or gemini.google.com directly. Install our browser extension to automatically scan what they type before it reaches the AI.</p>
+                <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-top: 1.5rem;">
+                    <p style="margin: 0 0 1rem 0; color: var(--dark); font-size: 1rem; line-height: 1.7;">
+                        <strong style="color: var(--primary);">How it works:</strong> Change your API endpoint URL from the LLM provider's URL to our gateway URL. Add your firewall API key in the `X-API-Key` header. All requests route through our firewall first, get scanned, then reach the LLM API.
+                    </p>
+                    <p style="margin: 0; color: var(--dark); font-size: 0.9375rem; line-height: 1.7;">
+                        <strong>Works with:</strong> Python, JavaScript, Go, Java, Ruby, PHP, curl, or any HTTP client. No SDK required.
+                    </p>
+                </div>
+                
+                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--warning); margin-top: 1.5rem;">
+                    <p style="margin: 0; color: var(--dark); font-size: 1rem; line-height: 1.7;">
+                        <strong style="color: var(--warning);">Use cases:</strong> Multi-language teams, centralized security control, existing infrastructure that can't use SDKs, or when you want to protect all API calls from a single gateway endpoint.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Visual Flow Diagram -->
+            <div style="margin-top: 3rem; padding: 2rem; background: var(--white); border-radius: 12px; border: 1px solid var(--gray-border);">
+                <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: var(--dark); text-align: center;">Request Flow</h3>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; font-size: 0.9375rem;">
+                    <div style="background: var(--gray-light); padding: 1rem 1.5rem; border-radius: 8px; font-weight: 600; color: var(--dark);">Your App</div>
+                    <span style="color: var(--primary); font-weight: 700; font-size: 1.25rem;">→</span>
+                    <div style="background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%); padding: 1rem 1.5rem; border-radius: 8px; font-weight: 600; color: white;">Gateway Proxy</div>
+                    <span style="color: var(--primary); font-weight: 700; font-size: 1.25rem;">→</span>
+                    <div style="background: var(--gray-light); padding: 1rem 1.5rem; border-radius: 8px; font-weight: 600; color: var(--dark);">Firewall</div>
+                    <span style="color: var(--primary); font-weight: 700; font-size: 1.25rem;">→</span>
+                    <div style="background: var(--gray-light); padding: 1rem 1.5rem; border-radius: 8px; font-weight: 600; color: var(--dark);">LLM API</div>
+                </div>
+                <p style="text-align: center; margin-top: 1rem; color: var(--gray); font-size: 0.875rem;">
+                    All requests are scanned and protected before reaching the LLM provider
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Three Integration Options -->
+    <section class="demo" id="integration-options" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
+        <div class="container">
+            <h2 class="section-title fade-in">Three Ways to Integrate - Choose What Works for You</h2>
+            <p class="section-subtitle fade-in">One security solution, three integration methods. Pick the option(s) that fit your use case.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                <!-- Option 1: Browser Extension -->
+                <div class="feature-card fade-in" style="text-align: left; position: relative;">
+                    <div style="position: absolute; top: -12px; left: 20px; background: var(--primary); color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em;">
+                        OPTION 1
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; margin-top: 0.5rem;">Browser Extension</h3>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Best for:</strong> Employees using ChatGPT, Claude, or Gemini websites directly
+                    </p>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Protects:</strong> Web-based LLM usage (chat.openai.com, claude.ai, gemini.google.com)
+                    </p>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Setup time:</strong> 5 minutes
+                    </p>
+                    
                     <div style="background: var(--white); padding: 1rem; border-radius: 8px; border: 1px solid var(--gray-border); margin-top: 1rem;">
                         <p style="font-size: 0.875rem; color: var(--gray); margin-bottom: 0.5rem; font-weight: 600;">Who uses this:</p>
                         <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: var(--dark);">
                             <li style="margin-bottom: 0.5rem;">✓ All your employees</li>
-                            <li style="margin-bottom: 0.5rem;">✓ Anyone using ChatGPT/Claude/Gemini</li>
+                            <li style="margin-bottom: 0.5rem;">✓ Anyone using ChatGPT/Claude/Gemini websites</li>
                             <li style="margin-bottom: 0.5rem;">✓ No coding required</li>
                         </ul>
                     </div>
+                    
                     <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-top: 1rem;">
                         <p style="margin: 0; font-size: 0.875rem; color: var(--dark); line-height: 1.6;">
-                            <strong style="color: var(--primary);">How it works:</strong> IT installs the browser extension company-wide. When employees use ChatGPT/Claude/Gemini, their requests get scanned automatically. Zero configuration.
+                            <strong style="color: var(--primary);">How it works:</strong> IT installs the browser extension company-wide via MDM. When employees use ChatGPT/Claude/Gemini websites, their requests get scanned automatically. Zero configuration.
+                        </p>
+                    </div>
+                    
+                    <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--warning); margin-top: 1rem;">
+                        <p style="margin: 0; font-size: 0.875rem; color: var(--dark); line-height: 1.6;">
+                            <strong style="color: var(--warning);">Use this if:</strong> You have employees using LLM websites directly. This is the only way to protect web-based usage.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Option 2: Python SDK -->
+                <div class="feature-card fade-in" style="text-align: left; position: relative;">
+                    <div style="position: absolute; top: -12px; left: 20px; background: var(--primary); color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em;">
+                        OPTION 2
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; margin-top: 0.5rem;">Python SDK</h3>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Best for:</strong> Python applications using LLM APIs
+                    </p>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Protects:</strong> API calls from Python applications
+                    </p>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Setup time:</strong> 10 minutes
+                    </p>
+                    
+                    <div style="background: var(--white); padding: 1rem; border-radius: 8px; border: 1px solid var(--gray-border); margin-top: 1rem;">
+                        <p style="font-size: 0.875rem; color: var(--gray); margin-bottom: 0.5rem; font-weight: 600;">Who uses this:</p>
+                        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: var(--dark);">
+                            <li style="margin-bottom: 0.5rem;">✓ Your development team</li>
+                            <li style="margin-bottom: 0.5rem;">✓ Python applications using LLM APIs</li>
+                            <li style="margin-bottom: 0.5rem;">✓ Drop-in replacement (2 lines of code)</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-top: 1rem;">
+                        <p style="margin: 0; font-size: 0.875rem; color: var(--dark); line-height: 1.6;">
+                            <strong style="color: var(--primary);">How it works:</strong> Replace `from openai import OpenAI` with `from aifirewall import OpenAI`. Add your firewall URL. Every API call goes through our firewall first, gets scanned, then reaches the AI.
+                        </p>
+                    </div>
+                    
+                    <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--warning); margin-top: 1rem;">
+                        <p style="margin: 0; font-size: 0.875rem; color: var(--dark); line-height: 1.6;">
+                            <strong style="color: var(--warning);">Use this if:</strong> You're building Python applications and want the easiest code integration. Not using Python? See Gateway Proxy below.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Option 3: Gateway Proxy -->
+                <div class="feature-card fade-in" style="text-align: left; position: relative;">
+                    <div style="position: absolute; top: -12px; left: 20px; background: var(--primary); color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em;">
+                        OPTION 3
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; margin-top: 0.5rem;">Gateway Proxy</h3>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Best for:</strong> Applications in any language (Python, JavaScript, Go, etc.)
+                    </p>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Protects:</strong> API calls from any application or language
+                    </p>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Setup time:</strong> 30 minutes
+                    </p>
+                    
+                    <div style="background: var(--white); padding: 1rem; border-radius: 8px; border: 1px solid var(--gray-border); margin-top: 1rem;">
+                        <p style="font-size: 0.875rem; color: var(--gray); margin-bottom: 0.5rem; font-weight: 600;">Who uses this:</p>
+                        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem; color: var(--dark);">
+                            <li style="margin-bottom: 0.5rem;">✓ Multi-language teams</li>
+                            <li style="margin-bottom: 0.5rem;">✓ Applications using any HTTP client</li>
+                            <li style="margin-bottom: 0.5rem;">✓ Centralized security control</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-top: 1rem;">
+                        <p style="margin: 0; font-size: 0.875rem; color: var(--dark); line-height: 1.6;">
+                            <strong style="color: var(--primary);">How it works:</strong> Change your API endpoint URL to point to our gateway. All requests route through our firewall first, get scanned, then reach the LLM API. Works with any language or HTTP client.
+                        </p>
+                    </div>
+                    
+                    <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--warning); margin-top: 1rem;">
+                        <p style="margin: 0; font-size: 0.875rem; color: var(--dark); line-height: 1.6;">
+                            <strong style="color: var(--warning);">Use this if:</strong> You have applications in multiple languages, want centralized control, or prefer not to use an SDK.
                         </p>
                     </div>
                 </div>
             </div>
             
             <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--white); border-radius: 12px; border: 2px solid var(--primary);">
-                <p style="font-size: 1.25rem; color: var(--dark); margin-bottom: 0.75rem; font-weight: 700;">Both Use the Same Firewall</p>
-                <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">Whether your developers use the SDK or employees use the browser extension, all requests go through the same firewall. Same security rules, same protection, same dashboard to monitor everything.</p>
+                <p style="font-size: 1.25rem; color: var(--dark); margin-bottom: 0.75rem; font-weight: 700;">All Three Use the Same Firewall</p>
+                <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">Whether you use Browser Extension, Python SDK, or Gateway Proxy, all requests go through the same firewall. Same security rules, same protection, same dashboard to monitor everything.</p>
                 <div style="display: inline-flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
                     <div style="background: var(--gray-light); padding: 0.75rem 1.25rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600;">
                         ✓ Same security rules
@@ -1410,6 +1582,148 @@ response = client.chat.completions.create(...)
         </div>
     </section>
 
+    <!-- Which Option Should I Choose? -->
+    <section class="demo" id="decision-guide" style="padding: 6rem 0; background: var(--white); border-top: 1px solid var(--gray-border);">
+        <div class="container">
+            <h2 class="section-title fade-in">Which Option Should I Choose?</h2>
+            <p class="section-subtitle fade-in">Match your use case to the right integration method</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.02) 100%); border: 2px solid var(--primary);">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                        <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem;">1</div>
+                        <h3 style="font-size: 1.25rem; margin: 0; color: var(--dark);">I have employees using ChatGPT/Claude/Gemini websites</h3>
+                    </div>
+                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1.5rem;">
+                        Your employees are accessing LLM websites directly through their browsers. You need protection for web-based usage.
+                    </p>
+                    <div style="background: var(--white); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                        <p style="margin: 0; font-size: 0.9375rem; color: var(--dark); font-weight: 600;">→ Use <strong style="color: var(--primary);">Browser Extension</strong></p>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: var(--gray);">This is the only way to protect web-based LLM usage. Install once, protects all employees automatically.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.02) 100%); border: 2px solid var(--primary);">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                        <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem;">2</div>
+                        <h3 style="font-size: 1.25rem; margin: 0; color: var(--dark);">I have Python applications using LLM APIs</h3>
+                    </div>
+                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1.5rem;">
+                        Your developers are building Python applications that call LLM APIs. You want the easiest code integration.
+                    </p>
+                    <div style="background: var(--white); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                        <p style="margin: 0; font-size: 0.9375rem; color: var(--dark); font-weight: 600;">→ Use <strong style="color: var(--primary);">Python SDK</strong></p>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: var(--gray);">Drop-in replacement for OpenAI/Anthropic/Google clients. Two lines of code, complete protection.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.02) 100%); border: 2px solid var(--primary);">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                        <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem;">3</div>
+                        <h3 style="font-size: 1.25rem; margin: 0; color: var(--dark);">I have applications in multiple languages</h3>
+                    </div>
+                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1.5rem;">
+                        Your team uses Python, JavaScript, Go, Java, or other languages. You want centralized security control.
+                    </p>
+                    <div style="background: var(--white); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                        <p style="margin: 0; font-size: 0.9375rem; color: var(--dark); font-weight: 600;">→ Use <strong style="color: var(--primary);">Gateway Proxy</strong></p>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: var(--gray);">Works with any language or HTTP client. Change endpoint URL, get protection for all applications.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%); border-radius: 12px; border: 2px solid var(--primary);">
+                <p style="font-size: 1.25rem; color: var(--dark); margin-bottom: 0.75rem; font-weight: 700;">Most Companies Use Multiple Options</p>
+                <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">
+                    You don't have to choose just one. Most companies use <strong>Browser Extension</strong> for employees + <strong>Python SDK</strong> or <strong>Gateway Proxy</strong> for applications. 
+                    All options work together seamlessly through the same firewall and dashboard.
+                </p>
+                <div style="display: inline-flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
+                    <div style="background: var(--white); padding: 0.75rem 1.25rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600; border: 1px solid var(--gray-border);">
+                        ✓ Browser Extension + SDK
+                    </div>
+                    <div style="background: var(--white); padding: 0.75rem 1.25rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600; border: 1px solid var(--gray-border);">
+                        ✓ Browser Extension + Gateway
+                    </div>
+                    <div style="background: var(--white); padding: 0.75rem 1.25rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600; border: 1px solid var(--gray-border);">
+                        ✓ All Three Together
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="demo" id="comparison" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
+        <div class="container">
+            <h2 class="section-title fade-in">Side-by-Side Comparison</h2>
+            <p class="section-subtitle fade-in">Compare all three options to find the best fit for your needs</p>
+            
+            <div style="margin-top: 3rem; overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm);">
+                    <thead>
+                        <tr style="background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);">
+                            <th style="padding: 1.25rem; text-align: left; color: white; font-weight: 600; font-size: 0.9375rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Feature</th>
+                            <th style="padding: 1.25rem; text-align: center; color: white; font-weight: 600; font-size: 0.9375rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Browser Extension</th>
+                            <th style="padding: 1.25rem; text-align: center; color: white; font-weight: 600; font-size: 0.9375rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Python SDK</th>
+                            <th style="padding: 1.25rem; text-align: center; color: white; font-weight: 600; font-size: 0.9375rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Gateway Proxy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid var(--gray-border);">
+                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Setup Time</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">5 minutes</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">10 minutes</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">30 minutes</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--gray-border); background: var(--gray-light);">
+                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Code Changes Required</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--success); font-weight: 700;">None</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">2 lines</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Change URL</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--gray-border);">
+                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Works With</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Web interfaces only</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Python apps</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--success); font-weight: 700;">Any language</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--gray-border); background: var(--gray-light);">
+                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Best For</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Employees using websites</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Python applications</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Multi-language teams</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--gray-border);">
+                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Protects</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Web-based LLM usage</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">API calls from Python</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">API calls from any app</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--gray-border); background: var(--gray-light);">
+                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Language Support</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">N/A (browser-based)</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Python only</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--success); font-weight: 700;">All languages</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Deployment</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">MDM/Chrome Web Store</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">pip install</td>
+                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Change endpoint URL</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--white); border-radius: 8px; border: 1px solid var(--gray-border);">
+                <p style="margin: 0; color: var(--gray); font-size: 0.9375rem; line-height: 1.7;">
+                    <strong style="color: var(--dark);">Remember:</strong> You can use multiple options together. Most companies use Browser Extension for employees + SDK or Gateway for applications.
+                </p>
+            </div>
+        </div>
+    </section>
+
     <!-- Multi-LLM Support -->
     <section class="demo" id="llm-support" style="padding: 6rem 0; background: var(--white); border-top: 1px solid var(--gray-border);">
         <div class="container">
@@ -1421,7 +1735,7 @@ response = client.chat.completions.create(...)
                     <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">ChatGPT</h3>
                     <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">Full support for OpenAI's GPT-3.5, GPT-4, and all models. SDK integration and browser extension protection.</p>
                     <div style="background: var(--gray-light); padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600;">
-                        ✓ SDK • ✓ Extension • ✓ API
+                        ✓ Browser Extension • ✓ Python SDK • ✓ Gateway Proxy
                     </div>
                 </div>
                 
@@ -1429,7 +1743,7 @@ response = client.chat.completions.create(...)
                     <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">Claude</h3>
                     <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">Complete protection for Anthropic's Claude models including Opus, Sonnet, and Haiku.</p>
                     <div style="background: var(--gray-light); padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600;">
-                        ✓ SDK • ✓ Extension • ✓ API
+                        ✓ Browser Extension • ✓ Python SDK • ✓ Gateway Proxy
                     </div>
                 </div>
                 
@@ -1437,7 +1751,7 @@ response = client.chat.completions.create(...)
                     <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">Gemini</h3>
                     <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">Full support for Google's Gemini Pro, Ultra, and all Gemini models via API and browser.</p>
                     <div style="background: var(--gray-light); padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600;">
-                        ✓ SDK • ✓ Extension • ✓ API
+                        ✓ Browser Extension • ✓ Python SDK • ✓ Gateway Proxy
                     </div>
                 </div>
             </div>
@@ -1452,8 +1766,14 @@ response = client.chat.completions.create(...)
     <!-- Browser Extension - Elevated Section -->
     <section class="demo" id="browser-extension" style="padding: 6rem 0; background: var(--white); border-top: 1px solid var(--gray-border);">
         <div class="container">
-            <h2 class="section-title fade-in">Protect Employees on ChatGPT, Claude & Gemini</h2>
-            <p class="section-subtitle fade-in">Managed browser extension deployed via MDM</p>
+            <h2 class="section-title fade-in">Option 1: Browser Extension - Protect Employees on Web Interfaces</h2>
+            <p class="section-subtitle fade-in">Managed browser extension deployed via MDM. Automatically protects employees using ChatGPT, Claude, or Gemini websites.</p>
+            
+            <div style="margin-top: 2rem; padding: 1.5rem; background: var(--gray-light); border-radius: 8px; border-left: 4px solid var(--primary);">
+                <p style="margin: 0; color: var(--dark); font-size: 0.9375rem; line-height: 1.7;">
+                    <strong>This is Option 1: Browser Extension (for web-based LLM usage).</strong> This protects employees using ChatGPT/Claude/Gemini websites directly. For API calls from applications, use <a href="#integration" style="color: var(--primary); text-decoration: none; font-weight: 600;">Python SDK (Option 2)</a> or <a href="#gateway-proxy" style="color: var(--primary); text-decoration: none; font-weight: 600;">Gateway Proxy (Option 3)</a>.
+                </p>
+            </div>
             
             <div style="max-width: 1000px; margin: 3rem auto 0;">
                 <div class="feature-card fade-in" style="padding: 2.5rem; text-align: left;">
@@ -1490,25 +1810,37 @@ response = client.chat.completions.create(...)
             <div class="use-case fade-in">
                 <div class="use-case-content">
                     <h3>Companies Using AI Across the Organization</h3>
-                    <p>Your developers are building apps with ChatGPT/Claude/Gemini APIs, and your employees are using these tools directly. You need protection for both. Use our SDK for applications and browser extension for employees - both routes through the same firewall with the same security rules.</p>
+                    <p>Your developers are building apps with ChatGPT/Claude/Gemini APIs, and your employees are using these tools directly. You need protection for both. Use <strong>Browser Extension (Option 1)</strong> for employees using websites + <strong>Python SDK (Option 2)</strong> or <strong>Gateway Proxy (Option 3)</strong> for applications - all routes through the same firewall with the same security rules.</p>
                 </div>
             </div>
             <div class="use-case fade-in">
                 <div class="use-case-content">
                     <h3>Protect Applications Your Developers Build</h3>
-                    <p>Your development team is building customer service bots, AI assistants, or other apps that use ChatGPT/Claude/Gemini APIs. Add our SDK to their code - it automatically routes all requests through our firewall first. Two lines of code, complete protection for your entire application.</p>
+                    <p>Your development team is building customer service bots, AI assistants, or other apps that use ChatGPT/Claude/Gemini APIs. Use <strong>Python SDK (Option 2)</strong> for Python apps or <strong>Gateway Proxy (Option 3)</strong> for multi-language teams. Add our SDK to their code - it automatically routes all requests through our firewall first. Two lines of code, complete protection for your entire application.</p>
+                </div>
+            </div>
+            <div class="use-case fade-in">
+                <div class="use-case-content">
+                    <h3>Multi-Language Teams Using Gateway Proxy</h3>
+                    <p>Your team uses Python, JavaScript, Go, Java, or other languages. You want centralized security control without managing multiple SDKs. Use <strong>Gateway Proxy (Option 3)</strong> - change your API endpoint URL once, and all applications across all languages are protected through the same firewall and dashboard.</p>
                 </div>
             </div>
             <div class="use-case fade-in">
                 <div class="use-case-content">
                     <h3>Healthcare & Financial Services</h3>
-                    <p>Regulated industries require HIPAA, PCI-DSS, and SOX compliance. Our firewall provides comprehensive audit trails and ensures PII never reaches LLMs, meeting strict regulatory requirements.</p>
+                    <p>Regulated industries require HIPAA, PCI-DSS, and SOX compliance. Our firewall provides comprehensive audit trails and ensures PII never reaches LLMs, meeting strict regulatory requirements. Works with all three integration options - Browser Extension, Python SDK, or Gateway Proxy.</p>
                 </div>
             </div>
             <div class="use-case fade-in">
                 <div class="use-case-content">
                     <h3>Security Teams & CISOs</h3>
-                    <p>Security leaders need visibility and control over AI usage across the organization. Get comprehensive logs, real-time violation alerts, and policy enforcement across all LLM interactions.</p>
+                    <p>Security leaders need visibility and control over AI usage across the organization. Get comprehensive logs, real-time violation alerts, and policy enforcement across all LLM interactions - whether employees use websites (<strong>Browser Extension</strong>) or applications use APIs (<strong>Python SDK</strong> or <strong>Gateway Proxy</strong>).</p>
+                </div>
+            </div>
+            <div class="use-case fade-in">
+                <div class="use-case-content">
+                    <h3>Using Multiple Options Together</h3>
+                    <p>Most companies need both web and API protection. Deploy <strong>Browser Extension (Option 1)</strong> for employees using ChatGPT/Claude/Gemini websites, plus <strong>Python SDK (Option 2)</strong> or <strong>Gateway Proxy (Option 3)</strong> for applications. All options work together seamlessly - same firewall, same policies, same dashboard, unified visibility.</p>
                 </div>
             </div>
         </div>
@@ -1544,11 +1876,56 @@ response = client.chat.completions.create(...)
         </div>
     </section>
 
+    <!-- FAQ Section -->
+    <section class="demo" id="faq" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
+        <div class="container">
+            <h2 class="section-title fade-in">Frequently Asked Questions</h2>
+            <p class="section-subtitle fade-in">Common questions about our integration options</p>
+            
+            <div style="max-width: 800px; margin: 3rem auto 0;">
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">Do I need all three options?</h3>
+                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">
+                        No. Most companies use 1-2 options based on their needs. If you only have employees using websites, use Browser Extension. If you only have applications, use Python SDK or Gateway Proxy. Most companies use Browser Extension for employees + SDK or Gateway for applications.
+                    </p>
+                </div>
+                
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">Can I use multiple options together?</h3>
+                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">
+                        Yes! All three options work together seamlessly. They all use the same firewall, same security rules, and same dashboard. Most companies use Browser Extension for employees + Python SDK or Gateway Proxy for applications.
+                    </p>
+                </div>
+                
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">What's the difference between Python SDK and Gateway Proxy?</h3>
+                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">
+                        <strong>Python SDK (Option 2)</strong> is a drop-in replacement for OpenAI/Anthropic/Google clients - perfect if you're using Python. <strong>Gateway Proxy (Option 3)</strong> works with any language by changing your API endpoint URL - perfect for multi-language teams or when you prefer not to use an SDK. Both provide the same protection.
+                    </p>
+                </div>
+                
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">Why do I need Browser Extension if I have Gateway Proxy?</h3>
+                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">
+                        Browser Extension protects employees using ChatGPT/Claude/Gemini websites directly. Gateway Proxy protects API calls from applications. They protect different things - Browser Extension protects web usage, Gateway Proxy protects API usage. Most companies need both.
+                    </p>
+                </div>
+                
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">Which option is easiest to set up?</h3>
+                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">
+                        <strong>Browser Extension</strong> is the easiest (5 minutes) - just install via MDM. <strong>Python SDK</strong> is next (10 minutes) - two lines of code. <strong>Gateway Proxy</strong> takes about 30 minutes - change your endpoint URL and add an API key header.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="cta-section" id="pricing">
         <div class="container">
             <h2>Ready to Secure Your AI Infrastructure?</h2>
-            <p>Get complete protection for both internal apps and employees using ChatGPT/Claude/Gemini - via one SDK and one managed browser extension.</p>
+            <p>Get complete protection for employees using ChatGPT/Claude/Gemini websites (Browser Extension) and applications using LLM APIs (Python SDK or Gateway Proxy).</p>
             <div class="hero-buttons">
                 <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'cta_section' });">Request Enterprise Demo</a>
                 <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'cta_section' });">Try Interactive Demo</a>
