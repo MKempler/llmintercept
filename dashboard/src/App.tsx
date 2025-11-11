@@ -50,7 +50,7 @@ function App() {
           <Route
             path="/*"
             element={
-              <div style={{ minHeight: '100vh', background: 'var(--gray-light)' }}>
+              <div style={{ minHeight: '100vh', background: 'var(--dark)' }}>
                 <Navbar />
                 <main style={{ 
                   maxWidth: '1280px', 

@@ -16,7 +16,7 @@ function DashboardPreview() {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      background: 'var(--gray-light)',
+      background: 'var(--dark)',
       padding: '0'
     }}>
       <Dashboard />

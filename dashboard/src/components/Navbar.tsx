@@ -64,11 +64,11 @@ export default function Navbar() {
     <nav 
       className="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        background: scrolled ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.98)',
+        background: scrolled ? 'rgba(2, 8, 23, 0.95)' : 'rgba(2, 8, 23, 0.98)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         boxShadow: scrolled ? 'var(--shadow-md)' : 'var(--shadow-sm)',
-        borderBottom: '1px solid rgba(226, 232, 240, 0.8)'
+        borderBottom: '1px solid var(--gray-border)'
       }}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -133,7 +133,7 @@ export default function Navbar() {
                     backgroundClip: 'text',
                     fontWeight: 800,
                     letterSpacing: '-0.02em',
-                    fontFamily: "'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif"
+                    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif'
                   }}
                 >
                   LLM
@@ -141,10 +141,10 @@ export default function Navbar() {
                 <span
                   style={{
                     fontSize: '1.5rem',
-                    color: 'var(--dark)',
+                    color: 'var(--text-primary)',
                     fontWeight: 700,
                     letterSpacing: '-0.02em',
-                    fontFamily: "'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif"
+                    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif'
                   }}
                 >
                   Intercept
@@ -162,9 +162,9 @@ export default function Navbar() {
                   fontWeight: 600,
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
-                  background: 'var(--gray-light)',
-                  color: 'var(--gray)',
-                  border: '1px solid var(--gray-border)'
+                  background: 'rgba(37, 99, 235, 0.15)',
+                  color: 'var(--primary-light)',
+                  border: '1px solid rgba(37, 99, 235, 0.2)'
                 }}
               >
                 Demo
@@ -178,7 +178,7 @@ export default function Navbar() {
               to="/"
               className="inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200"
               style={{
-                color: isActive('/') ? 'var(--primary)' : 'var(--gray)',
+                color: isActive('/') ? 'var(--primary)' : 'var(--text-muted)',
                 borderBottom: isActive('/') ? '2px solid var(--primary)' : '2px solid transparent',
                 marginBottom: '-2px',
                 fontWeight: isActive('/') ? 600 : 500
@@ -285,13 +285,13 @@ export default function Navbar() {
                     padding: '6px 12px',
                     borderRadius: '8px',
                     border: '1px solid var(--gray-border)',
-                    background: 'white',
+                    background: 'var(--dark-surface)',
                     cursor: 'pointer',
                     transition: 'all 0.2s'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = 'var(--primary)'
-                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)'
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.1)'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = 'var(--gray-border)'
@@ -314,7 +314,7 @@ export default function Navbar() {
                   >
                     {user.email.charAt(0).toUpperCase()}
                   </div>
-                  <span style={{ fontSize: '14px', color: 'var(--dark)', fontWeight: 500 }}>
+                  <span style={{ fontSize: '14px', color: 'var(--text-primary)', fontWeight: 500 }}>
                     {user.email}
                   </span>
                 </button>
@@ -326,20 +326,20 @@ export default function Navbar() {
                       top: '100%',
                       right: 0,
                       marginTop: '8px',
-                      background: 'white',
+                      background: 'var(--dark-surface)',
                       border: '1px solid var(--gray-border)',
                       borderRadius: '8px',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                      boxShadow: 'var(--shadow-lg)',
                       minWidth: '200px',
                       zIndex: 1000
                     }}
                   >
                     <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--gray-border)' }}>
-                      <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--dark)' }}>
+                      <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>
                         {user.email}
                       </div>
                       {user.company && (
-                        <div style={{ fontSize: '12px', color: 'var(--gray)', marginTop: '4px' }}>
+                        <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
                           {user.company}
                         </div>
                       )}
@@ -352,12 +352,12 @@ export default function Navbar() {
                           padding: '8px 12px',
                           borderRadius: '6px',
                           fontSize: '14px',
-                          color: 'var(--dark)',
+                          color: 'var(--text-secondary)',
                           textDecoration: 'none',
                           transition: 'background 0.2s'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'var(--gray-light)'
+                          e.currentTarget.style.background = 'rgba(37, 99, 235, 0.1)'
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.background = 'transparent'
@@ -373,13 +373,13 @@ export default function Navbar() {
                           padding: '8px 12px',
                           borderRadius: '6px',
                           fontSize: '14px',
-                          color: 'var(--dark)',
+                          color: 'var(--text-secondary)',
                           textDecoration: 'none',
                           transition: 'background 0.2s',
                           marginTop: '4px'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'var(--gray-light)'
+                          e.currentTarget.style.background = 'rgba(37, 99, 235, 0.1)'
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.background = 'transparent'
@@ -395,7 +395,7 @@ export default function Navbar() {
                           padding: '8px 12px',
                           borderRadius: '6px',
                           fontSize: '14px',
-                          color: '#c53030',
+                          color: 'var(--error)',
                           background: 'transparent',
                           border: 'none',
                           cursor: 'pointer',
@@ -403,7 +403,7 @@ export default function Navbar() {
                           marginTop: '4px'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = '#fed7d7'
+                          e.currentTarget.style.background = 'rgba(244, 63, 94, 0.1)'
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.background = 'transparent'
@@ -423,14 +423,14 @@ export default function Navbar() {
                 href="https://llmintercept.com"
                 className="inline-flex items-center px-3 py-2 text-xs font-medium transition-colors duration-200"
                 style={{
-                  color: 'var(--gray)',
+                  color: 'var(--text-muted)',
                   textDecoration: 'none'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = 'var(--primary)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--gray)'
+                  e.currentTarget.style.color = 'var(--text-muted)'
                 }}
               >
                 ← Demo Site
