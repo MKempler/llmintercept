@@ -47,9 +47,25 @@ export function clearAuth(): void {
   localStorage.removeItem(TOKEN_KEY)
   localStorage.removeItem(REFRESH_TOKEN_KEY)
   localStorage.removeItem(USER_KEY)
+  // Also clear demo mode when logging in
+  clearDemoMode()
 }
 
 export function isAuthenticated(): boolean {
   return !!getToken()
 }
 
+// Demo mode utilities
+const DEMO_MODE_KEY = 'aifirewall_demo_mode'
+
+export function setDemoMode(): void {
+  localStorage.setItem(DEMO_MODE_KEY, 'true')
+}
+
+export function isDemoMode(): boolean {
+  return localStorage.getItem(DEMO_MODE_KEY) === 'true'
+}
+
+export function clearDemoMode(): void {
+  localStorage.removeItem(DEMO_MODE_KEY)
+}
