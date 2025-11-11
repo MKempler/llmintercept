@@ -389,6 +389,9 @@
             #browser-extension .feature-card > div[style*="grid-template-columns: repeat(3"] {
                 grid-template-columns: 1fr !important;
             }
+            #use-cases > div > div[style*="grid-template-columns: repeat(3"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
         }
 
         @media (max-width: 768px) {
@@ -397,6 +400,19 @@
             }
             .two-column-grid {
                 grid-template-columns: 1fr;
+            }
+            #use-cases > div > div[style*="grid-template-columns: repeat(3"] {
+                grid-template-columns: 1fr !important;
+            }
+            section[style*="padding: 2.5rem 0"] > div > div[style*="display: flex"] {
+                flex-direction: column !important;
+                gap: 1.5rem !important;
+                align-items: flex-start !important;
+            }
+            #dashboard-preview > div > div > div[style*="display: flex"][style*="justify-content: center"] {
+                flex-direction: column !important;
+                gap: 1rem !important;
+                align-items: flex-start !important;
             }
         }
 
@@ -527,77 +543,6 @@
             background: var(--gray-light);
             border-top: 1px solid var(--gray-border);
             border-bottom: 1px solid var(--gray-border);
-        }
-
-        .integration-module {
-            margin-top: 3rem;
-            display: grid;
-            gap: 2.5rem;
-        }
-
-        .integration-tabs {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-        }
-
-        .integration-tab {
-            border: 1px solid var(--gray-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: left;
-            background: var(--white);
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            font: inherit;
-            color: var(--dark);
-        }
-
-        .integration-tab span:first-child {
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            color: var(--primary);
-            text-transform: uppercase;
-        }
-
-        .integration-tab span:nth-child(2) {
-            font-size: 1.125rem;
-            font-weight: 700;
-        }
-
-        .integration-tab span:last-child {
-            font-size: 0.875rem;
-            color: var(--gray);
-            line-height: 1.6;
-        }
-
-        .integration-tab.active {
-            border-color: var(--primary);
-            box-shadow: 0 12px 30px -12px rgba(37, 99, 235, 0.35);
-            transform: translateY(-4px);
-        }
-
-        .integration-tab:hover {
-            border-color: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px -16px rgba(15, 23, 42, 0.2);
-        }
-
-        .integration-panels {
-            position: relative;
-        }
-
-        .integration-panel {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .integration-panel.active {
-            display: block;
         }
 
         .demo-container {
@@ -1085,7 +1030,6 @@
                 </div>
             </a>
             <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
                 <li><a href="#interactive-demo">Demo</a></li>
                 <li><a href="https://dashboard.llmintercept.com" target="_blank" style="position: relative;" onclick="trackEvent('click_view_dashboard', { location: 'nav_desktop' });">Dashboard <span style="font-size: 0.7em; margin-left: 4px; opacity: 0.6;">↗</span></a></li>
                 <li><a href="#use-cases">Use Cases</a></li>
@@ -1102,7 +1046,6 @@
         </nav>
         <div class="mobile-menu" id="mobileMenu">
             <ul>
-                <li><a href="#features">Features</a></li>
                 <li><a href="#interactive-demo">Demo</a></li>
                 <li><a href="https://dashboard.llmintercept.com" target="_blank" onclick="trackEvent('click_view_dashboard', { location: 'nav_mobile' });">Dashboard ↗</a></li>
                 <li><a href="#use-cases">Use Cases</a></li>
@@ -1117,84 +1060,81 @@
             <div class="hero-content">
                 <div class="hero-badge">Enterprise-Grade LLM Security</div>
                 <h1>Your Employees Are Leaking Data to AI. <span class="gradient">We Stop It.</span></h1>
-                <p>Every prompt to ChatGPT, Claude, or Gemini is scanned before it leaves your organization. LLM Intercept blocks secrets, PII, and prompt injection attacks in real time - so you can enable AI without leaking data or breaking compliance.</p>
-                <div style="margin: 2rem 0; padding: 1.5rem; background: rgba(37, 99, 235, 0.05); border-left: 4px solid var(--primary); border-radius: 8px;">
-                    <p style="margin: 0 0 1rem 0; font-size: 0.9375rem; font-weight: 600; color: var(--dark);">Three Integration Options:</p>
-                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
-                        <li style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.9375rem;">
-                            <span style="color: var(--success); font-weight: 700;">✓</span>
-                            <span><strong>Browser Extension</strong> - Protect employees using ChatGPT/Claude/Gemini websites</span>
-                        </li>
-                        <li style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.9375rem;">
-                            <span style="color: var(--success); font-weight: 700;">✓</span>
-                            <span><strong>Python SDK</strong> - Drop-in replacement for Python applications</span>
-                        </li>
-                        <li style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.9375rem;">
-                            <span style="color: var(--success); font-weight: 700;">✓</span>
-                            <span><strong>Gateway Proxy</strong> - Works with any language, centralized security</span>
-                        </li>
-                        <li style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.9375rem; margin-top: 0.5rem; padding-top: 0.75rem; border-top: 1px solid rgba(37, 99, 235, 0.2);">
-                            <span style="color: var(--success); font-weight: 700;">✓</span>
-                            <span>Centralized policies, logs, and alerts for security teams</span>
-                        </li>
-                    </ul>
-                </div>
+                <p style="font-size: 1.125rem; line-height: 1.7; margin-bottom: 1rem;">LLM Intercept is an AI firewall that inspects every LLM request for secrets, PII, and prompt injection before it leaves your org.</p>
+                <p style="font-size: 0.9375rem; color: var(--gray); margin-bottom: 2.5rem;">Protect employees, apps, and APIs via Browser Extension, SDK, or Gateway.</p>
                 <div class="hero-buttons">
                     <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'hero' });">Request Enterprise Demo</a>
                     <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'hero' });">Try Interactive Demo</a>
-                    <a href="https://dashboard.llmintercept.com" target="_blank" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem;" onclick="trackEvent('click_view_dashboard', { location: 'hero' });">
-                        <span>View Dashboard</span>
-                        <span style="font-size: 0.9em; opacity: 0.7;">↗</span>
+                    <a href="https://dashboard.llmintercept.com" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;" onmouseover="this.style.color='var(--primary-dark)'; this.style.textDecoration='underline';" onmouseout="this.style.color='var(--primary)'; this.style.textDecoration='none';" onclick="trackEvent('click_view_dashboard', { location: 'hero' });">
+                        View Dashboard <span style="font-size: 0.9em;">→</span>
                     </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Proof: See It In Action -->
-    <section class="demo" id="see-it-in-action" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
+    <!-- Key Value Props -->
+    <section style="padding: 2.5rem 0; background: var(--white); border-bottom: 1px solid var(--gray-border);">
+        <div class="container">
+            <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; max-width: 1000px; margin: 0 auto;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; color: var(--dark);">
+                    <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">✓</span>
+                    <span><strong>Stop Data Leaks</strong> – Block secrets & PII before they ever reach LLMs.</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; color: var(--dark);">
+                    <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">✓</span>
+                    <span><strong>Meet Compliance</strong> – Centralized logging & policies for audits.</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; color: var(--dark);">
+                    <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">✓</span>
+                    <span><strong>Adopt AI Safely</strong> – Let teams use ChatGPT/Claude/Gemini without security tickets.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works" style="padding: 6rem 0; background: var(--white);">
+        <div class="container">
+            <h2 class="section-title fade-in">How It Works</h2>
+            <p class="section-subtitle fade-in">Four steps to complete protection</p>
+            <div class="how-it-works-steps">
+                <div class="step-card fade-in">
+                    <div class="step-number">1</div>
+                    <h3>Traffic Routed</h3>
+                    <p>Browser extension, SDK, or Gateway routes each request to LLM Intercept first.</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card fade-in">
+                    <div class="step-number">2</div>
+                    <h3>Real-Time Inspection</h3>
+                    <p>Secrets, PII, and prompt injection detected in &lt;100ms using pattern matching + ML.</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card fade-in">
+                    <div class="step-number">3</div>
+                    <h3>Automatic Enforcement</h3>
+                    <p>Block, redact, mask, or allow based on your policies.</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card fade-in">
+                    <div class="step-number">4</div>
+                    <h3>Unified Visibility</h3>
+                    <p>Security teams see all LLM usage: violations, users, apps, and models in one place.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Demo -->
+    <section class="demo" id="interactive-demo" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
         <div class="container">
             <div class="demo-container">
-                <h2 class="section-title fade-in">See it in action</h2>
-                <p class="section-subtitle fade-in">Explore the live security dashboard and run the firewall against real attack scenarios.</p>
-
-                <div class="demo-box fade-in" style="margin-top: 3rem; text-align: center;">
-                    <div style="background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%); padding: 3rem; border-radius: 12px; border: none; margin-bottom: 2rem; box-shadow: var(--shadow-lg);">
-                        <h3 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; color: var(--white);">Security Dashboard Preview</h3>
-                        <p style="color: rgba(255, 255, 255, 0.95); margin-bottom: 2rem; line-height: 1.7; font-size: 1.0625rem;">
-                            See real-time statistics, detailed violation reports, comprehensive audit logs, and powerful policy management tools.<br>
-                            Everything you need to monitor and secure your organization's LLM usage.
-                        </p>
-                        <a href="https://dashboard.llmintercept.com" target="_blank" class="btn" style="display: inline-flex; background: var(--white); color: var(--primary); font-weight: 600; padding: 0.875rem 2rem; font-size: 1.0625rem; box-shadow: var(--shadow-md);" onclick="trackEvent('click_view_dashboard', { location: 'see_it_in_action' });">
-                            <span>View Full Dashboard</span>
-                            <span style="margin-left: 8px;">→</span>
-                        </a>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem;">
-                        <div style="background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
-                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; font-size: 1.125rem;">Real-Time Stats</div>
-                            <div style="font-size: 0.9375rem; color: var(--gray); line-height: 1.6;">Track requests, blocks, violations, and security trends with live updates</div>
-                        </div>
-                        <div style="background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
-                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; font-size: 1.125rem;">Violation Details</div>
-                            <div style="font-size: 0.9375rem; color: var(--gray); line-height: 1.6;">See exactly what was blocked, why it was flagged, and what action was taken</div>
-                        </div>
-                        <div style="background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
-                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; font-size: 1.125rem;">Audit Logs</div>
-                            <div style="font-size: 0.9375rem; color: var(--gray); line-height: 1.6;">Complete searchable history of all requests, responses, and security events</div>
-                        </div>
-                        <div style="background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
-                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; font-size: 1.125rem;">Policy Management</div>
-                            <div style="font-size: 0.9375rem; color: var(--gray); line-height: 1.6;">Configure security rules, customize actions, and manage policies with ease</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="demo-box fade-in" id="interactive-demo" style="margin-top: 4rem;">
-                    <h3 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; color: var(--dark); text-align: center;">Test Real Threat Scenarios</h3>
-                    <p style="color: var(--gray); margin-bottom: 2rem; line-height: 1.7; text-align: center; max-width: 720px; margin-left: auto; margin-right: auto;">See how the firewall protects against actual security threats in real-time.</p>
-
+                <h2 class="section-title fade-in">Test Real Threat Scenarios</h2>
+                <p class="section-subtitle fade-in">See how the firewall protects against actual security threats in real-time.</p>
+                
+                <!-- Demo Scenarios -->
+                <div class="demo-box fade-in" style="margin-top: 3rem;">
                     <div style="margin-bottom: 2rem;">
                         <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
                             <button class="demo-btn secondary" id="stepBtn1" style="flex: 1; min-width: 150px;">
@@ -1210,14 +1150,14 @@
                                 <span>Clean Request</span>
                             </button>
                         </div>
-
+                        
                         <div id="demoStepContent" style="min-height: 300px;">
                             <div style="padding: 2rem; text-align: center; color: var(--gray);">
                                 <p>Loading demo...</p>
                             </div>
                         </div>
                     </div>
-
+                    
                     <div class="stats" style="margin-top: 2rem;">
                         <div class="stat">
                             <div class="stat-number" id="statTotal">0</div>
@@ -1241,494 +1181,102 @@
         </div>
     </section>
 
-    <!-- Key Outcomes -->
-    <section id="features" style="padding: 4rem 0; background: var(--white);">
+    <!-- Three Integration Options -->
+    <section class="demo" id="integration-options" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
         <div class="container">
-            <h2 class="section-title" style="text-align: center; margin-bottom: 2.5rem;">Key outcomes</h2>
-            <div class="features-grid" style="margin-top: 0;">
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
-                    <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">Stop Data Leaks</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">Interlock secrets, credentials, and customer data before they ever reach public LLMs.</p>
-                </div>
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
-                    <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">Meet Compliance</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">Centralize policy enforcement and logging so audits see every prompt, action, and decision.</p>
-                </div>
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
-                    <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">Adopt Safely</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">Give employees and developers green lights to use AI tools with the guardrails security teams trust.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works" style="padding: 6rem 0; background: var(--white);">
-        <div class="container">
-            <h2 class="section-title fade-in">How It Works</h2>
-            <p class="section-subtitle fade-in">Four steps to complete protection</p>
-            <div class="how-it-works-steps">
-                <div class="step-card fade-in">
-                    <div class="step-number">1</div>
-                    <h3>Traffic Routed</h3>
-                    <p>Browser extension, Python SDK, or Gateway Proxy routes each request to LLM Intercept first.</p>
-                </div>
-                <div class="step-arrow">→</div>
-                <div class="step-card fade-in">
-                    <div class="step-number">2</div>
-                    <h3>Real-Time Inspection</h3>
-                    <p>Secrets, PII, and adversarial prompts are detected in &lt;100ms using pattern matching + ML + policy rules.</p>
-                </div>
-                <div class="step-arrow">→</div>
-                <div class="step-card fade-in">
-                    <div class="step-number">3</div>
-                    <h3>Automatic Enforcement</h3>
-                    <p>Block, redact, mask, or allow based on your policies. Every decision is logged.</p>
-                </div>
-                <div class="step-arrow">→</div>
-                <div class="step-card fade-in">
-                    <div class="step-number">4</div>
-                    <h3>Unified Visibility</h3>
-                    <p>Security teams get a single dashboard for all LLM usage: violations, users, apps, models.</p>
-                        <a href="https://dashboard.llmintercept.com" target="_blank" style="display: inline-flex; align-items: center; margin-top: 1rem; color: var(--primary); font-weight: 600; font-size: 0.9375rem; text-decoration: none; transition: all 0.2s;" onclick="trackEvent('click_view_dashboard', { location: 'how_it_works' });">
-                        View Dashboard <span style="margin-left: 4px;">→</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Platform Capabilities -->
-    <section class="features" id="platform-capabilities">
-        <div class="container">
-            <h2 class="section-title">Platform Capabilities</h2>
-            <p class="section-subtitle">Detection, control, and visibility for every LLM interaction</p>
-            
-            <div style="margin-top: 3rem;">
-                <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--dark); margin-bottom: 1.5rem; text-align: center;">Detection</h3>
-                <div class="features-grid" style="margin-bottom: 3rem;">
-                    <div class="feature-card fade-in">
-                        <h3>Secrets & Keys</h3>
-                        <p>AWS, GCP, GitHub, DB creds, tokens - detected using pattern matching and ML models.</p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <h3>PII</h3>
-                        <p>Names, SSNs, emails, payment data - identified with NLP and pattern recognition.</p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <h3>Prompt Injection</h3>
-                        <p>Jailbreak attempts, data exfiltration patterns - blocked before reaching models.</p>
-                    </div>
-                </div>
-                
-                <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--dark); margin-bottom: 1.5rem; text-align: center;">Control</h3>
-                <div class="features-grid" style="margin-bottom: 3rem;">
-                    <div class="feature-card fade-in">
-                        <h3>Policy Actions</h3>
-                        <p>Block, redact, mask, or rewrite based on your security policies.</p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <h3>Per-Group Policies</h3>
-                        <p>Different rules for engineering, support, legal, and other teams.</p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <h3>SIEM Integration</h3>
-                        <p>Stream events to Splunk, Datadog, and other security tools (roadmap).</p>
-                    </div>
-                </div>
-                
-                <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--dark); margin-bottom: 1.5rem; text-align: center;">Visibility</h3>
-                <div class="features-grid">
-                    <div class="feature-card fade-in">
-                        <h3>Request & Response Logs</h3>
-                        <p>Complete audit trail of all LLM interactions with search and filtering.</p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <h3>Violation Drill-Downs</h3>
-                        <p>See exactly what was blocked, why, and what action was taken.</p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <h3>Compliance Export</h3>
-                        <p>Export logs and reports via CSV/API for compliance audits.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Deployment Options -->
-    <section class="demo" id="deployment-options" style="padding: 6rem 0; background: var(--white); border-top: 1px solid var(--gray-border); border-bottom: 1px solid var(--gray-border);">
-        <div class="container">
-            <h2 class="section-title fade-in">Three Ways to Deploy the Firewall</h2>
-            <p class="section-subtitle fade-in">Choose the path that matches your workflow—each routes traffic through the same policies and dashboard.</p>
-
-            <div class="integration-module">
-                <div class="integration-tabs">
-                    <button class="integration-tab active" data-target="browser-extension">
-                        <span>Option 1</span>
-                        <span>Browser Extension</span>
-                        <span>Fastest way to protect employees on ChatGPT, Claude, and Gemini.</span>
-                    </button>
-                    <button class="integration-tab" data-target="python-sdk">
-                        <span>Option 2</span>
-                        <span>Python SDK</span>
-                        <span>Drop-in client that adds security without rewrites.</span>
-                    </button>
-                    <button class="integration-tab" data-target="gateway-proxy">
-                        <span>Option 3</span>
-                        <span>Gateway Proxy</span>
-                        <span>Centralized control for every language and HTTP client.</span>
-                    </button>
-                </div>
-
-                <div class="integration-panels">
-                    <div class="integration-panel active" id="browser-extension">
-                        <h3 class="section-title" style="font-size: 2rem;">Option 1: Browser Extension - Protect Employees on Web Interfaces</h3>
-                        <p class="section-subtitle" style="margin-bottom: 2rem;">Managed browser extension deployed via MDM. Automatically protects employees using ChatGPT, Claude, or Gemini websites.</p>
-
-                        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--gray-light); border-radius: 8px; border-left: 4px solid var(--primary);">
-                            <p style="margin: 0; color: var(--dark); font-size: 0.9375rem; line-height: 1.7;">
-                                <strong>This is Option 1: Browser Extension for web-based LLM usage.</strong> Launch coverage in minutes for every employee visiting ChatGPT/Claude/Gemini. Need to secure API traffic? Switch to the Python SDK or Gateway tabs above.
-                            </p>
-                        </div>
-
-                        <div style="max-width: 1000px; margin: 3rem auto 0;">
-                            <div class="feature-card fade-in" style="padding: 2.5rem; text-align: left;">
-                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 2rem;">
-                                    <div>
-                                        <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">Scans Locally</div>
-                                        <p style="color: var(--gray); font-size: 0.9375rem; line-height: 1.6; margin: 0;">Prompts are scanned before they're sent to AI providers.</p>
-                                    </div>
-                                    <div>
-                                        <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">Policy Enforcement</div>
-                                        <p style="color: var(--gray); font-size: 0.9375rem; line-height: 1.6; margin: 0;">Warns on secrets &amp; PII, blocks according to your policies.</p>
-                                    </div>
-                                    <div>
-                                        <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem;">Unified Dashboard</div>
-                                        <p style="color: var(--gray); font-size: 0.9375rem; line-height: 1.6; margin: 0;">Streams events to the same dashboard used for SDK traffic.</p>
-                                    </div>
-                                </div>
-
-                                <div style="background: var(--gray-light); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-top: 2rem;">
-                                    <p style="margin: 0; color: var(--dark); font-size: 0.9375rem; line-height: 1.7;">
-                                        <strong style="color: var(--primary);">Zero configuration required.</strong> IT installs the extension company-wide via MDM. When employees use ChatGPT, Claude, or Gemini, their requests are automatically protected. No training needed, no behavior change required.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="integration-panel" id="python-sdk" hidden>
-                        <h3 class="section-title" style="font-size: 2rem;">Option 2: Python SDK - Drop-in Replacement</h3>
-                        <p class="section-subtitle" style="margin-bottom: 2rem;">Swap your OpenAI/Anthropic/Gemini client for ours. All requests are transparently routed through LLM Intercept for inspection and policy enforcement—no code rewrites or new APIs.</p>
-
-                        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--gray-light); border-radius: 8px; border-left: 4px solid var(--primary);">
-                            <p style="margin: 0; color: var(--dark); font-size: 0.9375rem; line-height: 1.7;">
-                                <strong>This is Option 2: Python SDK for application developers.</strong> Replace two lines of code to add pre-production scanning and policy enforcement. Rolling out beyond Python? Select the Gateway Proxy tab for cross-language coverage.
-                            </p>
-                        </div>
-
-                        <div style="margin-top: 1rem; padding: 1.5rem; background: #f0f9ff; border-radius: 8px; border-left: 4px solid var(--primary);">
-                            <p style="margin: 0; color: var(--dark); font-size: 0.9375rem; line-height: 1.7;">
-                                <strong>Supports Python, Node.js, and backend frameworks commonly used in production (FastAPI, Express, etc.).</strong>
-                            </p>
-                        </div>
-
-                        <div class="demo-box fade-in" style="margin-top: 3rem;">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
-                                <div>
-                                    <h3 style="color: var(--error); margin-bottom: 1rem; font-size: 1.125rem; font-weight: 600;">❌ Without Firewall</h3>
-                                    <div style="background: #fef2f2; padding: 1.5rem; border-radius: 8px; border: 1px solid #fecaca; overflow-x: auto;">
-                                        <pre style="margin: 0; padding: 0; font-family: 'Courier New', 'Monaco', 'Menlo', monospace; font-size: 0.875rem; line-height: 1.6; color: #991b1b; white-space: pre-wrap; word-wrap: break-word;"><code style="display: block; font-family: inherit;">from openai import OpenAI
-
-client = OpenAI(
-    api_key="sk-..."
-)
-
-response = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=[{
-        "role": "user",
-        "content": "Here's my AWS key: AKIA..."
-    }]
-)
-# ⚠️ Secret sent to OpenAI!</code></pre>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 style="color: var(--success); margin-bottom: 1rem; font-size: 1.125rem; font-weight: 600;">✅ With Firewall</h3>
-                                    <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 8px; border: 1px solid #bbf7d0; overflow-x: auto;">
-                                        <pre style="margin: 0; padding: 0; font-family: 'Courier New', 'Monaco', 'Menlo', monospace; font-size: 0.875rem; line-height: 1.6; color: #065f46; white-space: pre-wrap; word-wrap: break-word;"><code style="display: block; font-family: inherit;">from aifirewall import OpenAI, Anthropic, Google
-
-# OpenAI
-client = OpenAI(
-    api_key="sk-...",
-    firewall_url="https://gateway.com"
-)
-
-# Or Anthropic
-client = Anthropic(
-    api_key="sk-ant-...",
-    firewall_url="https://gateway.com"
-)
-
-# Or Google
-client = Google(
-    api_key="...",
-    firewall_url="https://gateway.com"
-)
-
-response = client.chat.completions.create(...)
-# ✅ Automatically protected!</code></pre>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-top: 1.5rem;">
-                                <p style="margin: 0; color: var(--dark); font-size: 1rem; line-height: 1.7;">
-                                    <strong style="color: var(--primary);">What this means:</strong> Instead of importing OpenAI, Anthropic, or Google clients directly, you import our SDK.
-                                    Your code works exactly the same way, but now every request is automatically scanned for secrets, PII, and attacks before reaching the AI.
-                                    <br><br>
-                                    <strong>No code changes needed.</strong> No new APIs to learn. Works with OpenAI, Anthropic, and Google. Just swap one import line and add your gateway URL.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="integration-panel" id="gateway-proxy" hidden>
-                        <h3 class="section-title" style="font-size: 2rem;">Option 3: Gateway Proxy - Works with Any Language</h3>
-                        <p class="section-subtitle" style="margin-bottom: 2rem;">Route API calls through our gateway. No SDK needed—works with any HTTP client.</p>
-
-                        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--white); border-radius: 8px; border-left: 4px solid var(--primary);">
-                            <p style="margin: 0; color: var(--dark); font-size: 0.9375rem; line-height: 1.7;">
-                                <strong>This is Option 3: Gateway Proxy for multi-language teams.</strong> Centralize enforcement and audit logs across every stack by pointing traffic to the firewall edge. Prefer an SDK? Jump to the Python tab above for the quickest Python rollout.
-                            </p>
-                        </div>
-
-                        <div class="demo-box fade-in" style="margin-top: 3rem;">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
-                                <div>
-                                    <h3 style="color: var(--error); margin-bottom: 1rem; font-size: 1.125rem; font-weight: 600;">❌ Without Firewall</h3>
-                                    <div style="background: #fef2f2; padding: 1.5rem; border-radius: 8px; border: 1px solid #fecaca; overflow-x: auto;">
-                                        <pre style="margin: 0; padding: 0; font-family: 'Courier New', 'Monaco', 'Menlo', monospace; font-size: 0.875rem; line-height: 1.6; color: #991b1b; white-space: pre-wrap; word-wrap: break-word;"><code style="display: block; font-family: inherit;"># Python
-import requests
-
-response = requests.post(
-    "https://api.openai.com/v1/chat/completions",
-    headers={"Authorization": "Bearer sk-..."},
-    json={"model": "gpt-3.5-turbo", ...}
-)
-# ⚠️ Direct to OpenAI - no protection!</code></pre>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 style="color: var(--success); margin-bottom: 1rem; font-size: 1.125rem; font-weight: 600;">✅ With Gateway Proxy</h3>
-                                    <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 8px; border: 1px solid #bbf7d0; overflow-x: auto;">
-                                        <pre style="margin: 0; padding: 0; font-family: 'Courier New', 'Monaco', 'Menlo', monospace; font-size: 0.875rem; line-height: 1.6; color: #065f46; white-space: pre-wrap; word-wrap: break-word;"><code style="display: block; font-family: inherit;"># Python - Just change the URL!
-import requests
-
-response = requests.post(
-    "https://your-gateway.railway.app/v1/chat/completions",
-    headers={
-        "Authorization": "Bearer sk-...",
-        "X-API-Key": "your-firewall-api-key"
-    },
-    json={"model": "gpt-3.5-turbo", ...}
-)
-# ✅ Protected by firewall!</code></pre>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary); margin-top: 1.5rem;">
-                                <p style="margin: 0 0 1rem 0; color: var(--dark); font-size: 1rem; line-height: 1.7;">
-                                    <strong style="color: var(--primary);">How it works:</strong> Change your API endpoint URL from the LLM provider's URL to our gateway URL. Add your firewall API key in the <code style="background: rgba(15, 23, 42, 0.08); padding: 0.1rem 0.3rem; border-radius: 4px;">X-API-Key</code> header. All requests route through our firewall first, get scanned, then reach the LLM API.
-                                </p>
-                                <p style="margin: 0; color: var(--dark); font-size: 0.9375rem; line-height: 1.7;">
-                                    <strong>Works with:</strong> Python, JavaScript, Go, Java, Ruby, PHP, curl, or any HTTP client. No SDK required.
-                                </p>
-                            </div>
-
-                            <div style="background: #fef3c7; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--warning); margin-top: 1.5rem;">
-                                <p style="margin: 0; color: var(--dark); font-size: 1rem; line-height: 1.7;">
-                                    <strong style="color: var(--warning);">Use cases:</strong> Multi-language teams, centralized security control, existing infrastructure that can't use SDKs, or when you want to protect all API calls from a single gateway endpoint.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div style="margin-top: 3rem; padding: 2rem; background: var(--white); border-radius: 12px; border: 1px solid var(--gray-border);">
-                            <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: var(--dark); text-align: center;">Request Flow</h3>
-                            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; font-size: 0.9375rem;">
-                                <div style="background: var(--gray-light); padding: 1rem 1.5rem; border-radius: 8px; font-weight: 600; color: var(--dark);">Your App</div>
-                                <span style="color: var(--primary); font-weight: 700; font-size: 1.25rem;">→</span>
-                                <div style="background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%); padding: 1rem 1.5rem; border-radius: 8px; font-weight: 600; color: white;">Gateway Proxy</div>
-                                <span style="color: var(--primary); font-weight: 700; font-size: 1.25rem;">→</span>
-                                <div style="background: var(--gray-light); padding: 1rem 1.5rem; border-radius: 8px; font-weight: 600; color: var(--dark);">Firewall</div>
-                                <span style="color: var(--primary); font-weight: 700; font-size: 1.25rem;">→</span>
-                                <div style="background: var(--gray-light); padding: 1rem 1.5rem; border-radius: 8px; font-weight: 600; color: var(--dark);">LLM API</div>
-                            </div>
-                            <p style="text-align: center; margin-top: 1rem; color: var(--gray); font-size: 0.875rem;">
-                                All requests are scanned and protected before reaching the LLM provider
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--gray-light); border-radius: 12px; border: 2px solid var(--primary);">
-                <p style="font-size: 1.25rem; color: var(--dark); margin-bottom: 0.75rem; font-weight: 700;">All Three Use the Same Firewall</p>
-                <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">Whether you use Browser Extension, Python SDK, or Gateway Proxy, every request is enforced by the same policies and monitored in the same dashboard.</p>
-                <div style="display: inline-flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
-                    <div style="background: var(--white); padding: 0.75rem 1.25rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600; border: 1px solid var(--gray-border);">
-                        ✓ Same security rules
-                    </div>
-                    <div style="background: var(--white); padding: 0.75rem 1.25rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600; border: 1px solid var(--gray-border);">
-                        ✓ Same dashboard
-                    </div>
-                    <div style="background: var(--white); padding: 0.75rem 1.25rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600; border: 1px solid var(--gray-border);">
-                        ✓ Same protection
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Which Option Should I Choose? -->
-    <section class="demo" id="decision-guide" style="padding: 6rem 0; background: var(--white); border-top: 1px solid var(--gray-border);">
-        <div class="container">
-            <h2 class="section-title fade-in">Which Option Should I Choose?</h2>
-            <p class="section-subtitle fade-in">Match your use case to the right integration method</p>
+            <h2 class="section-title fade-in">Three Ways to Integrate</h2>
+            <p class="section-subtitle fade-in">One security solution, three integration methods. Pick what fits your use case.</p>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.02) 100%); border: 2px solid var(--primary);">
-                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
-                        <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem;">1</div>
-                        <h3 style="font-size: 1.25rem; margin: 0; color: var(--dark);">I have employees using ChatGPT/Claude/Gemini websites</h3>
-                    </div>
-                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1.5rem;">
-                        Your employees are accessing LLM websites directly through their browsers. You need protection for web-based usage.
+                <!-- Option 1: Browser Extension -->
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
+                    <div style="font-size: 0.875rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Option 1</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--dark); font-weight: 700;">Browser Extension</h3>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Best for:</strong> Employees using ChatGPT/Claude/Gemini directly
                     </p>
-                    <div style="background: var(--white); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary);">
-                        <p style="margin: 0; font-size: 0.9375rem; color: var(--dark); font-weight: 600;">→ Use <strong style="color: var(--primary);">Browser Extension</strong></p>
-                        <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: var(--gray);">This is the only way to protect web-based LLM usage. Install once, protects all employees automatically.</p>
-                    </div>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Setup:</strong> ~5 minutes via MDM
+                    </p>
+                    <p style="margin: 0; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Value:</strong> Auto-scans prompts in browser, no code, no behavior change.
+                        </p>
                 </div>
                 
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.02) 100%); border: 2px solid var(--primary);">
-                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
-                        <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem;">2</div>
-                        <h3 style="font-size: 1.25rem; margin: 0; color: var(--dark);">I have Python applications using LLM APIs</h3>
-                    </div>
-                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1.5rem;">
-                        Your developers are building Python applications that call LLM APIs. You want the easiest code integration.
+                <!-- Option 2: Python SDK -->
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
+                    <div style="font-size: 0.875rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Option 2</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--dark); font-weight: 700;">Python SDK</h3>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Best for:</strong> Python apps using LLM APIs
                     </p>
-                    <div style="background: var(--white); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary);">
-                        <p style="margin: 0; font-size: 0.9375rem; color: var(--dark); font-weight: 600;">→ Use <strong style="color: var(--primary);">Python SDK</strong></p>
-                        <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: var(--gray);">Drop-in replacement for OpenAI/Anthropic/Google clients. Two lines of code, complete protection.</p>
-                    </div>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Setup:</strong> 2-line client swap
+                    </p>
+                    <p style="margin: 0; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Value:</strong> Every API call scanned before OpenAI/Anthropic/Gemini.
+                        </p>
                 </div>
                 
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.02) 100%); border: 2px solid var(--primary);">
-                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
-                        <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem;">3</div>
-                        <h3 style="font-size: 1.25rem; margin: 0; color: var(--dark);">I have applications in multiple languages</h3>
-                    </div>
-                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1.5rem;">
-                        Your team uses Python, JavaScript, Go, Java, or other languages. You want centralized security control.
+                <!-- Option 3: Gateway Proxy -->
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
+                    <div style="font-size: 0.875rem; font-weight: 700; color: var(--primary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Option 3</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--dark); font-weight: 700;">Gateway Proxy</h3>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Best for:</strong> Any language / multi-team environments
                     </p>
-                    <div style="background: var(--white); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary);">
-                        <p style="margin: 0; font-size: 0.9375rem; color: var(--dark); font-weight: 600;">→ Use <strong style="color: var(--primary);">Gateway Proxy</strong></p>
-                        <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: var(--gray);">Works with any language or HTTP client. Change endpoint URL, get protection for all applications.</p>
+                    <p style="margin-bottom: 1rem; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Setup:</strong> Change endpoint URL
+                    </p>
+                    <p style="margin: 0; color: var(--gray); line-height: 1.7; font-size: 0.9375rem;">
+                        <strong style="color: var(--dark);">Value:</strong> Centralized enforcement across all LLM traffic.
+                    </p>
                     </div>
-                </div>
-            </div>
-            
-            <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%); border-radius: 12px; border: 2px solid var(--primary);">
-                <p style="font-size: 1.25rem; color: var(--dark); margin-bottom: 0.75rem; font-weight: 700;">Most Companies Use Multiple Options</p>
-                <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">
-                    You don't have to choose just one. Most companies use <strong>Browser Extension</strong> for employees + <strong>Python SDK</strong> or <strong>Gateway Proxy</strong> for applications. 
-                    All options work together seamlessly through the same firewall and dashboard.
-                </p>
-                <div style="display: inline-flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
-                    <div style="background: var(--white); padding: 0.75rem 1.25rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600; border: 1px solid var(--gray-border);">
-                        ✓ Browser Extension + SDK
                     </div>
-                    <div style="background: var(--white); padding: 0.75rem 1.25rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600; border: 1px solid var(--gray-border);">
-                        ✓ Browser Extension + Gateway
-                    </div>
-                    <div style="background: var(--white); padding: 0.75rem 1.25rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600; border: 1px solid var(--gray-border);">
-                        ✓ All Three Together
-                    </div>
-                </div>
+                    
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="/docs/SDK_INTEGRATION_GUIDE.md" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;" onmouseover="this.style.color='var(--primary-dark)'; this.style.textDecoration='underline';" onmouseout="this.style.color='var(--primary)'; this.style.textDecoration='none';">
+                    See implementation examples <span style="font-size: 0.9em;">→</span>
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Comparison Table -->
-    <section class="demo" id="comparison" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
+    <!-- Unified Firewall & Dashboard -->
+    <section class="demo" id="dashboard-preview" style="padding: 6rem 0; background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); border-top: 1px solid var(--gray-border);">
         <div class="container">
-            <h2 class="section-title fade-in">Side-by-Side Comparison</h2>
-            <p class="section-subtitle fade-in">Compare all three options to find the best fit for your needs</p>
+            <div class="demo-container">
+                <h2 class="section-title fade-in">One Firewall. One Dashboard. Any Integration.</h2>
             
-            <div style="margin-top: 3rem; overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm);">
-                    <thead>
-                        <tr style="background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);">
-                            <th style="padding: 1.25rem; text-align: left; color: white; font-weight: 600; font-size: 0.9375rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Feature</th>
-                            <th style="padding: 1.25rem; text-align: center; color: white; font-weight: 600; font-size: 0.9375rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Browser Extension</th>
-                            <th style="padding: 1.25rem; text-align: center; color: white; font-weight: 600; font-size: 0.9375rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Python SDK</th>
-                            <th style="padding: 1.25rem; text-align: center; color: white; font-weight: 600; font-size: 0.9375rem; border-bottom: 2px solid rgba(255,255,255,0.2);">Gateway Proxy</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="border-bottom: 1px solid var(--gray-border);">
-                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Setup Time</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">5 minutes</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">10 minutes</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">30 minutes</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--gray-border); background: var(--gray-light);">
-                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Code Changes Required</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--success); font-weight: 700;">None</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">2 lines</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Change URL</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--gray-border);">
-                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Works With</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Web interfaces only</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Python apps</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--success); font-weight: 700;">Any language</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--gray-border); background: var(--gray-light);">
-                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Best For</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Employees using websites</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Python applications</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Multi-language teams</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--gray-border);">
-                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Protects</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Web-based LLM usage</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">API calls from Python</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">API calls from any app</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--gray-border); background: var(--gray-light);">
-                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Language Support</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">N/A (browser-based)</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Python only</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--success); font-weight: 700;">All languages</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--dark);">Deployment</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">MDM/Chrome Web Store</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">pip install</td>
-                            <td style="padding: 1rem 1.25rem; text-align: center; color: var(--gray);">Change endpoint URL</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2.5rem; flex-wrap: wrap; max-width: 800px; margin-left: auto; margin-right: auto;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; color: var(--dark);">
+                        <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">✓</span>
+                        <span>Same policies across browser, SDK, and gateway</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; color: var(--dark);">
+                        <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">✓</span>
+                        <span>Unified logs & violations</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; color: var(--dark);">
+                        <span style="color: var(--success); font-weight: 700; font-size: 1.25rem;">✓</span>
+                        <span>Real-time insights & exports</span>
+                    </div>
+                </div>
+                
+                <div class="demo-box fade-in" style="margin-top: 3rem;">
+                    <div style="background: var(--white); border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; border: 1px solid var(--gray-border); position: relative;">
+                        <div style="padding: 0; background: var(--white); position: relative;">
+                            <img src="aifirewall/dashboard.png" alt="LLM Intercept Security Dashboard showing real-time statistics, violation details, audit logs, and policy management" style="width: 100%; height: auto; display: block; border-radius: 16px;" />
+                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, transparent 0%, transparent 85%, rgba(255, 255, 255, 0.95) 100%); pointer-events: none; border-radius: 16px;"></div>
+                    </div>
+                </div>
             </div>
             
-            <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--white); border-radius: 8px; border: 1px solid var(--gray-border);">
-                <p style="margin: 0; color: var(--gray); font-size: 0.9375rem; line-height: 1.7;">
-                    <strong style="color: var(--dark);">Remember:</strong> You can use multiple options together. Most companies use Browser Extension for employees + SDK or Gateway for applications.
-                </p>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="https://dashboard.llmintercept.com" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;" onmouseover="this.style.color='var(--primary-dark)'; this.style.textDecoration='underline';" onmouseout="this.style.color='var(--primary)'; this.style.textDecoration='none';" onclick="trackEvent('click_view_dashboard', { location: 'dashboard_preview' });">
+                        Open Dashboard Preview <span style="font-size: 0.9em;">→</span>
+                    </a>
+                    </div>
             </div>
         </div>
     </section>
@@ -1740,155 +1288,83 @@ response = requests.post(
             <p class="section-subtitle fade-in">Vendor-agnostic security that protects regardless of which AI your team uses</p>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem;">
-                <div class="feature-card fade-in" style="text-align: center; padding: 2.5rem;">
+                <div class="feature-card fade-in" style="text-align: center; padding: 2rem;">
                     <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">ChatGPT</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">Full support for OpenAI's GPT-3.5, GPT-4, and all models. SDK integration and browser extension protection.</p>
+                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem; font-size: 0.9375rem;">Full support for OpenAI's GPT-3.5, GPT-4, and all models.</p>
                     <div style="background: var(--gray-light); padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600;">
                         ✓ Browser Extension • ✓ Python SDK • ✓ Gateway Proxy
                     </div>
                 </div>
                 
-                <div class="feature-card fade-in" style="text-align: center; padding: 2.5rem;">
+                <div class="feature-card fade-in" style="text-align: center; padding: 2rem;">
                     <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">Claude</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">Complete protection for Anthropic's Claude models including Opus, Sonnet, and Haiku.</p>
+                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem; font-size: 0.9375rem;">Complete protection for Anthropic's Claude models.</p>
                     <div style="background: var(--gray-light); padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600;">
                         ✓ Browser Extension • ✓ Python SDK • ✓ Gateway Proxy
                     </div>
                 </div>
                 
-                <div class="feature-card fade-in" style="text-align: center; padding: 2.5rem;">
+                <div class="feature-card fade-in" style="text-align: center; padding: 2rem;">
                     <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">Gemini</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">Full support for Google's Gemini Pro, Ultra, and all Gemini models via API and browser.</p>
+                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem; font-size: 0.9375rem;">Full support for Google's Gemini Pro, Ultra, and all models.</p>
                     <div style="background: var(--gray-light); padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; color: var(--dark); font-weight: 600;">
                         ✓ Browser Extension • ✓ Python SDK • ✓ Gateway Proxy
                     </div>
                 </div>
             </div>
-            
-            <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--gray-light); border-radius: 12px; border: 1px solid var(--gray-border);">
-                <p style="font-size: 1.125rem; color: var(--dark); margin-bottom: 0.5rem; font-weight: 600;">Vendor-Agnostic Security</p>
-                <p style="color: var(--gray); line-height: 1.7;">The same detection engine and policies protect all LLMs. Switch providers without changing your security setup.</p>
-            </div>
         </div>
     </section>
 
-    <!-- Use Cases -->
-    <section class="use-cases" id="use-cases">
+    <!-- Enterprise Security -->
+    <section class="use-cases" id="use-cases" style="padding: 6rem 0; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border-top: 1px solid var(--gray-border);">
         <div class="container">
-            <h2 class="section-title fade-in">Built for Security Teams</h2>
-            <p class="section-subtitle fade-in">Designed for enterprises adopting AI at scale</p>
-            <div class="use-case fade-in">
-                <div class="use-case-content">
-                    <h3>Companies Using AI Across the Organization</h3>
-                    <p>Your developers are building apps with ChatGPT/Claude/Gemini APIs, and your employees are using these tools directly. Combine rapid browser coverage with API controls to launch safely across the company. <strong>See the integration overview above</strong> to pick the mix that delivers full governance on day one.</p>
-                </div>
+            <h2 class="section-title fade-in">Enterprise Security</h2>
+            <p class="section-subtitle fade-in">Built for security teams with security-first architecture</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                <!-- Top Row: Use Cases -->
+                <div class="feature-card fade-in" style="text-align: left; padding: 1.75rem; border-top: 3px solid var(--success);">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--dark); font-weight: 700;">Regulated Industries</h3>
+                    <p style="color: var(--gray); line-height: 1.6; margin: 0; font-size: 0.9375rem;">HIPAA/PCI/SOX, provable controls.</p>
             </div>
-            <div class="use-case fade-in">
-                <div class="use-case-content">
-                    <h3>Protect Applications Your Developers Build</h3>
-                    <p>Your development team is shipping assistants and automations. Drop in the SDK or point traffic to the gateway to keep velocity high while every request is inspected. <strong>The integration comparison above</strong> highlights which path fits your architecture.</p>
+            
+                <div class="feature-card fade-in" style="text-align: left; padding: 1.75rem; border-top: 3px solid var(--primary);">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--dark); font-weight: 700;">Security Teams & CISOs</h3>
+                    <p style="color: var(--gray); line-height: 1.6; margin: 0; font-size: 0.9375rem;">Visibility, policies, SIEM export.</p>
+                    </div>
+                    
+                <div class="feature-card fade-in" style="text-align: left; padding: 1.75rem; border-top: 3px solid var(--gray-border);">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--dark); font-weight: 700;">How Detection Works</h3>
+                    <p style="color: var(--gray); line-height: 1.6; margin: 0; font-size: 0.9375rem;">Pattern matching + ML models + allowlist/denylist rules. Detects secrets, PII, and prompt injection in &lt;100ms.</p>
+                    </div>
+                
+                <!-- Bottom Row: Technical Architecture -->
+                <div class="feature-card fade-in" style="text-align: left; padding: 1.75rem; border-top: 3px solid var(--gray-border);">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--dark); font-weight: 700;">Low False Positives</h3>
+                    <p style="color: var(--gray); line-height: 1.6; margin: 0; font-size: 0.9375rem;">Tuned models minimize false positives. Whitelist patterns and custom rules prevent breaking normal prompts.</p>
                 </div>
-            </div>
-            <div class="use-case fade-in">
-                <div class="use-case-content">
-                    <h3>Multi-Language Teams Using Gateway Proxy</h3>
-                    <p>Your stack spans Python, JavaScript, Go, Java, and more. A gateway rollout gives centralized policy coverage without juggling multiple SDKs. <strong>See the integration overview above</strong> for rollout specifics.</p>
+                
+                <div class="feature-card fade-in" style="text-align: left; padding: 1.75rem; border-top: 3px solid var(--gray-border);">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--dark); font-weight: 700;">Self-Host/VPC</h3>
+                    <p style="color: var(--gray); line-height: 1.6; margin: 0; font-size: 0.9375rem;">Deploy gateway in your VPC or self-host for complete data control.</p>
                 </div>
-            </div>
-            <div class="use-case fade-in">
-                <div class="use-case-content">
-                    <h3>Healthcare & Financial Services</h3>
-                    <p>Regulated industries require HIPAA, PCI-DSS, and SOX compliance. Deploy the firewall through whichever integration path covers your teams, and use the shared dashboard to prove PII controls and audit trails.</p>
-                </div>
-            </div>
-            <div class="use-case fade-in">
-                <div class="use-case-content">
-                    <h3>Security Teams & CISOs</h3>
-                    <p>Security leaders need visibility and control over AI usage across the organization. The integration module above maps deployment speed to coverage so you can align policies with both web and API usage.</p>
-                </div>
-            </div>
-            <div class="use-case fade-in">
-                <div class="use-case-content">
-                    <h3>Using Multiple Options Together</h3>
-                    <p>Most companies pair employee protection with API controls. Mix and match from the integration module above—everything routes through the same firewall, policies, and dashboard for unified visibility.</p>
+                
+                <div class="feature-card fade-in" style="text-align: left; padding: 1.75rem; border-top: 3px solid var(--gray-border);">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--dark); font-weight: 700;">Data Privacy</h3>
+                    <p style="color: var(--gray); line-height: 1.6; margin: 0; font-size: 0.9375rem;">No training on your data. Data minimization (truncate, hash) ensures only necessary content is scanned.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Security & Compliance -->
-    <section class="demo" id="security" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
-        <div class="container">
-            <h2 class="section-title fade-in">Security & Compliance Assurance</h2>
-            <p class="section-subtitle fade-in">Built for enterprises that need real protection, not marketing promises</p>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 3rem;">
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">How Detection Works</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">Pattern matching + ML models + allowlist/denylist rules. Detects secrets, PII, and prompt injection patterns in &lt;100ms.</p>
-                </div>
-                
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">Low False Positives</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">Tuned detection models minimize false positives. Whitelist patterns and custom rules prevent breaking normal prompts.</p>
-                </div>
-                
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">Deployment Options</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">Proxy/gateway mode, Chrome extension, or network egress point. Self-hosted or VPC-deployed gateway option available.</p>
-                </div>
-                
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">Data Privacy</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin-bottom: 1rem;">No training on your data. Data minimization (truncate, hash) ensures only necessary content is scanned.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="demo" id="faq" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
-        <div class="container">
-            <h2 class="section-title fade-in">Frequently Asked Questions</h2>
-            <p class="section-subtitle fade-in">Common questions about our integration options</p>
-            
-            <div style="max-width: 800px; margin: 3rem auto 0;">
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; margin-bottom: 1.5rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">Do I need all three options?</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">Most teams deploy the combination that covers both browser usage and application traffic. Use the integration module above to match coverage to your governance requirements; many customers start with the browser extension for employees plus SDK or gateway for apps.</p>
-                </div>
-                
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; margin-bottom: 1.5rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">Can I use multiple options together?</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">Yes. All options share policies and telemetry, so you can roll them out side by side. Pick the mix in the integration overview above that balances deployment speed with the coverage you need.</p>
-                </div>
-                
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; margin-bottom: 1.5rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">What's the difference between Python SDK and Gateway Proxy?</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin: 0;"><strong>Python SDK</strong> keeps Python teams shipping quickly with a drop-in client. <strong>Gateway Proxy</strong> provides the same protections for every language via a single endpoint. The integration module above walks through when to choose each.</p>
-                </div>
-                
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; margin-bottom: 1.5rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">Why do I need Browser Extension if I have Gateway Proxy?</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">Browser Extension is the only way to govern direct use of ChatGPT/Claude/Gemini in the browser. Gateway Proxy protects API calls from apps. Use both if you need coverage for employees and services—they share policies and dashboards.</p>
-                </div>
-                
-                <div class="feature-card fade-in" style="text-align: left; padding: 2rem; margin-bottom: 1.5rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; color: var(--dark);">Which option is easiest to set up?</h3>
-                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">Browser Extension deploys in minutes via MDM, the SDK takes a couple of lines of code, and the Gateway rolls out once routing is updated—usually under an hour. The integration module above includes detailed steps for each path.</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- CTA Section -->
-    <section class="cta-section" id="pricing">
+    <section class="cta-section" id="pricing" style="padding: 6rem 0; background: var(--white); border-top: 1px solid var(--gray-border);">
         <div class="container">
-            <h2>Ready to Secure Your AI Infrastructure?</h2>
-            <p>Get complete protection for employees using ChatGPT/Claude/Gemini websites (Browser Extension) and applications using LLM APIs (Python SDK or Gateway Proxy).</p>
-            <div class="hero-buttons">
-                <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'cta_section' });">Request Enterprise Demo</a>
-                <a href="#see-it-in-action" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'cta_section' });">See it in Action</a>
+            <h2 style="text-align: center; font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; margin-bottom: 2rem; color: var(--dark);">Ready to secure your AI stack?</h2>
+            <div class="hero-buttons" style="justify-content: center;">
+                <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'cta_section' });">Request Demo</a>
+                <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'cta_section' });">Try Interactive Demo</a>
             </div>
         </div>
     </section>
@@ -1898,7 +1374,7 @@ response = requests.post(
         <div class="container">
             <div style="max-width: 600px; margin: 0 auto;">
                 <h2 class="section-title fade-in">Request a Demo</h2>
-                <p class="section-subtitle fade-in">Get started with LLM Intercept. We'll set up a trial account for you.</p>
+                <p class="section-subtitle fade-in">We'll set up a trial account for you.</p>
                 <form id="contactForm" style="margin-top: 3rem;" class="fade-in">
                     <div style="margin-bottom: 1.5rem;">
                         <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark);">Name</label>
@@ -1926,27 +1402,10 @@ response = requests.post(
     </section>
 
     <!-- Footer -->
-    <footer>
+    <footer style="padding: 3rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Product</h4>
-                    <ul class="footer-links">
-                        <li><a href="#platform-capabilities">Platform</a></li>
-                        <li><a href="#see-it-in-action">See it in action</a></li>
-                        <li><a href="#how-it-works">How It Works</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Company</h4>
-                    <ul class="footer-links">
-                        <li><a href="mailto:contact@llmintercept.com">Contact</a></li>
-                        <li><a href="#contact">Request Demo</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 LLM Intercept. All rights reserved.</p>
+            <div style="text-align: center;">
+                <p style="color: var(--gray); font-size: 0.9375rem; margin: 0;">&copy; 2025 LLM Intercept. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -2028,26 +1487,6 @@ response = requests.post(
             el.classList.add('visible');
             observer.observe(el);
         });
-
-        const integrationTabs = document.querySelectorAll('.integration-tab');
-        const integrationPanels = document.querySelectorAll('.integration-panel');
-        if (integrationTabs.length && integrationPanels.length) {
-            integrationTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const targetId = tab.getAttribute('data-target');
-                    integrationTabs.forEach(t => t.classList.toggle('active', t === tab));
-                    integrationPanels.forEach(panel => {
-                        const isMatch = panel.id === targetId;
-                        panel.classList.toggle('active', isMatch);
-                        if (isMatch) {
-                            panel.removeAttribute('hidden');
-                        } else {
-                            panel.setAttribute('hidden', 'true');
-                        }
-                    });
-                });
-            });
-        }
 
         // Demo scenarios data
         const demoSteps = {
