@@ -88,11 +88,14 @@ app.add_middleware(AuthMiddleware, auth=auth_handler)
 # Helper function to add CORS headers to responses
 def add_cors_headers(response):
     """Add CORS headers to response."""
-    # Use first allowed origin or * if all allowed
-    origin = allowed_origins[0] if allowed_origins and allowed_origins[0] != "*" else "*"
-    response.headers["Access-Control-Allow-Origin"] = origin
-    response.headers["Access-Control-Allow-Methods"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "*"
+    # Don't override CORS middleware - it handles this automatically
+    # Only add headers if middleware didn't (shouldn't happen, but safety check)
+    if "Access-Control-Allow-Origin" not in response.headers:
+        # Use first allowed origin or * if all allowed
+        origin = allowed_origins[0] if allowed_origins and allowed_origins[0] != "*" else "*"
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Methods"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
     return response
 
 # Initialize components
@@ -269,6 +272,7 @@ async def get_logs(
         except:
             pass
     
+    # Always return demo data if in demo mode OR if no real logs exist
     if demo_mode:
         # For demo mode, filter demo logs in memory
         current_time = time.time()
@@ -326,34 +330,42 @@ async def get_logs(
         })
         return add_cors_headers(response)
     
-    # Real mode - use database filtering
-    real_logs = audit_logger.get_recent_logs(
-        limit=limit,
-        offset=offset,
-        status=status,
-        endpoint=endpoint,
-        violation_type=violation_type,
-        start_date=start_dt,
-        end_date=end_dt,
-        search=search
-    )
+@app.get("/api/logs")
+async def get_logs(
+    status: Optional[str] = None,
+    endpoint: Optional[str] = None,
+    violation_type: Optional[str] = None,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    search: Optional[str] = None,
+    limit: int = 100,
+    offset: int = 0
+):
+    """Get audit logs with filtering support."""
+    global _cached_demo_logs, _last_demo_data_generation_time
     
-    total_count = audit_logger.get_logs_count(
-        status=status,
-        endpoint=endpoint,
-        violation_type=violation_type,
-        start_date=start_dt,
-        end_date=end_dt,
-        search=search
-    )
+    from datetime import datetime
     
-    response = JSONResponse(content={
-        "logs": real_logs,
-        "total": total_count,
-        "limit": limit,
-        "offset": offset
-    })
-    return add_cors_headers(response)
+    try:
+        # Default to True for MVP (no customers yet)
+        demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
+        
+        # Parse date strings if provided
+        start_dt = None
+        end_dt = None
+        if start_date:
+            try:
+                start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+            except:
+                pass
+        if end_date:
+            try:
+                end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+            except:
+                pass
+        
+        # Always return demo data if in demo mode OR if no real logs exist
+        if demo_mode:
 
 
 @app.get("/api/policies")
