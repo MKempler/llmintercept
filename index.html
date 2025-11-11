@@ -1151,6 +1151,117 @@
         </div>
     </section>
 
+    <!-- Proof: See It In Action -->
+    <section class="demo" id="see-it-in-action" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
+        <div class="container">
+            <div class="demo-container">
+                <h2 class="section-title fade-in">See it in action</h2>
+                <p class="section-subtitle fade-in">Explore the live security dashboard and run the firewall against real attack scenarios.</p>
+
+                <div class="demo-box fade-in" style="margin-top: 3rem; text-align: center;">
+                    <div style="background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%); padding: 3rem; border-radius: 12px; border: none; margin-bottom: 2rem; box-shadow: var(--shadow-lg);">
+                        <h3 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; color: var(--white);">Security Dashboard Preview</h3>
+                        <p style="color: rgba(255, 255, 255, 0.95); margin-bottom: 2rem; line-height: 1.7; font-size: 1.0625rem;">
+                            See real-time statistics, detailed violation reports, comprehensive audit logs, and powerful policy management tools.<br>
+                            Everything you need to monitor and secure your organization's LLM usage.
+                        </p>
+                        <a href="https://dashboard.llmintercept.com" target="_blank" class="btn" style="display: inline-flex; background: var(--white); color: var(--primary); font-weight: 600; padding: 0.875rem 2rem; font-size: 1.0625rem; box-shadow: var(--shadow-md);" onclick="trackEvent('click_view_dashboard', { location: 'see_it_in_action' });">
+                            <span>View Full Dashboard</span>
+                            <span style="margin-left: 8px;">→</span>
+                        </a>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem;">
+                        <div style="background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
+                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; font-size: 1.125rem;">Real-Time Stats</div>
+                            <div style="font-size: 0.9375rem; color: var(--gray); line-height: 1.6;">Track requests, blocks, violations, and security trends with live updates</div>
+                        </div>
+                        <div style="background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
+                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; font-size: 1.125rem;">Violation Details</div>
+                            <div style="font-size: 0.9375rem; color: var(--gray); line-height: 1.6;">See exactly what was blocked, why it was flagged, and what action was taken</div>
+                        </div>
+                        <div style="background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
+                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; font-size: 1.125rem;">Audit Logs</div>
+                            <div style="font-size: 0.9375rem; color: var(--gray); line-height: 1.6;">Complete searchable history of all requests, responses, and security events</div>
+                        </div>
+                        <div style="background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
+                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; font-size: 1.125rem;">Policy Management</div>
+                            <div style="font-size: 0.9375rem; color: var(--gray); line-height: 1.6;">Configure security rules, customize actions, and manage policies with ease</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="demo-box fade-in" id="interactive-demo" style="margin-top: 4rem;">
+                    <h3 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; color: var(--dark); text-align: center;">Test Real Threat Scenarios</h3>
+                    <p style="color: var(--gray); margin-bottom: 2rem; line-height: 1.7; text-align: center; max-width: 720px; margin-left: auto; margin-right: auto;">See how the firewall protects against actual security threats in real-time.</p>
+
+                    <div style="margin-bottom: 2rem;">
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                            <button class="demo-btn secondary" id="stepBtn1" style="flex: 1; min-width: 150px;">
+                                <span>Secrets Detection</span>
+                            </button>
+                            <button class="demo-btn secondary" id="stepBtn2" style="flex: 1; min-width: 150px;">
+                                <span>PII Protection</span>
+                            </button>
+                            <button class="demo-btn secondary" id="stepBtn3" style="flex: 1; min-width: 150px;">
+                                <span>Injection Defense</span>
+                            </button>
+                            <button class="demo-btn secondary" id="stepBtn4" style="flex: 1; min-width: 150px;">
+                                <span>Clean Request</span>
+                            </button>
+                        </div>
+
+                        <div id="demoStepContent" style="min-height: 300px;">
+                            <div style="padding: 2rem; text-align: center; color: var(--gray);">
+                                <p>Loading demo...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats" style="margin-top: 2rem;">
+                        <div class="stat">
+                            <div class="stat-number" id="statTotal">0</div>
+                            <div class="stat-label">Total Scans</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="statBlocked">0</div>
+                            <div class="stat-label">Blocked</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="statAllowed">0</div>
+                            <div class="stat-label">Allowed</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="statViolations">0</div>
+                            <div class="stat-label">Violations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Outcomes -->
+    <section id="features" style="padding: 4rem 0; background: var(--white);">
+        <div class="container">
+            <h2 class="section-title" style="text-align: center; margin-bottom: 2.5rem;">Key outcomes</h2>
+            <div class="features-grid" style="margin-top: 0;">
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">Stop Data Leaks</h3>
+                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">Interlock secrets, credentials, and customer data before they ever reach public LLMs.</p>
+                </div>
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">Meet Compliance</h3>
+                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">Centralize policy enforcement and logging so audits see every prompt, action, and decision.</p>
+                </div>
+                <div class="feature-card fade-in" style="text-align: left; padding: 2rem;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--dark);">Adopt Safely</h3>
+                    <p style="color: var(--gray); line-height: 1.7; margin: 0;">Give employees and developers green lights to use AI tools with the guardrails security teams trust.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- How It Works -->
     <section class="how-it-works" id="how-it-works" style="padding: 6rem 0; background: var(--white);">
         <div class="container">
@@ -1187,54 +1298,11 @@
         </div>
     </section>
 
-    <!-- Dashboard Preview -->
-    <section class="demo" id="dashboard-preview" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
+    <!-- Platform Capabilities -->
+    <section class="features" id="platform-capabilities">
         <div class="container">
-            <div class="demo-container">
-                <h2 class="section-title fade-in">Security Dashboard</h2>
-                <p class="section-subtitle fade-in">Unified visibility across all LLM usage: violations, users, apps, and models</p>
-                
-                <div class="demo-box fade-in" style="margin-top: 3rem; text-align: center;">
-                    <div style="background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%); padding: 3rem; border-radius: 12px; border: none; margin-bottom: 2rem; box-shadow: var(--shadow-lg);">
-                        <h3 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; color: var(--white);">Explore the Full Dashboard</h3>
-                        <p style="color: rgba(255, 255, 255, 0.95); margin-bottom: 2rem; line-height: 1.7; font-size: 1.0625rem;">
-                            See real-time statistics, detailed violation reports, comprehensive audit logs, and powerful policy management tools.<br>
-                            Everything you need to monitor and secure your organization's LLM usage.
-                        </p>
-                        <a href="https://dashboard.llmintercept.com" target="_blank" class="btn" style="display: inline-flex; background: var(--white); color: var(--primary); font-weight: 600; padding: 0.875rem 2rem; font-size: 1.0625rem; box-shadow: var(--shadow-md);" onclick="trackEvent('click_view_dashboard', { location: 'dashboard_preview' });">
-                            <span>View Full Dashboard</span>
-                            <span style="margin-left: 8px;">→</span>
-                        </a>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem;">
-                        <div style="background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
-                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; font-size: 1.125rem;">Real-Time Stats</div>
-                            <div style="font-size: 0.9375rem; color: var(--gray); line-height: 1.6;">Track requests, blocks, violations, and security trends with live updates</div>
-                        </div>
-                        <div style="background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
-                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; font-size: 1.125rem;">Violation Details</div>
-                            <div style="font-size: 0.9375rem; color: var(--gray); line-height: 1.6;">See exactly what was blocked, why it was flagged, and what action was taken</div>
-                        </div>
-                        <div style="background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
-                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; font-size: 1.125rem;">Audit Logs</div>
-                            <div style="font-size: 0.9375rem; color: var(--gray); line-height: 1.6;">Complete searchable history of all requests, responses, and security events</div>
-                        </div>
-                        <div style="background: var(--white); padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
-                            <div style="font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; font-size: 1.125rem;">Policy Management</div>
-                            <div style="font-size: 0.9375rem; color: var(--gray); line-height: 1.6;">Configure security rules, customize actions, and manage policies with ease</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features -->
-    <section class="features" id="features">
-        <div class="container">
-            <h2 class="section-title">Enterprise Security Controls</h2>
-            <p class="section-subtitle">Detection, control, and visibility for LLM interactions</p>
+            <h2 class="section-title">Platform Capabilities</h2>
+            <p class="section-subtitle">Detection, control, and visibility for every LLM interaction</p>
             
             <div style="margin-top: 3rem;">
                 <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--dark); margin-bottom: 1.5rem; text-align: center;">Detection</h3>
@@ -1288,64 +1356,8 @@
         </div>
     </section>
 
-    <!-- Interactive Demo -->
-    <section class="demo" id="interactive-demo" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
-        <div class="container">
-            <div class="demo-container">
-                <h2 class="section-title fade-in">Test Real Threat Scenarios</h2>
-                <p class="section-subtitle fade-in">See how the firewall protects against actual security threats in real-time.</p>
-                
-                <!-- Demo Scenarios -->
-                <div class="demo-box fade-in" style="margin-top: 3rem;">
-                    <div style="margin-bottom: 2rem;">
-                        <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                            <button class="demo-btn secondary" id="stepBtn1" style="flex: 1; min-width: 150px;">
-                                <span>Secrets Detection</span>
-                            </button>
-                            <button class="demo-btn secondary" id="stepBtn2" style="flex: 1; min-width: 150px;">
-                                <span>PII Protection</span>
-                            </button>
-                            <button class="demo-btn secondary" id="stepBtn3" style="flex: 1; min-width: 150px;">
-                                <span>Injection Defense</span>
-                            </button>
-                            <button class="demo-btn secondary" id="stepBtn4" style="flex: 1; min-width: 150px;">
-                                <span>Clean Request</span>
-                            </button>
-                        </div>
-                        
-                        <div id="demoStepContent" style="min-height: 300px;">
-                            <div style="padding: 2rem; text-align: center; color: var(--gray);">
-                                <p>Loading demo...</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="stats" style="margin-top: 2rem;">
-                        <div class="stat">
-                            <div class="stat-number" id="statTotal">0</div>
-                            <div class="stat-label">Total Scans</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-number" id="statBlocked">0</div>
-                            <div class="stat-label">Blocked</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-number" id="statAllowed">0</div>
-                            <div class="stat-label">Allowed</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-number" id="statViolations">0</div>
-                            <div class="stat-label">Violations</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Integration Module -->
-    <section class="demo" id="integration" style="padding: 6rem 0; background: var(--white); border-top: 1px solid var(--gray-border); border-bottom: 1px solid var(--gray-border);">
+    <!-- Deployment Options -->
+    <section class="demo" id="deployment-options" style="padding: 6rem 0; background: var(--white); border-top: 1px solid var(--gray-border); border-bottom: 1px solid var(--gray-border);">
         <div class="container">
             <h2 class="section-title fade-in">Three Ways to Deploy the Firewall</h2>
             <p class="section-subtitle fade-in">Choose the path that matches your workflow—each routes traffic through the same policies and dashboard.</p>
@@ -1804,10 +1816,10 @@ response = requests.post(
         </div>
     </section>
 
-    <!-- Technical Credibility -->
-    <section class="demo" id="technical" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
+    <!-- Security & Compliance -->
+    <section class="demo" id="security" style="padding: 6rem 0; background: var(--gray-light); border-top: 1px solid var(--gray-border);">
         <div class="container">
-            <h2 class="section-title fade-in">Security-First Architecture</h2>
+            <h2 class="section-title fade-in">Security & Compliance Assurance</h2>
             <p class="section-subtitle fade-in">Built for enterprises that need real protection, not marketing promises</p>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 3rem;">
@@ -1876,7 +1888,7 @@ response = requests.post(
             <p>Get complete protection for employees using ChatGPT/Claude/Gemini websites (Browser Extension) and applications using LLM APIs (Python SDK or Gateway Proxy).</p>
             <div class="hero-buttons">
                 <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'cta_section' });">Request Enterprise Demo</a>
-                <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'cta_section' });">Try Interactive Demo</a>
+                <a href="#see-it-in-action" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'cta_section' });">See it in Action</a>
             </div>
         </div>
     </section>
@@ -1920,8 +1932,8 @@ response = requests.post(
                 <div class="footer-section">
                     <h4>Product</h4>
                     <ul class="footer-links">
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#interactive-demo">Demo</a></li>
+                        <li><a href="#platform-capabilities">Platform</a></li>
+                        <li><a href="#see-it-in-action">See it in action</a></li>
                         <li><a href="#how-it-works">How It Works</a></li>
                     </ul>
                 </div>
