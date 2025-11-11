@@ -123,17 +123,32 @@ function Logs() {
     }
   }, [logs])
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string, row: any) => {
+    let statusBadge: JSX.Element
+
     switch (status) {
       case 'blocked':
-        return <Badge variant="error">Blocked</Badge>
+        statusBadge = <Badge variant="error">Blocked</Badge>
+        break
       case 'allowed':
-        return <Badge variant="success">Allowed</Badge>
+        statusBadge = <Badge variant="success">Allowed</Badge>
+        break
       case 'error':
-        return <Badge variant="error">Error</Badge>
+        statusBadge = <Badge variant="error">Error</Badge>
+        break
       default:
-        return <Badge variant="gray">{status}</Badge>
+        statusBadge = <Badge variant="gray">{status}</Badge>
+        break
     }
+
+    const isRedacted = row?.metadata?.redacted
+
+    return (
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        {statusBadge}
+        {isRedacted && <Badge variant="warning">Redacted</Badge>}
+      </div>
+    )
   }
 
   const formatDate = (dateString: string) => {
@@ -205,7 +220,7 @@ function Logs() {
     {
       key: 'status',
       label: 'Status',
-      render: (value: string) => getStatusBadge(value)
+      render: (value: string, row: any) => getStatusBadge(value, row)
     },
     {
       key: 'method',
