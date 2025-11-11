@@ -903,46 +903,31 @@
 
         /* How It Works */
         .how-it-works-steps {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            position: relative;
-            max-width: 1200px;
-            margin: 3rem auto 0;
-            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .how-it-works-steps::before {
-            content: '';
-            position: absolute;
-            top: 24px;
-            left: 2rem;
-            right: 2rem;
-            height: 1px;
-            background: linear-gradient(to right, transparent 0%, rgba(148, 163, 253, 0.2) 10%, rgba(148, 163, 253, 0.2) 90%, transparent 100%);
-            z-index: 0;
-        }
-
-        .step-card {
-            flex: 1;
+        .how-step {
             background: var(--dark-surface);
             border: 1px solid rgba(148, 163, 253, 0.12);
             border-radius: 12px;
             padding: 1.5rem;
             text-align: left;
             transition: all 0.3s ease;
-            position: relative;
-            z-index: 1;
-            max-width: 260px;
         }
 
-        .step-card:hover {
+        .how-step:hover {
             border-color: rgba(148, 163, 253, 0.25);
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
             transform: translateY(-2px);
         }
 
-        .step-number {
+        .how-step .step-number {
             display: inline-block;
             background: var(--primary);
             color: #FFFFFF;
@@ -953,7 +938,7 @@
             margin-bottom: 1rem;
         }
 
-        .step-card h3 {
+        .how-step h3 {
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 0.5rem;
@@ -961,58 +946,27 @@
             line-height: 1.3;
         }
 
-        .step-card p {
+        .how-step p {
             color: var(--text-secondary);
             line-height: 1.5;
             font-size: 14px;
             margin: 0;
         }
 
-        .step-arrow {
-            display: none;
-        }
-
-        @media (max-width: 968px) {
+        @media (max-width: 768px) {
             .how-it-works-steps {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 1.5rem;
-                padding: 0;
+                display: flex;
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 1rem;
+                padding-bottom: 1rem;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
             }
 
-            .how-it-works-steps::before {
-                display: none;
-            }
-
-            .how-it-works-steps::after {
-                content: '';
-                position: absolute;
-                left: 24px;
-                top: 0;
-                bottom: 0;
-                width: 1px;
-                background: linear-gradient(to bottom, transparent 0%, rgba(148, 163, 253, 0.2) 10%, rgba(148, 163, 253, 0.2) 90%, transparent 100%);
-                z-index: 0;
-            }
-
-            .step-card {
-                max-width: 100%;
-                margin-left: 3rem;
-                position: relative;
-            }
-
-            .step-card::before {
-                content: '';
-                position: absolute;
-                left: -3rem;
-                top: 24px;
-                width: 1px;
-                height: calc(100% + 1.5rem);
-                background: rgba(148, 163, 253, 0.2);
-            }
-
-            .step-card:last-child::before {
-                display: none;
+            .how-step {
+                flex: 0 0 280px;
+                scroll-snap-align: start;
             }
         }
 
@@ -1703,23 +1657,23 @@
             <h2 class="section-title fade-in">How It Works</h2>
             <p class="section-subtitle fade-in">Four steps to complete protection</p>
             <div class="how-it-works-steps">
-                <div class="step-card fade-in">
-                    <span class="step-number">1</span>
+                <div class="how-step fade-in">
+                    <div class="step-number">1</div>
                     <h3>Traffic Routed</h3>
                     <p>Browser extension, SDK, or Gateway routes each request to LLM Intercept first.</p>
                 </div>
-                <div class="step-card fade-in">
-                    <span class="step-number">2</span>
+                <div class="how-step fade-in">
+                    <div class="step-number">2</div>
                     <h3>Real-Time Inspection</h3>
                     <p>Secrets, PII, and prompt injection detected in &lt;100ms using pattern matching + ML.</p>
                 </div>
-                <div class="step-card fade-in">
-                    <span class="step-number">3</span>
+                <div class="how-step fade-in">
+                    <div class="step-number">3</div>
                     <h3>Automatic Enforcement</h3>
                     <p>Block, redact, mask, or allow based on your policies.</p>
                 </div>
-                <div class="step-card fade-in">
-                    <span class="step-number">4</span>
+                <div class="how-step fade-in">
+                    <div class="step-number">4</div>
                     <h3>Unified Visibility</h3>
                     <p>Security teams see all LLM usage: violations, users, apps, and models in one place.</p>
                 </div>
