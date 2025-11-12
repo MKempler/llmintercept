@@ -64,7 +64,7 @@ export default function Navbar() {
     <nav 
       className="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        background: scrolled ? 'rgba(2, 8, 23, 0.95)' : 'rgba(2, 8, 23, 0.98)',
+        background: scrolled ? 'rgba(15, 23, 42, 0.95)' : 'rgba(15, 23, 42, 0.98)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         boxShadow: scrolled ? 'var(--shadow-md)' : 'var(--shadow-sm)',
