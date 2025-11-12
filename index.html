@@ -729,27 +729,27 @@
             text-align: center;
             font-size: 14px;
             color: var(--text-muted);
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .works-with-logos {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 3rem;
+            gap: 4rem;
             flex-wrap: wrap;
         }
 
         .works-with-logo {
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
-            filter: grayscale(100%);
+            transition: all 0.3s ease;
+            cursor: default;
         }
 
         .works-with-logo:hover {
-            opacity: 1;
-            filter: grayscale(0%);
+            transform: translateY(-2px);
         }
 
         .works-with-logo img {
@@ -758,9 +758,14 @@
         }
 
         .works-with-logo-text {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
             color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .works-with-logo-text:hover {
+            color: var(--text-primary);
         }
 
         @media (max-width: 968px) {
@@ -1925,16 +1930,6 @@
                     </div>
                 </a>
             </div>
-            
-            <!-- Works with Logos -->
-            <div class="works-with">
-                <div class="works-with-label">Works with</div>
-                <div class="works-with-logos">
-                    <div class="works-with-logo works-with-logo-text">OpenAI</div>
-                    <div class="works-with-logo works-with-logo-text">Anthropic</div>
-                    <div class="works-with-logo works-with-logo-text">Google Gemini</div>
-                    </div>
-            </div>
         </div>
     </section>
 
@@ -1999,25 +1994,14 @@
     </section>
 
 
-    <!-- CTA Section -->
-    <section class="cta-section" id="pricing" style="background: #020817; border-top: 1px solid var(--gray-border);">
-        <div class="container">
-            <div class="final-cta">
-                <h2 class="final-cta-title">Ready to secure your AI stack?</h2>
-                <p class="final-cta-subtitle">One firewall for employees and apps.</p>
-                <div class="final-cta-buttons">
-                    <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'cta_section' });">Request Demo</a>
-                <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'cta_section' });">Try Interactive Demo</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Form -->
+    <!-- CTA & Contact Form Section -->
     <section class="contact" id="contact" style="background: #020817; border-top: 1px solid var(--gray-border);">
         <div class="container">
             <div style="max-width: 600px; margin: 0 auto;">
-                <h2 class="section-title fade-in">Request a Demo</h2>
+                <div class="final-cta fade-in">
+                    <h2 class="final-cta-title">Ready to secure your AI stack?</h2>
+                    <p class="final-cta-subtitle">Request an enterprise demo</p>
+                </div>
                 <form id="contactForm" style="margin-top: 3rem;" class="fade-in">
                     <div style="margin-bottom: 1.5rem;">
                         <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Name</label>
