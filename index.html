@@ -1269,10 +1269,11 @@
 
         .demo-result {
             margin-top: 1.5rem;
-            padding: 1.75rem;
-            border-radius: 8px;
+            padding: 2rem;
+            border-radius: 16px;
             display: none;
             border: 1px solid;
+            background: var(--dark-surface);
         }
 
         .demo-result.show {
@@ -1280,37 +1281,79 @@
         }
 
         .demo-result.success {
-            background: #f0fdf4;
-            border-color: var(--success);
-            color: #065f46;
+            background: rgba(5, 150, 105, 0.1);
+            border-color: rgba(5, 150, 105, 0.3);
+            color: var(--text-secondary);
+        }
+
+        .demo-result.success p {
+            color: var(--text-secondary);
+        }
+
+        .demo-result.success strong {
+            color: var(--success);
         }
 
         .demo-result.blocked {
-            background: #fffbeb;
-            border-color: var(--warning);
-            color: #92400e;
+            background: rgba(244, 63, 94, 0.1);
+            border-color: rgba(244, 63, 94, 0.3);
+            color: var(--text-secondary);
+        }
+
+        .demo-result.blocked p {
+            color: var(--text-secondary);
+        }
+
+        .demo-result.blocked strong {
+            color: var(--error);
         }
 
         .demo-result.error {
-            background: #fef2f2;
-            border-color: var(--error);
-            color: #991b1b;
+            background: rgba(244, 63, 94, 0.1);
+            border-color: rgba(244, 63, 94, 0.3);
+            color: var(--text-secondary);
+        }
+
+        .demo-result.error p {
+            color: var(--text-secondary);
+        }
+
+        .demo-result.error strong {
+            color: var(--error);
         }
 
         .violation-list {
             margin-top: 1.25rem;
             padding: 1.25rem;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 8px;
+            background: rgba(11, 16, 32, 0.6);
+            border-radius: 12px;
+            border: 1px solid var(--gray-border);
+        }
+
+        .violation-list strong {
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .violation-item {
             padding: 1rem;
             margin: 0.75rem 0;
-            background: var(--white);
+            background: rgba(244, 63, 94, 0.1);
             border-left: 3px solid var(--error);
-            border-radius: 6px;
-            box-shadow: var(--shadow-sm);
+            border-radius: 8px;
+            border: 1px solid rgba(244, 63, 94, 0.2);
+        }
+
+        .violation-item:first-child {
+            margin-top: 0;
+        }
+
+        .violation-item:last-child {
+            margin-bottom: 0;
         }
 
         .violation-item strong {
@@ -1318,13 +1361,14 @@
             display: block;
             margin-bottom: 0.5rem;
             font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            font-weight: 600;
         }
 
         .violation-item small {
-            color: var(--gray);
+            color: var(--text-muted);
             font-size: 0.875rem;
+            display: block;
+            margin-top: 0.5rem;
         }
 
         .stats {
@@ -2292,18 +2336,18 @@
                         const piiTypes = firewallMeta.violations.map(v => v.type.toUpperCase()).join(', ');
                         resultDiv.innerHTML = `<div class="demo-result success show" style="margin-top: 1rem;">
                             <p><strong>⚠️ Request Allowed (PII Redacted)</strong></p>
-                            <p style="margin-top: 0.75rem; color: var(--dark);">Your prompt contained PII that was automatically redacted before being sent to the LLM.</p>
-                            <div style="margin-top: 1rem; padding: 1rem; background: #fef3c7; border-radius: 6px; border-left: 3px solid #f59e0b;">
-                                <p style="margin: 0; font-size: 0.9rem; color: var(--dark);"><strong>⚠️ PII Detected and Redacted:</strong></p>
-                                <ul style="margin-top: 0.5rem; margin-bottom: 0; padding-left: 1.25rem; color: var(--gray); line-height: 1.8;">
+                            <p style="margin-top: 0.75rem;">Your prompt contained PII that was automatically redacted before being sent to the LLM.</p>
+                            <div style="margin-top: 1rem; padding: 1rem; background: rgba(249, 115, 22, 0.1); border-radius: 8px; border-left: 3px solid var(--warning); border: 1px solid rgba(249, 115, 22, 0.2);">
+                                <p style="margin: 0; font-size: 0.9rem; color: var(--text-primary);"><strong style="color: var(--warning);">⚠️ PII Detected and Redacted:</strong></p>
+                                <ul style="margin-top: 0.5rem; margin-bottom: 0; padding-left: 1.25rem; color: var(--text-secondary); line-height: 1.8;">
                                     ${firewallMeta.violations.map(v => `<li><strong>${v.type.toUpperCase()}:</strong> "${v.matched_text || 'N/A'}" was redacted</li>`).join('')}
                                 </ul>
                             </div>
-                            <div style="margin-top: 1rem; padding: 1rem; background: #f0f9ff; border-radius: 6px; border-left: 3px solid var(--success);">
-                                <p style="margin: 0; font-size: 0.9rem; color: var(--dark);"><strong>LLM Response:</strong></p>
-                                <p style="margin-top: 0.5rem; margin-bottom: 0; color: var(--gray); line-height: 1.6;">${responseContent.substring(0, 300)}${responseContent.length > 300 ? '...' : ''}</p>
+                            <div style="margin-top: 1rem; padding: 1rem; background: rgba(5, 150, 105, 0.1); border-radius: 8px; border-left: 3px solid var(--success); border: 1px solid rgba(5, 150, 105, 0.2);">
+                                <p style="margin: 0; font-size: 0.9rem; color: var(--text-primary);"><strong style="color: var(--success);">LLM Response:</strong></p>
+                                <p style="margin-top: 0.5rem; margin-bottom: 0; color: var(--text-secondary); line-height: 1.6;">${responseContent.substring(0, 300)}${responseContent.length > 300 ? '...' : ''}</p>
                             </div>
-                            <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray); line-height: 1.6;">
+                            <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted); line-height: 1.6;">
                                 <strong>What happened:</strong> The firewall detected ${piiTypes} in your prompt and automatically redacted it before sending to the LLM. Your request was allowed to proceed safely. This protects sensitive data while still enabling legitimate use cases.
                             </p>
                         </div>`;
@@ -2311,12 +2355,12 @@
                         // No violations detected
                         resultDiv.innerHTML = `<div class="demo-result success show" style="margin-top: 1rem;">
                             <p><strong>✅ Request Allowed</strong></p>
-                            <p style="margin-top: 0.75rem; color: var(--dark);">Your prompt passed all security checks and was successfully sent to the LLM.</p>
-                            <div style="margin-top: 1rem; padding: 1rem; background: #f0f9ff; border-radius: 6px; border-left: 3px solid var(--success);">
-                                <p style="margin: 0; font-size: 0.9rem; color: var(--dark);"><strong>LLM Response:</strong></p>
-                                <p style="margin-top: 0.5rem; margin-bottom: 0; color: var(--gray); line-height: 1.6;">${responseContent.substring(0, 300)}${responseContent.length > 300 ? '...' : ''}</p>
+                            <p style="margin-top: 0.75rem;">Your prompt passed all security checks and was successfully sent to the LLM.</p>
+                            <div style="margin-top: 1rem; padding: 1rem; background: rgba(5, 150, 105, 0.1); border-radius: 8px; border-left: 3px solid var(--success); border: 1px solid rgba(5, 150, 105, 0.2);">
+                                <p style="margin: 0; font-size: 0.9rem; color: var(--text-primary);"><strong style="color: var(--success);">LLM Response:</strong></p>
+                                <p style="margin-top: 0.5rem; margin-bottom: 0; color: var(--text-secondary); line-height: 1.6;">${responseContent.substring(0, 300)}${responseContent.length > 300 ? '...' : ''}</p>
                             </div>
-                            <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray); line-height: 1.6;">
+                            <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted); line-height: 1.6;">
                                 <strong>What happened:</strong> The firewall scanned your prompt and found no secrets, PII, or injection attempts. The request was forwarded to the LLM and this response was returned.
                             </p>
                         </div>`;
@@ -2325,8 +2369,8 @@
                     stats.allowed++;
                     resultDiv.innerHTML = `<div class="demo-result success show" style="margin-top: 1rem;">
                         <p><strong>✅ Request Allowed</strong></p>
-                        <p style="margin-top: 0.75rem; color: var(--dark);">Your prompt passed all security checks and was successfully processed.</p>
-                        <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray); line-height: 1.6;">
+                        <p style="margin-top: 0.75rem;">Your prompt passed all security checks and was successfully processed.</p>
+                        <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted); line-height: 1.6;">
                             <strong>What happened:</strong> The firewall scanned your prompt and found no security violations. The request was allowed to proceed.
                         </p>
                     </div>`;
