@@ -209,7 +209,7 @@
 
         .nav-links a {
             text-decoration: none;
-            color: var(--text-secondary);
+            color: #ffffff;
             font-weight: 500;
             font-size: 0.9375rem;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -239,7 +239,7 @@
 
         .cta-button {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: var(--white);
+            color: #ffffff;
             padding: 0.75rem 1.75rem;
             border-radius: 8px;
             text-decoration: none;
@@ -401,8 +401,11 @@
             font-size: clamp(20px, 2.5vw, 24px);
             font-weight: 500;
             color: var(--text-secondary);
-            line-height: 1.4;
+            line-height: 1.5;
             margin-top: 0.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-oneliner {
@@ -1585,7 +1588,7 @@
         .mobile-menu-toggle span {
             width: 24px;
             height: 2px;
-            background: var(--dark);
+            background: var(--text-primary);
             transition: all 0.3s ease;
             border-radius: 2px;
         }
@@ -1627,6 +1630,16 @@
             transform: translateY(0);
         }
 
+        /* Mobile menu visibility - only show when active */
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: none;
+            }
+            .mobile-menu.active {
+                display: block;
+            }
+        }
+
         .mobile-menu ul {
             list-style: none;
             margin: 0;
@@ -1639,7 +1652,7 @@
         .mobile-menu ul li a {
             display: block;
             padding: 0.75rem 0;
-            color: var(--dark);
+            color: var(--text-primary);
             font-weight: 500;
             font-size: 1.0625rem;
             text-decoration: none;
@@ -1658,9 +1671,6 @@
             }
             .mobile-menu-toggle {
                 display: flex;
-            }
-            .mobile-menu {
-                display: block;
             }
             .hero {
                 padding: 6rem 0 4rem;
@@ -1735,17 +1745,10 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-left">
-                <div class="hero-badge">Enterprise-Grade LLM Security</div>
                 <h1>Your Employees Are Leaking Data to AI. <span class="gradient">We Stop It.</span></h1>
-                    <p class="hero-subhead">Protect every LLM interaction across your organization</p>
-                    <p class="hero-oneliner">AI firewall that inspects every LLM request for secrets, PII, and prompt injection before it leaves your org.</p>
-                    <p class="hero-integration">Protect employees, apps, and APIs via Browser Extension, SDK, or Gateway.</p>
-                    <div class="hero-ctas">
-                        <div class="hero-ctas-row">
-                    <a href="#contact" class="btn btn-primary" onclick="trackEvent('click_request_demo', { location: 'hero' });">Request Enterprise Demo</a>
-                    <a href="#interactive-demo" class="btn btn-secondary" onclick="trackEvent('click_try_demo', { location: 'hero' });">Try Interactive Demo</a>
-                </div>
-            </div>
+                    <p class="hero-subhead">LLM Intercept is a firewall that inspects every AI request for secrets, PII, and prompt injection before it leaves your org.</p>
+                    <p class="hero-oneliner">Protect employees, apps, and APIs via Browser Extension, SDK, or Gateway.</p>
+                    <div class="hero-badge">Enterprise-Grade LLM Security</div>
         </div>
             </div>
         </div>
@@ -1932,7 +1935,7 @@
             </div>
             
             <div class="integration-link">
-                <a href="https://github.com/MKempler/llmintercept/blob/main/docs/CUSTOMER_ONBOARDING.md" target="_blank" rel="noopener noreferrer">View documentation <span style="font-size: 0.9em;">→</span></a>
+                <a href="docs.html?page=CUSTOMER_ONBOARDING.md">View documentation <span style="font-size: 0.9em;">→</span></a>
             </div>
         </div>
     </section>
