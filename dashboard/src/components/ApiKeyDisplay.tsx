@@ -108,7 +108,7 @@ function ApiKeyDisplay({ onRegenerate }: ApiKeyDisplayProps) {
       {/* API Key Display */}
       <div
         style={{
-          background: 'white',
+          background: 'var(--dark-surface)',
           border: '1px solid var(--gray-border)',
           borderRadius: '8px',
           padding: '24px',
@@ -141,7 +141,7 @@ function ApiKeyDisplay({ onRegenerate }: ApiKeyDisplayProps) {
               flex: 1,
               fontFamily: 'monospace',
               fontSize: '14px',
-              color: 'var(--dark)',
+              color: 'var(--text-primary)',
               wordBreak: 'break-all',
               padding: '0'
             }}
@@ -195,7 +195,7 @@ function ApiKeyDisplay({ onRegenerate }: ApiKeyDisplayProps) {
           onClick={() => setShowRegenerateModal(true)}
           style={{
             padding: '8px 16px',
-            background: 'white',
+            background: 'var(--dark-surface)',
             color: '#dc2626',
             border: '1px solid #dc2626',
             borderRadius: '6px',
@@ -222,7 +222,7 @@ function ApiKeyDisplay({ onRegenerate }: ApiKeyDisplayProps) {
       {/* Usage Instructions */}
       <div
         style={{
-          background: 'white',
+          background: 'var(--dark-surface)',
           border: '1px solid var(--gray-border)',
           borderRadius: '8px',
           padding: '24px',
@@ -324,7 +324,7 @@ response = client.chat.completions.create(
               rel="noopener noreferrer"
               style={{
                 padding: '8px 16px',
-                background: 'white',
+                background: 'var(--dark-surface)',
                 color: 'var(--primary)',
                 border: '1px solid var(--primary)',
                 borderRadius: '6px',
@@ -348,7 +348,7 @@ response = client.chat.completions.create(
               rel="noopener noreferrer"
               style={{
                 padding: '8px 16px',
-                background: 'white',
+                background: 'var(--dark-surface)',
                 color: 'var(--primary)',
                 border: '1px solid var(--primary)',
                 borderRadius: '6px',
@@ -372,7 +372,7 @@ response = client.chat.completions.create(
               rel="noopener noreferrer"
               style={{
                 padding: '8px 16px',
-                background: 'white',
+                background: 'var(--dark-surface)',
                 color: 'var(--primary)',
                 border: '1px solid var(--primary)',
                 borderRadius: '6px',
@@ -419,7 +419,7 @@ response = client.chat.completions.create(
         >
           <div
             style={{
-              background: 'white',
+              background: 'var(--dark-surface)',
               borderRadius: '8px',
               padding: '24px',
               maxWidth: '500px',
@@ -495,7 +495,7 @@ response = client.chat.completions.create(
                 disabled={regenerating}
                 style={{
                   padding: '10px 20px',
-                  background: 'white',
+                  background: 'var(--dark-surface)',
                   color: 'var(--gray)',
                   border: '1px solid var(--gray-border)',
                   borderRadius: '6px',

@@ -60,7 +60,7 @@ export default function LogDetailModal({ log, onClose }: LogDetailModalProps) {
     >
       <div
         style={{
-          background: 'white',
+          background: 'var(--dark-surface)',
           borderRadius: '12px',
           maxWidth: '900px',
           width: '100%',
@@ -90,7 +90,7 @@ export default function LogDetailModal({ log, onClose }: LogDetailModalProps) {
               border: 'none',
               fontSize: '24px',
               cursor: 'pointer',
-              color: 'var(--gray)',
+              color: 'var(--text-muted)',
               padding: '0',
               width: '32px',
               height: '32px',
@@ -207,12 +207,12 @@ export default function LogDetailModal({ log, onClose }: LogDetailModalProps) {
                         <code
                           style={{
                             fontSize: '12px',
-                            background: 'white',
+                            background: 'var(--dark-light)',
                             padding: '6px 8px',
                             borderRadius: '4px',
                             display: 'block',
                             fontFamily: 'monospace',
-                            color: 'var(--dark)'
+                            color: 'var(--text-primary)'
                           }}
                         >
                           {violation.matched_text}

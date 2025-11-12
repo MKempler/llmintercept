@@ -122,11 +122,11 @@ function Login() {
             gap: '12px',
             marginBottom: '16px',
             padding: '16px',
-            background: 'var(--gray-light)',
+            background: 'var(--dark-light)',
             borderRadius: '8px'
           }}>
             <div style={{ flex: 1, height: '1px', background: 'var(--gray-border)' }}></div>
-            <span style={{ color: 'var(--gray)', fontSize: '14px' }}>OR</span>
+            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>OR</span>
             <div style={{ flex: 1, height: '1px', background: 'var(--gray-border)' }}></div>
           </div>
           
@@ -137,7 +137,7 @@ function Login() {
             style={{
               width: '100%',
               padding: '14px',
-              background: 'white',
+              background: 'var(--dark-light)',
               color: 'var(--primary)',
               border: '2px solid var(--primary)',
               borderRadius: '8px',
@@ -153,7 +153,7 @@ function Login() {
               e.currentTarget.style.color = 'white'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'white'
+              e.currentTarget.style.background = 'var(--dark-light)'
               e.currentTarget.style.color = 'var(--primary)'
             }}
           >
@@ -162,7 +162,7 @@ function Login() {
           <p style={{ 
             margin: 0, 
             fontSize: '13px', 
-            color: 'var(--gray)',
+            color: 'var(--text-muted)',
             lineHeight: '1.5'
           }}>
             Explore the dashboard with sample data. No account required.

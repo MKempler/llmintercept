@@ -218,7 +218,7 @@ function Patterns() {
               padding: '6px 12px',
               borderRadius: '6px',
               border: '1px solid var(--gray-border)',
-              backgroundColor: 'white',
+              backgroundColor: 'var(--dark-surface)',
               cursor: 'pointer',
               fontSize: '12px',
               display: 'flex',
@@ -235,7 +235,7 @@ function Patterns() {
               padding: '6px 12px',
               borderRadius: '6px',
               border: '1px solid var(--gray-border)',
-              backgroundColor: 'white',
+              backgroundColor: 'var(--dark-surface)',
               cursor: 'pointer',
               fontSize: '12px',
               display: 'flex',
@@ -252,7 +252,7 @@ function Patterns() {
               padding: '6px 12px',
               borderRadius: '6px',
               border: '1px solid var(--error)',
-              backgroundColor: 'white',
+              backgroundColor: 'var(--dark-surface)',
               color: 'var(--error)',
               cursor: 'pointer',
               fontSize: '12px',
@@ -339,7 +339,7 @@ function Patterns() {
         >
           <div
             style={{
-              backgroundColor: 'white',
+              backgroundColor: 'var(--dark-surface)',
               borderRadius: '12px',
               padding: '24px',
               maxWidth: '600px',
@@ -426,7 +426,7 @@ function Patterns() {
                   padding: '8px 16px',
                   border: '1px solid var(--gray-border)',
                   borderRadius: '6px',
-                  backgroundColor: 'white',
+                  backgroundColor: 'var(--dark-surface)',
                   cursor: 'pointer'
                 }}
               >
@@ -596,7 +596,7 @@ function PatternModal({ pattern, onClose, onSave }: { pattern: Pattern | null, o
                 padding: '10px 20px',
                 border: '1px solid var(--gray-border)',
                 borderRadius: '6px',
-                backgroundColor: 'white',
+                backgroundColor: 'var(--dark-surface)',
                 cursor: 'pointer'
               }}
             >

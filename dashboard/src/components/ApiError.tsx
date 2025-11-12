@@ -43,7 +43,7 @@ export default function ApiError({
       <h2 style={{
         fontSize: '1.5rem',
         fontWeight: 700,
-        color: 'var(--dark)',
+        color: 'var(--text-primary)',
         marginBottom: '12px'
       }}>
         {title}
@@ -52,7 +52,7 @@ export default function ApiError({
       {/* Message */}
       <p style={{
         fontSize: '1rem',
-        color: 'var(--gray)',
+        color: 'var(--text-muted)',
         marginBottom: '24px',
         lineHeight: 1.6
       }}>
@@ -101,7 +101,7 @@ export default function ApiError({
         background: 'var(--gray-light)',
         borderRadius: '8px',
         fontSize: '14px',
-        color: 'var(--gray)',
+        color: 'var(--text-muted)',
         textAlign: 'left'
       }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>

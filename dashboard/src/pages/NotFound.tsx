@@ -55,7 +55,7 @@ export default function NotFound() {
         <h1 style={{
           fontSize: '2rem',
           fontWeight: 700,
-          color: 'var(--dark)',
+          color: 'var(--text-primary)',
           marginBottom: '12px',
           animation: 'fadeIn 1s ease-out'
         }}>
@@ -65,7 +65,7 @@ export default function NotFound() {
         {/* Description */}
         <p style={{
           fontSize: '1.125rem',
-          color: 'var(--gray)',
+          color: 'var(--text-muted)',
           marginBottom: '32px',
           lineHeight: 1.6,
           animation: 'fadeIn 1.2s ease-out'
@@ -120,8 +120,8 @@ export default function NotFound() {
               alignItems: 'center',
               gap: '8px',
               padding: '12px 24px',
-              background: 'var(--white)',
-              color: 'var(--dark)',
+              background: 'var(--dark-surface)',
+              color: 'var(--text-primary)',
               border: '1px solid var(--gray-border)',
               borderRadius: '8px',
               fontWeight: 600,
@@ -130,11 +130,11 @@ export default function NotFound() {
               transition: 'all 0.2s'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--gray-light)'
-              e.currentTarget.style.borderColor = 'var(--gray)'
+              e.currentTarget.style.backgroundColor = 'var(--dark-light)'
+              e.currentTarget.style.borderColor = 'var(--primary)'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--white)'
+              e.currentTarget.style.backgroundColor = 'var(--dark-surface)'
               e.currentTarget.style.borderColor = 'var(--gray-border)'
             }}
           >
@@ -152,7 +152,7 @@ export default function NotFound() {
         }}>
           <p style={{
             fontSize: '14px',
-            color: 'var(--gray)',
+            color: 'var(--text-muted)',
             marginBottom: '16px',
             fontWeight: 500
           }}>
@@ -180,8 +180,8 @@ export default function NotFound() {
                     alignItems: 'center',
                     gap: '6px',
                     padding: '8px 16px',
-                    background: 'var(--gray-light)',
-                    color: 'var(--dark)',
+                    background: 'var(--dark-surface)',
+                    color: 'var(--text-primary)',
                     borderRadius: '6px',
                     fontSize: '14px',
                     fontWeight: 500,
@@ -194,8 +194,8 @@ export default function NotFound() {
                     e.currentTarget.style.transform = 'translateY(-2px)'
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'var(--gray-light)'
-                    e.currentTarget.style.color = 'var(--dark)'
+                    e.currentTarget.style.background = 'var(--dark-surface)'
+                    e.currentTarget.style.color = 'var(--text-primary)'
                     e.currentTarget.style.transform = 'translateY(0)'
                   }}
                 >

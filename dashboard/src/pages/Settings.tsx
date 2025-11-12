@@ -103,7 +103,7 @@ function Settings() {
       {/* Account Information Section */}
       <div
         style={{
-          background: 'white',
+          background: 'var(--dark-surface)',
           border: '1px solid var(--gray-border)',
           borderRadius: '8px',
           padding: '24px',
@@ -122,7 +122,7 @@ function Settings() {
                 marginBottom: '8px',
                 fontSize: '14px',
                 fontWeight: 500,
-                color: 'var(--dark)'
+                color: 'var(--text-primary)'
               }}
             >
               Email
@@ -138,7 +138,7 @@ function Settings() {
                 borderRadius: '6px',
                 fontSize: '14px',
                 background: 'var(--gray-light)',
-                color: 'var(--gray)',
+                color: 'var(--text-muted)',
                 cursor: 'not-allowed'
               }}
             />
@@ -155,7 +155,7 @@ function Settings() {
                 marginBottom: '8px',
                 fontSize: '14px',
                 fontWeight: 500,
-                color: 'var(--dark)'
+                color: 'var(--text-primary)'
               }}
             >
               Company Name
@@ -226,7 +226,7 @@ function Settings() {
                   marginBottom: '8px',
                   fontSize: '14px',
                   fontWeight: 500,
-                  color: 'var(--gray)'
+                  color: 'var(--text-muted)'
                 }}
               >
                 Account Status
@@ -245,12 +245,12 @@ function Settings() {
                   marginBottom: '8px',
                   fontSize: '14px',
                   fontWeight: 500,
-                  color: 'var(--gray)'
+                  color: 'var(--text-muted)'
                 }}
               >
                 Account Created
               </label>
-              <div style={{ fontSize: '14px', color: 'var(--dark)' }}>
+              <div style={{ fontSize: '14px', color: 'var(--text-primary)' }}>
                 {user.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
               </div>
             </div>
@@ -262,12 +262,12 @@ function Settings() {
                   marginBottom: '8px',
                   fontSize: '14px',
                   fontWeight: 500,
-                  color: 'var(--gray)'
+                  color: 'var(--text-muted)'
                 }}
               >
                 Last Login
               </label>
-              <div style={{ fontSize: '14px', color: 'var(--dark)' }}>
+              <div style={{ fontSize: '14px', color: 'var(--text-primary)' }}>
                 {user.last_login ? new Date(user.last_login).toLocaleDateString() : 'Never'}
               </div>
             </div>
@@ -283,7 +283,7 @@ function Settings() {
       {/* Integration Guides Section */}
       <div
         style={{
-          background: 'white',
+          background: 'var(--dark-surface)',
           border: '1px solid var(--gray-border)',
           borderRadius: '8px',
           padding: '24px'

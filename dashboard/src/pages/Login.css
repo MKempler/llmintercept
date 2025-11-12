@@ -5,14 +5,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  background: var(--dark);
+  background-image: radial-gradient(circle at top right, rgba(37, 99, 235, 0.15) 0%, rgba(139, 92, 246, 0.08) 50%, transparent 70%);
   padding: 24px;
 }
 
 .login-card {
-  background: white;
+  background: var(--dark-surface);
+  border: 1px solid var(--gray-border);
   border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-xl);
   padding: 48px;
   width: 100%;
   max-width: 420px;
@@ -57,7 +59,7 @@
 
 .login-logo-secondary {
   font-size: 28px;
-  color: #1a202c;
+  color: var(--text-primary);
   font-weight: 700;
   letter-spacing: -0.02em;
   font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -67,20 +69,21 @@
   margin: 0 0 8px 0;
   font-size: 24px;
   font-weight: 700;
-  color: #1a202c;
+  color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .login-header p {
   margin: 0;
-  color: #718096;
+  color: var(--text-muted);
   font-size: 14px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .error-message {
-  background: #fed7d7;
-  color: #c53030;
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--error);
+  border: 1px solid rgba(244, 63, 94, 0.3);
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 24px;
@@ -97,7 +100,7 @@
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: #2d3748;
+  color: var(--text-secondary);
   font-size: 14px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -105,29 +108,31 @@
 .form-group input {
   width: 100%;
   padding: 12px 16px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--gray-border);
   border-radius: 8px;
   font-size: 14px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   transition: all 0.2s;
   box-sizing: border-box;
-  background: white;
+  background: var(--dark-light);
+  color: var(--text-primary);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 .form-group input::placeholder {
-  color: #a0aec0;
+  color: var(--text-muted);
+  opacity: 0.6;
 }
 
 .form-group small {
   display: block;
   margin-top: 6px;
-  color: #718096;
+  color: var(--text-muted);
   font-size: 12px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -170,7 +175,7 @@
 
 .forgot-password-link {
   display: block;
-  color: #2563eb;
+  color: var(--primary);
   text-decoration: none;
   font-size: 14px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -181,18 +186,18 @@
 
 .forgot-password-link:hover {
   text-decoration: underline;
-  color: #1d4ed8;
+  color: var(--primary-light);
 }
 
 .contact-support {
   margin: 16px 0 0 0;
-  color: #718096;
+  color: var(--text-muted);
   font-size: 13px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .contact-support a {
-  color: #2563eb;
+  color: var(--primary);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s;
@@ -200,12 +205,13 @@
 
 .contact-support a:hover {
   text-decoration: underline;
-  color: #1d4ed8;
+  color: var(--primary-light);
 }
 
 .success-message {
-  background: #c6f6d5;
-  color: #22543d;
+  background: rgba(5, 150, 105, 0.15);
+  color: var(--success);
+  border: 1px solid rgba(5, 150, 105, 0.3);
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 24px;

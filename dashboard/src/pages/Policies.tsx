@@ -239,7 +239,7 @@ function Policies() {
       render: (_: any, row: any) => {
         const value = row.statistics
         return (
-          <div style={{ fontSize: '13px', color: 'var(--dark)' }}>
+          <div style={{ fontSize: '13px', color: 'var(--text-primary)' }}>
             <div style={{ marginBottom: '4px' }}>
               <strong>{value?.violations_caught || 0}</strong> violations caught
             </div>
@@ -268,8 +268,8 @@ function Policies() {
                 padding: '6px 12px',
                 border: '1px solid var(--gray-border)',
                 borderRadius: '6px',
-                background: 'white',
-                color: 'var(--dark)',
+                background: 'var(--dark-surface)',
+                color: 'var(--text-primary)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -295,8 +295,8 @@ function Policies() {
                 padding: '6px 12px',
                 border: '1px solid var(--gray-border)',
                 borderRadius: '6px',
-                background: 'white',
-                color: 'var(--dark)',
+                background: 'var(--dark-surface)',
+                color: 'var(--text-primary)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -324,7 +324,7 @@ function Policies() {
                   padding: '6px 12px',
                   border: '1px solid var(--error)',
                   borderRadius: '6px',
-                  background: 'white',
+                  background: 'var(--dark-surface)',
                   color: 'var(--error)',
                   cursor: deletingPolicyId === row.id ? 'not-allowed' : 'pointer',
                   display: 'flex',
@@ -485,7 +485,7 @@ function Policies() {
         >
           <div
             style={{
-              backgroundColor: 'white',
+              backgroundColor: 'var(--dark-surface)',
               borderRadius: '12px',
               padding: '24px',
               maxWidth: '800px',
@@ -517,7 +517,7 @@ function Policies() {
                 <LoadingSpinner />
               </div>
             ) : policyHistory.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '40px', color: 'var(--gray)' }}>
+              <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
                 No history available for this policy
               </div>
             ) : (
@@ -548,7 +548,7 @@ function Policies() {
                       )}
                     </div>
                     {entry.change_summary && (
-                      <div style={{ fontSize: '14px', color: 'var(--dark)', marginBottom: '12px' }}>
+                        <div style={{ fontSize: '14px', color: 'var(--text-primary)', marginBottom: '12px' }}>
                         {entry.change_summary}
                       </div>
                     )}
@@ -556,13 +556,13 @@ function Policies() {
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', fontSize: '12px' }}>
                         <div>
                           <div style={{ fontWeight: 600, marginBottom: '4px', color: 'var(--error)' }}>Before</div>
-                          <div style={{ padding: '8px', backgroundColor: 'white', borderRadius: '4px', fontFamily: 'monospace' }}>
+                          <div style={{ padding: '8px', backgroundColor: 'var(--dark-light)', borderRadius: '4px', fontFamily: 'monospace', color: 'var(--text-primary)' }}>
                             {JSON.stringify(entry.old_value, null, 2)}
                           </div>
                         </div>
                         <div>
                           <div style={{ fontWeight: 600, marginBottom: '4px', color: 'var(--success)' }}>After</div>
-                          <div style={{ padding: '8px', backgroundColor: 'white', borderRadius: '4px', fontFamily: 'monospace' }}>
+                          <div style={{ padding: '8px', backgroundColor: 'var(--dark-light)', borderRadius: '4px', fontFamily: 'monospace', color: 'var(--text-primary)' }}>
                             {JSON.stringify(entry.new_value, null, 2)}
                           </div>
                         </div>

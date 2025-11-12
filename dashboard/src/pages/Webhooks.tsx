@@ -259,7 +259,7 @@ function Webhooks() {
         >
           <div
             style={{
-              backgroundColor: 'white',
+              backgroundColor: 'var(--dark-surface)',
               borderRadius: '12px',
               padding: '24px',
               maxWidth: '500px',
@@ -283,7 +283,7 @@ function Webhooks() {
                 padding: '10px 20px',
                 border: '1px solid var(--gray-border)',
                 borderRadius: '6px',
-                backgroundColor: 'white',
+                backgroundColor: 'var(--dark-surface)',
                 cursor: 'pointer',
                 width: '100%'
               }}

@@ -78,7 +78,7 @@ function ChangePasswordForm() {
   return (
     <div
       style={{
-        background: 'white',
+        background: 'var(--dark-surface)',
         border: '1px solid var(--gray-border)',
         borderRadius: '8px',
         padding: '24px'
@@ -127,7 +127,7 @@ function ChangePasswordForm() {
               marginBottom: '8px',
               fontSize: '14px',
               fontWeight: 500,
-              color: 'var(--dark)'
+              color: 'var(--text-primary)'
             }}
           >
             Current Password
@@ -158,7 +158,7 @@ function ChangePasswordForm() {
               marginBottom: '8px',
               fontSize: '14px',
               fontWeight: 500,
-              color: 'var(--dark)'
+              color: 'var(--text-primary)'
             }}
           >
             New Password
@@ -231,7 +231,7 @@ function ChangePasswordForm() {
               marginBottom: '8px',
               fontSize: '14px',
               fontWeight: 500,
-              color: 'var(--dark)'
+              color: 'var(--text-primary)'
             }}
           >
             Confirm New Password

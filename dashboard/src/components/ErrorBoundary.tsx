@@ -70,7 +70,7 @@ class ErrorBoundary extends Component<Props, State> {
             <h1 style={{
               fontSize: '2rem',
               fontWeight: 700,
-              color: 'var(--dark)',
+              color: 'var(--text-primary)',
               marginBottom: '12px',
               animation: 'fadeIn 0.8s ease-out'
             }}>
@@ -80,7 +80,7 @@ class ErrorBoundary extends Component<Props, State> {
             {/* Description */}
             <p style={{
               fontSize: '1.125rem',
-              color: 'var(--gray)',
+              color: 'var(--text-muted)',
               marginBottom: '24px',
               lineHeight: 1.6,
               animation: 'fadeIn 1s ease-out'
@@ -154,8 +154,8 @@ class ErrorBoundary extends Component<Props, State> {
                   alignItems: 'center',
                   gap: '8px',
                   padding: '12px 24px',
-                  background: 'var(--white)',
-                  color: 'var(--dark)',
+                  background: 'var(--dark-surface)',
+                  color: 'var(--text-primary)',
                   border: '1px solid var(--gray-border)',
                   borderRadius: '8px',
                   fontWeight: 600,
@@ -168,7 +168,7 @@ class ErrorBoundary extends Component<Props, State> {
                   e.currentTarget.style.borderColor = 'var(--gray)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--white)'
+                  e.currentTarget.style.backgroundColor = 'var(--dark-surface)'
                   e.currentTarget.style.borderColor = 'var(--gray-border)'
                 }}
               >

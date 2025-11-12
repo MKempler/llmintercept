@@ -142,7 +142,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
         onClick={(e) => e.stopPropagation()}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', paddingBottom: '24px', borderBottom: '1px solid var(--gray-border)' }}>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--dark)', margin: 0 }}>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
             {policy ? 'Edit Policy' : 'Create Policy'}
           </h2>
           <button
@@ -207,7 +207,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                 borderRadius: '8px',
                 fontSize: '14px',
                 fontFamily: 'inherit',
-                backgroundColor: 'var(--white)',
+                backgroundColor: 'var(--dark-light)',
                 transition: 'all 0.2s',
                 boxSizing: 'border-box'
               }}
@@ -239,7 +239,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                 fontSize: '14px',
                 fontFamily: 'inherit',
                 resize: 'vertical',
-                backgroundColor: 'var(--white)',
+                backgroundColor: 'var(--dark-light)',
                 transition: 'all 0.2s',
                 boxSizing: 'border-box'
               }}
@@ -275,7 +275,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                       border: `2px solid ${isSelected ? 'var(--primary)' : 'var(--gray-border)'}`,
                       borderRadius: '8px',
                       cursor: 'pointer',
-                      backgroundColor: isSelected ? 'rgba(37, 99, 235, 0.05)' : 'var(--white)',
+                      backgroundColor: isSelected ? 'rgba(37, 99, 235, 0.15)' : 'var(--dark-light)',
                       transition: 'all 0.2s'
                     }}
                     onMouseEnter={(e) => {
@@ -287,7 +287,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                     onMouseLeave={(e) => {
                       if (!isSelected) {
                         e.currentTarget.style.borderColor = 'var(--gray-border)'
-                        e.currentTarget.style.backgroundColor = 'var(--white)'
+                        e.currentTarget.style.backgroundColor = 'var(--dark-light)'
                       }
                     }}
                   >
@@ -338,7 +338,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                       border: `2px solid ${isSelected ? actionColor : 'var(--gray-border)'}`,
                       borderRadius: '10px',
                       cursor: 'pointer',
-                      backgroundColor: isSelected ? `${actionColor}15` : 'var(--white)',
+                      backgroundColor: isSelected ? `${actionColor}15` : 'var(--dark-light)',
                       transition: 'all 0.2s',
                       position: 'relative'
                     }}
@@ -351,7 +351,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                     onMouseLeave={(e) => {
                       if (!isSelected) {
                         e.currentTarget.style.borderColor = 'var(--gray-border)'
-                        e.currentTarget.style.backgroundColor = 'var(--white)'
+                        e.currentTarget.style.backgroundColor = 'var(--dark-light)'
                       }
                     }}
                   >
@@ -430,7 +430,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                   borderRadius: '8px',
                   fontSize: '14px',
                   fontFamily: 'inherit',
-                  backgroundColor: 'var(--white)',
+                  backgroundColor: 'var(--dark-light)',
                   transition: 'all 0.2s',
                   boxSizing: 'border-box'
                 }}
@@ -461,8 +461,8 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                 padding: '12px 24px',
                 border: '1px solid var(--gray-border)',
                 borderRadius: '8px',
-                background: 'var(--white)',
-                color: 'var(--dark)',
+                background: 'var(--dark-surface)',
+                color: 'var(--text-primary)',
                 fontWeight: 600,
                 fontSize: '14px',
                 cursor: 'pointer',
@@ -473,7 +473,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                 e.currentTarget.style.borderColor = 'var(--gray)'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--white)'
+                        e.currentTarget.style.backgroundColor = 'var(--dark-light)'
                 e.currentTarget.style.borderColor = 'var(--gray-border)'
               }}
             >
