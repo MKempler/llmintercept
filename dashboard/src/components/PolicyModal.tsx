@@ -152,7 +152,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
               border: 'none',
               cursor: 'pointer',
               padding: '8px',
-              color: 'var(--gray)',
+              color: 'var(--text-muted)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -160,12 +160,12 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
               transition: 'all 0.2s'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--gray-light)'
-              e.currentTarget.style.color = 'var(--dark)'
+              e.currentTarget.style.backgroundColor = 'var(--dark-light)'
+              e.currentTarget.style.color = 'var(--text-primary)'
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = 'transparent'
-              e.currentTarget.style.color = 'var(--gray)'
+              e.currentTarget.style.color = 'var(--text-muted)'
             }}
           >
             <FiX size={20} />

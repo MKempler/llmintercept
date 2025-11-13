@@ -349,9 +349,9 @@ function Patterns() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ marginTop: 0, marginBottom: '20px' }}>Test Pattern</h2>
+            <h2 style={{ marginTop: 0, marginBottom: '20px', color: 'var(--text-primary)' }}>Test Pattern</h2>
             <div style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500, color: 'var(--text-secondary)' }}>
                 Pattern (Regex)
               </label>
               <input
@@ -364,13 +364,15 @@ function Patterns() {
                   border: '1px solid var(--gray-border)',
                   borderRadius: '6px',
                   fontFamily: 'monospace',
-                  fontSize: '13px'
+                  fontSize: '13px',
+                  backgroundColor: 'var(--dark-light)',
+                  color: 'var(--text-primary)'
                 }}
                 placeholder="Enter regex pattern"
               />
             </div>
             <div style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500, color: 'var(--text-secondary)' }}>
                 Test Text
               </label>
               <textarea
@@ -384,18 +386,20 @@ function Patterns() {
                   borderRadius: '6px',
                   minHeight: '150px',
                   fontFamily: 'monospace',
-                  fontSize: '13px'
+                  fontSize: '13px',
+                  backgroundColor: 'var(--dark-light)',
+                  color: 'var(--text-primary)'
                 }}
                 placeholder="Enter text to test against the pattern"
               />
             </div>
             {testResults.length > 0 && (
               <div style={{ marginBottom: '16px' }}>
-                <h3 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>
+                <h3 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-primary)' }}>
                   Matches ({testResults.length})
                 </h3>
                 {testResults[0]?.error ? (
-                  <div style={{ padding: '12px', backgroundColor: '#fee2e2', borderRadius: '6px', color: '#dc2626' }}>
+                  <div style={{ padding: '12px', backgroundColor: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.3)', borderRadius: '6px', color: 'var(--error)' }}>
                     Error: {testResults[0].error}
                   </div>
                 ) : (
@@ -405,10 +409,11 @@ function Patterns() {
                         key={idx}
                         style={{
                           padding: '8px',
-                          backgroundColor: 'var(--gray-light)',
+                          backgroundColor: 'var(--dark-light)',
                           borderRadius: '4px',
                           marginBottom: '8px',
-                          fontSize: '12px'
+                          fontSize: '12px',
+                          color: 'var(--text-primary)'
                         }}
                       >
                         <strong>Match:</strong> "{match.text}"<br />
@@ -427,6 +432,7 @@ function Patterns() {
                   border: '1px solid var(--gray-border)',
                   borderRadius: '6px',
                   backgroundColor: 'var(--dark-surface)',
+                  color: 'var(--text-primary)',
                   cursor: 'pointer'
                 }}
               >
@@ -486,7 +492,7 @@ function PatternModal({ pattern, onClose, onSave }: { pattern: Pattern | null, o
     >
       <div
         style={{
-          backgroundColor: 'white',
+          backgroundColor: 'var(--dark-surface)',
           borderRadius: '12px',
           padding: '24px',
           maxWidth: '500px',
@@ -496,12 +502,12 @@ function PatternModal({ pattern, onClose, onSave }: { pattern: Pattern | null, o
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 style={{ marginTop: 0, marginBottom: '20px' }}>
+        <h2 style={{ marginTop: 0, marginBottom: '20px', color: 'var(--text-primary)' }}>
           {pattern ? 'Edit Pattern' : 'Create Pattern'}
         </h2>
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500, color: 'var(--text-secondary)' }}>
               Name *
             </label>
             <input
@@ -513,12 +519,14 @@ function PatternModal({ pattern, onClose, onSave }: { pattern: Pattern | null, o
                 width: '100%',
                 padding: '10px',
                 border: '1px solid var(--gray-border)',
-                borderRadius: '6px'
+                borderRadius: '6px',
+                backgroundColor: 'var(--dark-light)',
+                color: 'var(--text-primary)'
               }}
             />
           </div>
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500, color: 'var(--text-secondary)' }}>
               Regex Pattern *
             </label>
             <input
@@ -536,12 +544,12 @@ function PatternModal({ pattern, onClose, onSave }: { pattern: Pattern | null, o
               }}
               placeholder="e.g., [A-Z0-9]{32}"
             />
-            <div style={{ fontSize: '12px', color: 'var(--gray)', marginTop: '4px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
               Enter a valid JavaScript regex pattern
             </div>
           </div>
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500, color: 'var(--text-secondary)' }}>
               Violation Type *
             </label>
             <select
@@ -552,7 +560,9 @@ function PatternModal({ pattern, onClose, onSave }: { pattern: Pattern | null, o
                 width: '100%',
                 padding: '10px',
                 border: '1px solid var(--gray-border)',
-                borderRadius: '6px'
+                borderRadius: '6px',
+                backgroundColor: 'var(--dark-light)',
+                color: 'var(--text-primary)'
               }}
             >
               <option value="secret">Secret</option>
@@ -562,7 +572,7 @@ function PatternModal({ pattern, onClose, onSave }: { pattern: Pattern | null, o
             </select>
           </div>
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500, color: 'var(--text-secondary)' }}>
               Description
             </label>
             <textarea
@@ -573,7 +583,9 @@ function PatternModal({ pattern, onClose, onSave }: { pattern: Pattern | null, o
                 padding: '10px',
                 border: '1px solid var(--gray-border)',
                 borderRadius: '6px',
-                minHeight: '80px'
+                minHeight: '80px',
+                backgroundColor: 'var(--dark-light)',
+                color: 'var(--text-primary)'
               }}
               placeholder="Optional description of what this pattern detects"
             />
@@ -585,7 +597,7 @@ function PatternModal({ pattern, onClose, onSave }: { pattern: Pattern | null, o
                 checked={enabled}
                 onChange={(e) => setEnabled(e.target.checked)}
               />
-              <span>Enabled</span>
+              <span style={{ color: 'var(--text-primary)' }}>Enabled</span>
             </label>
           </div>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
@@ -597,6 +609,7 @@ function PatternModal({ pattern, onClose, onSave }: { pattern: Pattern | null, o
                 border: '1px solid var(--gray-border)',
                 borderRadius: '6px',
                 backgroundColor: 'var(--dark-surface)',
+                color: 'var(--text-primary)',
                 cursor: 'pointer'
               }}
             >

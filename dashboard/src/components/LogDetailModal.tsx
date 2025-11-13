@@ -80,7 +80,7 @@ export default function LogDetailModal({ log, onClose }: LogDetailModalProps) {
             alignItems: 'center'
           }}
         >
-          <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: 'var(--dark)' }}>
+          <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)' }}>
             Log Details
           </h2>
           <button

@@ -550,7 +550,7 @@ function Dashboard() {
       {/* Violations Table */}
       <div className="card" style={{ padding: 0 }}>
         <div style={{ padding: '24px', borderBottom: '1px solid var(--gray-border)' }}>
-          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--dark)' }}>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text-primary)' }}>
             Recent Violations
           </h3>
         </div>

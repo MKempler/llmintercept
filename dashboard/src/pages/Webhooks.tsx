@@ -267,13 +267,13 @@ function Webhooks() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ marginTop: 0, marginBottom: '20px' }}>Add Webhook</h2>
+            <h2 style={{ marginTop: 0, marginBottom: '20px', color: 'var(--text-primary)' }}>Add Webhook</h2>
             <div style={{ padding: '16px', backgroundColor: 'var(--gray-light)', borderRadius: '8px', marginBottom: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <FiAlertCircle size={16} color="var(--warning)" />
-                <span style={{ fontWeight: 600 }}>API Not Yet Available</span>
+                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>API Not Yet Available</span>
               </div>
-              <p style={{ fontSize: '13px', color: 'var(--gray)', margin: 0 }}>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
                 Webhook management via API is coming soon. For now, configure webhooks using environment variables.
               </p>
             </div>
@@ -284,6 +284,7 @@ function Webhooks() {
                 border: '1px solid var(--gray-border)',
                 borderRadius: '6px',
                 backgroundColor: 'var(--dark-surface)',
+                color: 'var(--text-primary)',
                 cursor: 'pointer',
                 width: '100%'
               }}

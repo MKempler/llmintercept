@@ -496,7 +496,7 @@ function Policies() {
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 style={{ margin: 0 }}>Policy Change History</h2>
+              <h2 style={{ margin: 0, color: 'var(--text-primary)' }}>Policy Change History</h2>
               <button
                 onClick={() => setHistoryModalOpen(false)}
                 style={{
@@ -505,7 +505,7 @@ function Policies() {
                   background: 'transparent',
                   cursor: 'pointer',
                   fontSize: '20px',
-                  color: 'var(--gray)'
+                  color: 'var(--text-muted)'
                 }}
               >
                 ×
@@ -534,10 +534,10 @@ function Policies() {
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                       <div>
-                        <div style={{ fontWeight: 600, marginBottom: '4px', textTransform: 'capitalize' }}>
+                        <div style={{ fontWeight: 600, marginBottom: '4px', textTransform: 'capitalize', color: 'var(--text-primary)' }}>
                           {entry.change_type}
                         </div>
-                        <div style={{ fontSize: '12px', color: 'var(--gray)' }}>
+                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                           {entry.timestamp ? new Date(entry.timestamp).toLocaleString() : '-'}
                         </div>
                       </div>

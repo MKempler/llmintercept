@@ -89,7 +89,7 @@ function ApiKeyDisplay({ onRegenerate }: ApiKeyDisplayProps) {
 
   if (loading) {
     return (
-      <div style={{ padding: '24px', textAlign: 'center', color: 'var(--gray)' }}>
+      <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)' }}>
         Loading API key...
       </div>
     )
@@ -116,10 +116,10 @@ function ApiKeyDisplay({ onRegenerate }: ApiKeyDisplayProps) {
         }}
       >
         <div style={{ marginBottom: '16px' }}>
-          <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 600, color: 'var(--dark)' }}>
+          <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>
             Your API Key
           </h3>
-          <p style={{ margin: 0, fontSize: '14px', color: 'var(--gray)' }}>
+          <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-muted)' }}>
             Use this key to identify your requests. Keep it secure and never share it publicly.
           </p>
         </div>
@@ -229,12 +229,12 @@ function ApiKeyDisplay({ onRegenerate }: ApiKeyDisplayProps) {
           marginBottom: '24px'
         }}
       >
-        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600, color: 'var(--dark)' }}>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>
           How to Use Your API Key
         </h3>
         
         <div style={{ marginBottom: '20px' }}>
-          <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 600, color: 'var(--dark)' }}>
+          <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>
             Python SDK (Recommended)
           </h4>
           <pre
@@ -265,7 +265,7 @@ response = client.chat.completions.create(
         </div>
 
         <div style={{ marginBottom: '20px' }}>
-          <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 600, color: 'var(--dark)' }}>
+          <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>
             Gateway Proxy (HTTP Header)
           </h4>
           <pre
@@ -289,7 +289,7 @@ response = client.chat.completions.create(
         </div>
 
         <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid var(--gray-border)' }}>
-          <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 600, color: 'var(--dark)' }}>
+          <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>
             Documentation Links
           </h4>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
@@ -428,10 +428,10 @@ response = client.chat.completions.create(
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', fontWeight: 600, color: 'var(--dark)' }}>
+            <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)' }}>
               Regenerate API Key
             </h3>
-            <p style={{ margin: '0 0 20px 0', fontSize: '14px', color: 'var(--gray)' }}>
+            <p style={{ margin: '0 0 20px 0', fontSize: '14px', color: 'var(--text-muted)' }}>
               Warning: Regenerating your API key will invalidate your current key. Any applications using the old key will stop working. You'll need to update all integrations with the new key.
             </p>
 
@@ -439,8 +439,9 @@ response = client.chat.completions.create(
               <div
                 style={{
                   padding: '12px',
-                  background: '#fee',
-                  color: '#c33',
+                  background: 'rgba(244, 63, 94, 0.15)',
+                  border: '1px solid rgba(244, 63, 94, 0.3)',
+                  color: 'var(--error)',
                   borderRadius: '6px',
                   marginBottom: '16px',
                   fontSize: '14px'
@@ -458,7 +459,7 @@ response = client.chat.completions.create(
                   marginBottom: '8px',
                   fontSize: '14px',
                   fontWeight: 500,
-                  color: 'var(--dark)'
+                  color: 'var(--text-secondary)'
                 }}
               >
                 Enter your password to confirm:
@@ -475,7 +476,9 @@ response = client.chat.completions.create(
                   border: '1px solid var(--gray-border)',
                   borderRadius: '6px',
                   fontSize: '14px',
-                  fontFamily: 'inherit'
+                  fontFamily: 'inherit',
+                  backgroundColor: 'var(--dark-light)',
+                  color: 'var(--text-primary)'
                 }}
                 onKeyPress={(e) => {
                   if (e.key === 'Enter' && password && !regenerating) {
@@ -496,7 +499,7 @@ response = client.chat.completions.create(
                 style={{
                   padding: '10px 20px',
                   background: 'var(--dark-surface)',
-                  color: 'var(--gray)',
+                  color: 'var(--text-primary)',
                   border: '1px solid var(--gray-border)',
                   borderRadius: '6px',
                   cursor: regenerating ? 'not-allowed' : 'pointer',
