@@ -84,6 +84,21 @@ function Policies() {
     }
   }
 
+  const handleToggleEnabled = async (policyId: string, currentValue: boolean) => {
+    try {
+      const policy = policies.find(p => p.id === policyId)
+      if (!policy) return
+      
+      await apiClient.put(`/api/policies/${policyId}`, {
+        ...policy,
+        enabled: !currentValue
+      })
+      await fetchPolicies()
+    } catch (error: any) {
+      alert(error.response?.data?.detail || 'Failed to update policy')
+    }
+  }
+
   const handleViewHistory = async (policyId: string) => {
     setSelectedPolicyId(policyId)
     setHistoryModalOpen(true)
@@ -179,11 +194,11 @@ function Policies() {
             {getPolicyIcon(row.action)}
           </div>
           <div>
-            <div style={{ fontWeight: 600, color: 'var(--dark)', marginBottom: '4px' }}>
+            <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>
               {row.name}
             </div>
             {row.description && (
-              <div style={{ fontSize: '12px', color: 'var(--gray)' }}>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                 {row.description}
               </div>
             )}
@@ -283,7 +298,7 @@ function Policies() {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'var(--gray-border)'
-                e.currentTarget.style.color = 'var(--dark)'
+                e.currentTarget.style.color = 'var(--text-primary)'
               }}
             >
               <FiEdit2 size={14} />
@@ -310,7 +325,7 @@ function Policies() {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'var(--gray-border)'
-                e.currentTarget.style.color = 'var(--dark)'
+                e.currentTarget.style.color = 'var(--text-primary)'
               }}
             >
               <FiClock size={14} />
@@ -340,7 +355,7 @@ function Policies() {
                   }
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'white'
+                  e.currentTarget.style.background = 'var(--dark-surface)'
                 }}
               >
                 <FiTrash2 size={14} />

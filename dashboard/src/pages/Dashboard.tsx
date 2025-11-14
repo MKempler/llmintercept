@@ -39,16 +39,53 @@ function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [timeRange, setTimeRange] = useState<TimeRange>('7d')
 
+  // Calculate date range from timeRange
+  const dateRange = useMemo(() => {
+    const now = new Date()
+    let startDate: Date | null = null
+    let endDate: Date | null = new Date()
+
+    switch (timeRange) {
+      case '24h':
+        startDate = subHours(now, 24)
+        break
+      case '7d':
+        startDate = subDays(now, 7)
+        break
+      case '30d':
+        startDate = subDays(now, 30)
+        break
+      case 'all':
+        startDate = null
+        break
+    }
+
+    return { startDate, endDate }
+  }, [timeRange])
+
   useEffect(() => {
     fetchStats()
     const interval = setInterval(fetchStats, 5000)
     return () => clearInterval(interval)
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeRange, dateRange])
 
   const fetchStats = async () => {
     try {
+      const params: any = {
+        limit: 1000  // Get enough logs for proper filtering
+      }
+
+      if (dateRange.startDate) {
+        params.start_date = dateRange.startDate.toISOString()
+      }
+
+      if (dateRange.endDate) {
+        params.end_date = dateRange.endDate.toISOString()
+      }
+
       const [logsRes, violationsRes] = await Promise.all([
-        apiClient.get('/api/logs'),
+        apiClient.get('/api/logs', { params }),
         apiClient.get('/api/violations')
       ])
       
@@ -72,7 +109,8 @@ function Dashboard() {
     }
   }
 
-  // Filter data based on time range
+  // Since API already filters by date range, use stats directly
+  // Filter violations by time range (violations API doesn't support date filtering yet)
   const filteredData = useMemo(() => {
     if (!stats.logs.length) return { logs: [], violations: [] }
     
@@ -93,22 +131,17 @@ function Dashboard() {
         cutoffDate = new Date(0) // Beginning of time
     }
     
-    const filteredLogs = stats.logs.filter((log: any) => {
-      if (!log.timestamp) return false
-      const logDate = parseISO(log.timestamp)
-      return isAfter(logDate, cutoffDate)
-    })
-    
+    // Logs are already filtered by API, but filter violations client-side
     const filteredViolations = stats.violations.filter((log: any) => {
       if (!log.timestamp) return false
       const logDate = parseISO(log.timestamp)
       return isAfter(logDate, cutoffDate)
     })
     
-    return { logs: filteredLogs, violations: filteredViolations }
+    return { logs: stats.logs, violations: filteredViolations }
   }, [stats.logs, stats.violations, timeRange])
 
-  // Calculate filtered stats
+  // Calculate filtered stats (logs are already filtered by API)
   const filteredStats = useMemo(() => {
     const blocked = filteredData.logs.filter((l: any) => l.status === 'blocked').length
     const allowed = filteredData.logs.filter((l: any) => l.status === 'allowed').length

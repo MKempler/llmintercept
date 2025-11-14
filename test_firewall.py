@@ -3,7 +3,8 @@ from aifirewall import OpenAI
 # Your Railway gateway URL
 client = OpenAI(
     api_key="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",
-    firewall_url="https://llmintercept-production.up.railway.app"
+    firewall_url="https://llmintercept-production.up.railway.app",
+    firewall_api_key="fw_live_QKZlb5iVpkPu4rV6qnBylc3zEioMyJSnqYN40bgjzH8"
 )
 
 # Test: Try to send a secret (should be blocked)

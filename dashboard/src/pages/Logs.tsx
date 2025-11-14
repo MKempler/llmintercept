@@ -21,7 +21,7 @@ function Logs() {
   const [endpointFilter, setEndpointFilter] = useState<string | null>(null)
   const [violationTypeFilter, setViolationTypeFilter] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [limit, setLimit] = useState(50)
+  const [limit, setLimit] = useState(100)
   const [offset, setOffset] = useState(0)
   const [total, setTotal] = useState(0)
   const [selectedLog, setSelectedLog] = useState<any | null>(null)

@@ -191,7 +191,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '10px', fontWeight: 600, color: 'var(--dark)', fontSize: '14px' }}>
+            <label style={{ display: 'block', marginBottom: '10px', fontWeight: 600, color: 'var(--text-primary)', fontSize: '14px' }}>
               Policy Name <span style={{ color: 'var(--error)' }}>*</span>
             </label>
             <input
@@ -208,6 +208,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                 fontSize: '14px',
                 fontFamily: 'inherit',
                 backgroundColor: 'var(--dark-light)',
+                color: 'var(--text-primary)',
                 transition: 'all 0.2s',
                 boxSizing: 'border-box'
               }}
@@ -223,7 +224,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
           </div>
 
           <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '10px', fontWeight: 600, color: 'var(--dark)', fontSize: '14px' }}>
+            <label style={{ display: 'block', marginBottom: '10px', fontWeight: 600, color: 'var(--text-primary)', fontSize: '14px' }}>
               Description
             </label>
             <textarea
@@ -240,6 +241,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                 fontFamily: 'inherit',
                 resize: 'vertical',
                 backgroundColor: 'var(--dark-light)',
+                color: 'var(--text-primary)',
                 transition: 'all 0.2s',
                 boxSizing: 'border-box'
               }}
@@ -255,7 +257,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
           </div>
 
           <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '12px', fontWeight: 600, color: 'var(--dark)', fontSize: '14px' }}>
+            <label style={{ display: 'block', marginBottom: '12px', fontWeight: 600, color: 'var(--text-primary)', fontSize: '14px' }}>
               Violation Types <span style={{ color: 'var(--error)' }}>*</span>
             </label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -304,8 +306,8 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                       }}
                     />
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 600, color: 'var(--dark)', fontSize: '14px', marginBottom: '2px' }}>{type.label}</div>
-                      <div style={{ fontSize: '13px', color: 'var(--gray)' }}>{type.description}</div>
+                      <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '14px', marginBottom: '2px' }}>{type.label}</div>
+                      <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{type.description}</div>
                     </div>
                   </label>
                 )
@@ -314,7 +316,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
           </div>
 
           <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '12px', fontWeight: 600, color: 'var(--dark)', fontSize: '14px' }}>
+            <label style={{ display: 'block', marginBottom: '12px', fontWeight: 600, color: 'var(--text-primary)', fontSize: '14px' }}>
               Action <span style={{ color: 'var(--error)' }}>*</span>
             </label>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
@@ -376,10 +378,10 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                     }}>
                       {getActionIcon(actionOption.value)}
                     </div>
-                    <div style={{ fontWeight: 600, color: 'var(--dark)', marginBottom: '4px', fontSize: '15px' }}>
+                    <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px', fontSize: '15px' }}>
                       {actionOption.label}
                     </div>
-                    <div style={{ fontSize: '12px', color: 'var(--gray)', textAlign: 'center', lineHeight: '1.4' }}>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', textAlign: 'center', lineHeight: '1.4' }}>
                       {actionOption.description}
                     </div>
                   </label>
@@ -408,13 +410,13 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                   }}
                 />
                 <div>
-                  <div style={{ fontWeight: 600, color: 'var(--dark)', fontSize: '14px' }}>Enabled</div>
-                  <div style={{ fontSize: '12px', color: 'var(--gray)', marginTop: '2px' }}>Policy is active</div>
+                  <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '14px' }}>Enabled</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>Policy is active</div>
                 </div>
               </label>
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: '10px', fontWeight: 600, color: 'var(--dark)', fontSize: '14px' }}>
+              <label style={{ display: 'block', marginBottom: '10px', fontWeight: 600, color: 'var(--text-primary)', fontSize: '14px' }}>
                 Priority
               </label>
               <input
@@ -428,13 +430,14 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                   padding: '12px 16px',
                   border: '1px solid var(--gray-border)',
                   borderRadius: '8px',
-                  fontSize: '14px',
-                  fontFamily: 'inherit',
-                  backgroundColor: 'var(--dark-light)',
-                  transition: 'all 0.2s',
-                  boxSizing: 'border-box'
-                }}
-                onFocus={(e) => {
+                fontSize: '14px',
+                fontFamily: 'inherit',
+                backgroundColor: 'var(--dark-light)',
+                color: 'var(--text-primary)',
+                transition: 'all 0.2s',
+                boxSizing: 'border-box'
+              }}
+              onFocus={(e) => {
                   e.currentTarget.style.borderColor = 'var(--primary)'
                   e.currentTarget.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.1)'
                 }}
@@ -473,7 +476,7 @@ export default function PolicyModal({ isOpen, onClose, onSave, policy }: PolicyM
                 e.currentTarget.style.borderColor = 'var(--gray)'
               }}
               onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'var(--dark-light)'
+                e.currentTarget.style.backgroundColor = 'var(--dark-surface)'
                 e.currentTarget.style.borderColor = 'var(--gray-border)'
               }}
             >
