@@ -90,15 +90,15 @@ function Dashboard() {
       ])
       
       const logs = logsRes.data.logs || []
+      const total = logsRes.data.total || logs.length  // Use API's total count, not paginated length
+      const blocked = logsRes.data.blocked || logs.filter((l: any) => l.status === 'blocked').length
+      const allowed = logsRes.data.allowed || logs.filter((l: any) => l.status === 'allowed').length
       const violations = violationsRes.data.violations || []
       
-      const blocked = logs.filter((l: any) => l.status === 'blocked').length
-      const allowed = logs.filter((l: any) => l.status === 'allowed').length
-      
       setStats({
-        totalRequests: logs.length,
-        blockedRequests: blocked,
-        allowedRequests: allowed,
+        totalRequests: total,  // Use total from API response
+        blockedRequests: blocked,  // Use blocked count from API (calculated from filtered set)
+        allowedRequests: allowed,  // Use allowed count from API (calculated from filtered set)
         violations: violations.slice(0, 10),
         logs
       })

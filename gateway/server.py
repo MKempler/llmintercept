@@ -310,14 +310,22 @@ async def get_logs(
     
     # Helper function to parse dates safely
     def parse_date(date_str):
-        """Parse date string safely."""
+        """Parse date string safely and normalize to UTC timezone-aware datetime."""
         if not date_str:
             return None
         try:
+            from datetime import timezone
             # Handle ISO format with Z or timezone
             if date_str.endswith('Z'):
                 date_str = date_str.replace('Z', '+00:00')
-            return datetime.fromisoformat(date_str)
+            dt = datetime.fromisoformat(date_str)
+            # If naive datetime (no timezone), assume UTC (matching demo_data.py which uses utcnow())
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            # Normalize to UTC for consistent comparison
+            if dt.tzinfo is not None:
+                dt = dt.astimezone(timezone.utc)
+            return dt
         except Exception as e:
             print(f"Error parsing date {date_str}: {e}")
             return None
@@ -357,11 +365,12 @@ async def get_logs(
                     continue
                 try:
                     log_dt = parse_date(log['timestamp'])
+                    # Both datetimes are now UTC timezone-aware, so comparison should work
                     if log_dt and log_dt >= start_dt:
                         temp_filtered.append(log)
-                except:
-                    # If we can't parse, include it (better than excluding)
-                    temp_filtered.append(log)
+                except Exception as e:
+                    # If we can't parse, exclude it (better than including invalid data)
+                    print(f"Error parsing log timestamp {log.get('timestamp')}: {e}")
             filtered = temp_filtered
         
         end_dt = parse_date(end_date)
@@ -372,18 +381,26 @@ async def get_logs(
                     continue
                 try:
                     log_dt = parse_date(log['timestamp'])
+                    # Both datetimes are now UTC timezone-aware, so comparison should work
                     if log_dt and log_dt <= end_dt:
                         temp_filtered.append(log)
-                except:
-                    # If we can't parse, include it (better than excluding)
-                    temp_filtered.append(log)
+                except Exception as e:
+                    # If we can't parse, exclude it (better than including invalid data)
+                    print(f"Error parsing log timestamp {log.get('timestamp')}: {e}")
             filtered = temp_filtered
+        
+        # Calculate statistics from filtered set (before pagination)
+        blocked_count = sum(1 for log in filtered if log.get('status') == 'blocked')
+        allowed_count = sum(1 for log in filtered if log.get('status') == 'allowed')
+        error_count = sum(1 for log in filtered if log.get('status') == 'error')
         
         # Apply pagination
         total_count = len(filtered)
         paginated = filtered[offset:offset + limit]
         
-        return paginated, total_count
+        # Add statistics to each log entry for convenience (will be ignored by client)
+        # Actually, let's return stats separately in the response
+        return paginated, total_count, blocked_count, allowed_count, error_count
     
     # Authenticated user - return real data from database
     if is_authenticated:
@@ -422,9 +439,17 @@ async def get_logs(
                 user_id=logged_in_user_id  # Filter by logged-in user
             )
             
+            # Calculate blocked/allowed/error from real_logs (they're already filtered)
+            blocked_count = sum(1 for log in real_logs if log.get('status') == 'blocked')
+            allowed_count = sum(1 for log in real_logs if log.get('status') == 'allowed')
+            error_count = sum(1 for log in real_logs if log.get('status') == 'error')
+            
             response = JSONResponse(content={
                 "logs": real_logs,
                 "total": total_count,
+                "blocked": blocked_count,
+                "allowed": allowed_count,
+                "errors": error_count,
                 "limit": limit,
                 "offset": offset
             })
@@ -443,11 +468,14 @@ async def get_logs(
     # Not authenticated - return demo data
     try:
         demo_logs = get_demo_logs()
-        paginated_logs, total_count = filter_and_paginate_logs(demo_logs)
+        paginated_logs, total_count, blocked_count, allowed_count, error_count = filter_and_paginate_logs(demo_logs)
         
         response = JSONResponse(content={
             "logs": paginated_logs,
             "total": total_count,
+            "blocked": blocked_count,
+            "allowed": allowed_count,
+            "errors": error_count,
             "limit": limit,
             "offset": offset
         })
@@ -458,6 +486,9 @@ async def get_logs(
         response = JSONResponse(content={
             "logs": [],
             "total": 0,
+            "blocked": 0,
+            "allowed": 0,
+            "errors": 0,
             "limit": limit,
             "offset": offset
         })

@@ -24,6 +24,9 @@ function Logs() {
   const [limit, setLimit] = useState(100)
   const [offset, setOffset] = useState(0)
   const [total, setTotal] = useState(0)
+  const [blockedCount, setBlockedCount] = useState(0)
+  const [allowedCount, setAllowedCount] = useState(0)
+  const [errorCount, setErrorCount] = useState(0)
   const [selectedLog, setSelectedLog] = useState<any | null>(null)
   const [availableEndpoints, setAvailableEndpoints] = useState<string[]>([])
 
@@ -95,6 +98,10 @@ function Logs() {
       const logsData = res.data.logs || []
       setLogs(logsData)
       setTotal(res.data.total || 0)
+      // Use API's calculated counts (from filtered set, not just paginated)
+      setBlockedCount(res.data.blocked ?? logsData.filter((log: any) => log.status === 'blocked').length)
+      setAllowedCount(res.data.allowed ?? logsData.filter((log: any) => log.status === 'allowed').length)
+      setErrorCount(res.data.errors ?? logsData.filter((log: any) => log.status === 'error').length)
 
       // Extract unique endpoints for filter dropdown
       const endpoints: string[] = Array.from(
@@ -109,19 +116,15 @@ function Logs() {
     }
   }
 
-  // Calculate summary stats from current logs
+  // Use stats from API (calculated from filtered set, not just paginated logs)
   const summaryStats = useMemo(() => {
-    const blocked = logs.filter((log) => log.status === 'blocked').length
-    const allowed = logs.filter((log) => log.status === 'allowed').length
-    const errors = logs.filter((log) => log.status === 'error').length
-
     return {
-      total: logs.length,
-      blocked,
-      allowed,
-      errors
+      total: total,  // Use total from API (filtered count)
+      blocked: blockedCount,  // Use blocked count from API
+      allowed: allowedCount,  // Use allowed count from API
+      errors: errorCount  // Errors are rare, so using paginated count is fine
     }
-  }, [logs])
+  }, [total, blockedCount, allowedCount, errorCount])
 
   const getStatusBadge = (status: string, row: any) => {
     let statusBadge: JSX.Element
