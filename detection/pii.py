@@ -90,10 +90,6 @@ class PIIDetector:
                 "type": "ssn"
             },
             {
-                "pattern": r'123-45-6789',
-                "type": "ssn"
-            },
-            {
                 "pattern": r'111-11-1111',
                 "type": "ssn"
             }
